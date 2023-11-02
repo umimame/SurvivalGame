@@ -259,7 +259,9 @@ namespace My
 
     }
 
-
+    /// <summary>
+    /// SpriteRenderer,Image,TMPro‚Ì‚·‚×‚Ä‚ðŽæ“¾‚·‚é
+    /// </summary>
     [Serializable]
     public class SpriteOrImage
     {

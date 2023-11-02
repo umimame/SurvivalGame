@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
 {
     [SerializeField] private bool debugMode;
-    [SerializeField] SceneEditor sceneEditor;
+    [SerializeField] SceneOperator sceneEditor;
     [SerializeField] GameObject[] editors;
     [field: SerializeField] public AudioSource source { get; private set; }
     private void Start()
@@ -25,7 +25,7 @@ public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
 
     private void FindSceneEditor()
     {
-        sceneEditor = GameObject.FindWithTag("SceneEditor").GetComponent<SceneEditor>();
+        sceneEditor = GameObject.FindWithTag("SceneEditor").GetComponent<SceneOperator>();
      }
 
     private void SceneChanged(Scene scene, LoadSceneMode mode)

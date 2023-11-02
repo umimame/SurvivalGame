@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 /// 各シーンに一つのみ配置<br/>
 /// シーンを跨ぐと削除
 /// </summary>
-public class SceneEditor : MonoBehaviour
+public class SceneOperator : MonoBehaviour
 {
     [field: SerializeField] public bool debugMode { get; private set; }
     [SerializeField] private Instancer canvas;
@@ -71,7 +71,7 @@ public class SceneEditor : MonoBehaviour
         }
     }
 
-    public T EditorGet<T>()
+    public T OperatorGet<T>()
     {
         return GameObject.FindWithTag("SceneEditor").GetComponent<T>();
     }
