@@ -11,6 +11,7 @@ public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
     [SerializeField] private bool debugMode;
     [SerializeField] SceneOperator sceneEditor;
     [SerializeField] GameObject[] editors;
+    [field: SerializeField] public PresetsByPlayerType presets { get; private set; }
     [field: SerializeField] public AudioSource source { get; private set; }
     private void Start()
     {
@@ -25,11 +26,12 @@ public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
 
     private void FindSceneEditor()
     {
-        sceneEditor = GameObject.FindWithTag("SceneEditor").GetComponent<SceneOperator>();
+        sceneEditor = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<SceneOperator>();
      }
 
     private void SceneChanged(Scene scene, LoadSceneMode mode)
     {
         FindSceneEditor();
+
     }
 }

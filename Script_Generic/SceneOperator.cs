@@ -11,11 +11,15 @@ public class SceneOperator : MonoBehaviour
     [SerializeField] private Instancer canvas;
     [SerializeField] private FadeInstancer fadeObj;
 
+    private void Awake()
+    {
+
+        canvas.Initialize();
+        canvas.Instance();
+    }
     protected virtual void Start()
     {
         SceneCheck();
-        canvas.Initialize();
-        canvas.Instance();
         SceneManager.sceneLoaded += SceneLoaded;
     }
 
@@ -73,6 +77,13 @@ public class SceneOperator : MonoBehaviour
 
     public T OperatorGet<T>()
     {
-        return GameObject.FindWithTag("SceneEditor").GetComponent<T>();
+        return GameObject.FindWithTag(Tags.SceneOperator).GetComponent<T>();
     }
+}
+
+public static class Tags
+{
+    public static string SceneOperator = nameof(SceneOperator);
+    public static string Player01 = nameof(Player01);
+    public static string Player02 = nameof(Player02);
 }

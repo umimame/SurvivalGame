@@ -166,6 +166,10 @@ namespace My
         {
             moveObject.transform.position = center.transform.position;
         }
+        public void AdjustByCenter()
+        {
+            moveObject.transform.position = center.transform.position;
+        }
         public void Limit()
         {
             if (Vector2.Distance(moveObject.transform.position, center.transform.position) > radius)
@@ -173,6 +177,23 @@ namespace My
                 Vector3 nor = moveObject.transform.position - center.transform.position;
                 moveObject.transform.position = center.transform.position + nor.normalized * radius;
             }
+
+        }
+    }
+
+    [Serializable] public class SmoothRotate
+    {
+        [SerializeField] private float speed;
+        [SerializeField] private GameObject targetObj;
+        public void Initialize(GameObject targetObj)
+        {
+            this.targetObj = targetObj;
+        }
+        public void Update(Vector3 direction)
+        {
+            Quaternion me = targetObj.transform.rotation;
+            Quaternion you = Quaternion.LookRotation(direction);
+            targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
         }
     }
 
@@ -444,6 +465,10 @@ namespace My
         }
     }
 #if UNITY_EDITOR
+    /// <summary>
+    /// serializedObjectUpdateÇ…ä÷êîÇí«â¡Ç∑ÇÈ
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MyEditor<T> : Editor where T : UnityEngine.Object
     {
         protected UnityAction serializedObjectUpdate;
