@@ -22,7 +22,7 @@ public class CameraByPlayer : MonoBehaviour
 
 
         }
-        else
+        else if(body.tag == Tags.Player02)
         {
             gameObject.tag = "Untagged";
             cam.rect = FrontCanvas.instance.presets.cameraRectPre[1];
