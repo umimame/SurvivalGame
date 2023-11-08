@@ -34,13 +34,5 @@ public class player : MonoBehaviour
         //ˆÚ“®æ‚ÌÀ•W‚ğİ’è
         transform.position = destination;
     }
-    public void TagJudge(GameObject Item, float point)
-    {
-        if (Item.CompareTag("Item"))
-        {
-            transform.GetComponent<Item>();
-            getpoint += point;
-        }
-    }
 
 }
