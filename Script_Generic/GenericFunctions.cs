@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -148,6 +149,13 @@ namespace My
             }
             return "0";
         }
+        public static float GetAnimationClipLength(IEnumerable<AnimationClip> animationClips, string clipName)
+        {
+            Debug.Log("Get");
+            return (from animationClip in animationClips
+                    where animationClip.name == clipName
+                    select animationClip.length).FirstOrDefault();
+        }
     }
 
     
@@ -207,6 +215,7 @@ namespace My
         [SerializeField] private float interval;
         [SerializeField] private float time;
         [field: SerializeField] public bool timeOverride;
+        private UnityEvent action;
 
         /// <summary>
         /// 引数には最初から使用できるかどうかを記述する
@@ -235,6 +244,7 @@ namespace My
             }
             else
             {
+                action.Invoke();
                 active = false;
             }
         }
@@ -464,6 +474,10 @@ namespace My
             }
         }
     }
+
+
+
+
 #if UNITY_EDITOR
     /// <summary>
     /// serializedObjectUpdateに関数を追加する
