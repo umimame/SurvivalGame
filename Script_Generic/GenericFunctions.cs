@@ -149,16 +149,116 @@ namespace My
             }
             return "0";
         }
-        public static float GetAnimationClipLength(IEnumerable<AnimationClip> animationClips, string clipName)
+        
+        /// <summary>
+        /// Animationの長さを返す
+        /// </summary>
+        /// <param name="animator"></param>
+        /// <param name="clipName"></param>
+        /// <returns></returns>
+        public static float GetAnimationClipLength(Animator animator, string clipName)
         {
-            Debug.Log("Get");
-            return (from animationClip in animationClips
-                    where animationClip.name == clipName
-                    select animationClip.length).FirstOrDefault();
+            return Get(animator.runtimeAnimatorController.animationClips, clipName);
+
+            float Get(IEnumerable<AnimationClip> animationClips, string clipName)
+            {
+                return (from animationClip in animationClips
+                        where animationClip.name == clipName
+                        select animationClip.length).FirstOrDefault();
+            }
         }
     }
 
-    
+    /// <summary>
+    /// 指定した型を検索し、Listにして返す関数
+    /// </summary>
+    public class TypeFinder : MonoBehaviour
+    {
+        [field: SerializeField] public FieldInfo[] fields { get; private set; }
+        public List<T> GetAndInList<T>(Type type)
+        {
+            fields = type.GetFields(BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            List<T> variables = new List<T>();
+            foreach (FieldInfo field in fields)
+            {
+                if (field.FieldType == typeof(T))
+                {
+                    T variable = (T)field.GetValue(GetComponent(type));
+                    variables.Add(variable);
+
+                }
+            }
+
+            return variables;
+        }
+    }
+
+
+    public enum ExistState
+    {
+        None,
+        Start,
+        Update,
+        Ending,
+    }
+
+    [Serializable] public class Exist
+    {
+        [field: SerializeField, NonEditable] public ExistState state { get; private set; } = ExistState.None;
+        [field: SerializeField] public Action none { get; set; }
+        [field: SerializeField] public Action start { get; set; }
+        [field: SerializeField] public Action update { get; set; }
+        [field: SerializeField] public Action toEnd { get; set; }
+        [field: SerializeField] public Action ending { get; set; }
+
+        [SerializeField] private bool end;
+
+        public void Initialize()
+        {
+            state = ExistState.None;
+            end = false;
+        }
+
+        public void Enable()
+        {
+            switch (state)
+            {
+                case ExistState.None:
+                    none?.Invoke();
+                    break;
+
+                case ExistState.Start:
+                    start?.Invoke();
+                    state = ExistState.Update;
+                    break;
+                case ExistState.Update:
+                    update?.Invoke();
+
+                    if(end == true) 
+                    { 
+                        toEnd?.Invoke();
+                        state = ExistState.Ending;
+                    }
+
+                    break;
+                case ExistState.Ending:
+
+                    break;
+            }
+        }
+
+        public void Start()
+        {
+            state = ExistState.Start;
+        }
+
+        public void Finish()
+        {
+            end = true;
+        }
+    }
+
+
     /// <summary>
     /// 移動範囲を円形に制限
     /// </summary>
@@ -205,6 +305,30 @@ namespace My
         }
     }
 
+    [Serializable] public class EasingAnimator
+    {
+        [SerializeField, NonEditable] private float nowRatio; 
+        [SerializeField, NonEditable] private float maxTime;
+        [SerializeField] AnimationCurve curve;
+        public Animator animator { get; set; }
+        public void Initialize(float maxTime,Animator animator = null)
+        {
+            if (animator != null) { this.animator = animator; }
+            this.maxTime = maxTime;
+            nowRatio = 0.0f;
+        }
+
+        public void Reset()
+        {
+            nowRatio = 0.0f;
+        }
+        public void Update()
+        {
+            animator.speed *= curve.Evaluate(nowRatio);
+            nowRatio += 1 / maxTime * Time.deltaTime;
+        }
+    }
+
     /// <summary>
     /// 間隔制御クラス
     /// </summary>
@@ -215,15 +339,17 @@ namespace My
         [SerializeField] private float interval;
         [SerializeField] private float time;
         [field: SerializeField] public bool timeOverride;
-        private UnityEvent action;
+        private bool autoReset;
+        public Action action { get; set; }
 
         /// <summary>
         /// 引数には最初から使用できるかどうかを記述する
         /// </summary>
         /// <param name="start"></param>
-        public void Initialize(bool start, float interval = 0.0f)
+        public void Initialize(bool start, bool autoReset = true, float interval = 0.0f)
         {
             if(interval != 0.0f) { this.interval = interval; }
+            this.autoReset = autoReset;
             if (start == true)
             {
                 time = interval;
@@ -240,27 +366,16 @@ namespace My
             time += Time.deltaTime;
             if (time >= interval)
             {
+                action?.Invoke();
+                if(autoReset == true) { Reset(); }
                 active = true;
             }
             else
             {
-                action.Invoke();
                 active = false;
             }
         }
 
-        /// <summary>
-        /// 引数は「引数無しのメソッド」
-        /// </summary>
-        /// <param name="action"></param>
-        public void Launch(Action action)
-        {
-            if (active == true)
-            {
-
-                action();
-            }
-        }
 
         public void Reset()
         {
@@ -420,30 +535,6 @@ namespace My
         }
 
     }
-    /// <summary>
-    /// 指定した型を検索し、Listにして返す関数
-    /// </summary>
-    public class TypeFinder : MonoBehaviour
-    {
-        [field: SerializeField] public FieldInfo[] fields { get; private set; }
-        public List<T> GetAndInList<T>(Type type)
-        {
-            fields = type.GetFields(BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            List<T> variables = new List<T>();
-            foreach (FieldInfo field in fields)
-            {
-                if (field.FieldType == typeof(T))
-                {
-                    T variable = (T)field.GetValue(GetComponent(type));
-                    variables.Add(variable);
-
-                }
-            }
-
-            return variables;
-        }
-    }
-
     /// <summary>
     /// 図形のlocalScale.xまたはyを参照値に合わせて拡縮させる
     /// </summary>

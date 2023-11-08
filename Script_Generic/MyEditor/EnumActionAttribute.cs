@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Mark a method with an integer argument with this to display the argument as an enum popup in the UnityEvent
+/// Mark a method with an integer argument with this to display the argument as an enum popup in the Action
 /// drawer. Use: [EnumAction(typeof(SomeEnumType))]
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class Chara_Player : Chara
@@ -17,6 +18,7 @@ public class Chara_Player : Chara
         Attack,
         Damage,
         Death,
+        None,
     }
 
     [SerializeField] private Parameter dashSpeed;
@@ -25,13 +27,15 @@ public class Chara_Player : Chara
     [SerializeField] private SmoothRotate smooth;
 
     [SerializeField] private Vector2 beforeinputVelocity;
-    [SerializeField] private bool inputting;
+    [SerializeField, NonEditable] private bool inputting;   // 移動の入力
+    [SerializeField, NonEditable] private bool run;         // 走り入力
+    [SerializeField, NonEditable] private bool rigor;       // 硬直
     private Vector3 direction;
     [SerializeField] private Animator animator;
     [SerializeField] private CharaState motionState;
-    [SerializeField] private bool run;
-    private float sum;
-    [SerializeField] private float motionTime;
+    private float velocitySum;
+    [SerializeField] private Motion attack1;
+
     void Awake()
     {
 
@@ -45,33 +49,40 @@ public class Chara_Player : Chara
         input = GetComponent<PlayerInput>();
         base.Start();
         dashSpeed.Initialize();
+
+        attack1.Initialize(animator, Anims.attack1);
+        attack1.updateAction += () => motionState = CharaState.Attack;
+        attack1.updateAction += () => rigor = true;
+        attack1.endAction += () => motionState = CharaState.Idle;  // stateを変えるラムダ式
+        attack1.endAction += () => rigor = false;
     }
 
     protected override void Update()
     {
-        Prerequisite();
+        Reset();
         base.Update();
-        Debug.Log(motionState);
+
+        attack1.Update();
         switch (motionState)
         {
             case CharaState.Idle:
-                animator.SetInteger("AnimIdx", (int)motionState);
+                animator.SetInteger(Anims.AnimIdx, (int)motionState);
 
                 break;
 
             case CharaState.Walk:
-                animator.SetInteger("AnimIdx", (int)motionState);
+                animator.SetInteger(Anims.AnimIdx, (int)motionState);
                 assignSpeed = speed.entity;
 
                 break;
             case CharaState.Run:
-                animator.SetInteger("AnimIdx", (int)motionState);
+                animator.SetInteger(Anims.AnimIdx, (int)motionState);
                 assignSpeed = dashSpeed.entity;
 
                 break;
 
             case CharaState.Attack:
-                animator.SetInteger("AnimIdx", (int)motionState);
+                animator.SetInteger(Anims.AnimIdx, (int)motionState);
 
                 break;
         }
@@ -88,12 +99,14 @@ public class Chara_Player : Chara
             norCircle.moveObject.transform.position = newPos;
             direction = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
 
-            animator.speed = sum;
+            animator.speed = velocitySum;
             beforeinputVelocity = inputSurfaceVelocityPlan;
         }
         smooth.Update(direction);
 
         norCircle.Limit();
+
+        RigorReset();
     }
 
 
@@ -101,23 +114,42 @@ public class Chara_Player : Chara
     /// 前提処理<br/>
     /// Updateの最初に行われる
     /// </summary>
-    public void Prerequisite()
+    public void Reset()
     {
         dashSpeed.Update();
         animator.speed = 1;
         if (hp.entity <= 0) { alive = false; }
         inputting = (inputSurfaceVelocityPlan != Vector2.zero) ? true : false;
+        rigor = false;
 
         if(alive == true)
         {
-            if (inputting == false) { 
-                ChangeState(CharaState.Idle);
-            }
-            else
+            if (rigor == false)
             {
-                if (run == false) { ChangeState(CharaState.Walk); }
-                else { ChangeState(CharaState.Run); }
+
+
+                if (inputting == false)
+                {
+                    ChangeState(CharaState.Idle);
+                }
+                else
+                {
+                    if (run == false) { ChangeState(CharaState.Walk); }
+                    else { ChangeState(CharaState.Run); }
+                }
             }
+        }
+    }
+
+    /// <summary>
+    /// 硬直状態(rigor == true)の時に行われる
+    /// </summary>
+    public void RigorReset()
+    {
+
+        if (rigor == true)
+        {
+            inputSurfaceVelocityPlan = Vector2.zero;
         }
     }
 
@@ -128,32 +160,34 @@ public class Chara_Player : Chara
 
     public void OnMove(InputValue value)
     {
-        if (alive == true) 
-        {
-            inputSurfaceVelocityPlan = value.Get<Vector2>();
+        if( rigor == true) { return; }
+        if(alive == false) { return; }
 
-            sum = Mathf.Abs(value.Get<Vector2>().x) + Mathf.Abs(value.Get<Vector2>().y);
+        inputSurfaceVelocityPlan = value.Get<Vector2>();
+        velocitySum = Mathf.Abs(value.Get<Vector2>().x) + Mathf.Abs(value.Get<Vector2>().y);
 
-        }
+        return;
+        
     }
 
     public void OnRunning(InputValue value)
     {
-        if (alive == true)
-        {
-            run = Convert.ToBoolean(value.Get<float>());
+        if (rigor == true) { return; }
+        if (alive == false) { return; }
+
+        run = Convert.ToBoolean(value.Get<float>());
             
-        }
+        
     }
 
     public void OnAttack1(InputValue value)
     {
-        if(alive == true)
-        {
-            ChangeState(CharaState.Attack);
-            motionTime = AddFunction.GetAnimationClipLength(animator.runtimeAnimatorController.animationClips, "attack1");
-            Debug.Log("Attack");
-        }
+        if (rigor == true) { return; }
+        if (alive == false) { return; }
+
+        ChangeState(CharaState.Attack);
+        attack1.Start();
+        Debug.Log("Attack");
     }
 }
 
@@ -161,12 +195,54 @@ public class Chara_Player : Chara
 [Serializable] public class Motion
 {
     [SerializeField] private float motionTime;
-    [SerializeField] private float nowTime;
-}
+    [SerializeField] private float adjustMotionTime;
+    [field: SerializeField] public Interval interval { get; set; }
 
-public enum MotionState
-{
-    Start,
-    Active,
-    End,
+    [SerializeField] private Exist exist;
+    [SerializeField] private EasingAnimator easAnim;
+    public void Initialize(Animator animator, string clipName)
+    {
+        motionTime = AddFunction.GetAnimationClipLength(animator, clipName);
+        motionTime += adjustMotionTime;
+
+        easAnim.Initialize(motionTime, animator);
+        interval.Initialize(false, true, motionTime);
+
+        exist.start += easAnim.Reset;
+
+        exist.update += interval.Update;
+        exist.update += easAnim.Update;
+        interval.action += exist.Finish;
+    }
+
+    public void Update()
+    {
+        exist.Enable();
+    }
+
+    public void Start()
+    {
+        exist.Initialize();
+        exist.Start();
+    }
+
+    public bool active
+    {
+        get
+        {
+            return !interval.active;
+        }
+    }
+
+    public Action updateAction
+    {
+        get { return exist.update; }
+        set { exist.update = value; }
+    }
+    public Action endAction
+    {
+        get { return interval.action; }
+        set { interval.action = value; }
+    }
+
 }

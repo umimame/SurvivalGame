@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4064012993855557386}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player01
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -160,7 +160,7 @@ GameObject:
   - component: {fileID: 4064012994823538042}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Player01
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -217,9 +217,57 @@ MonoBehaviour:
     targetObj: {fileID: 0}
   beforeinputVelocity: {x: 0, y: 0}
   inputting: 0
+  run: 0
+  rigor: 0
   animator: {fileID: 6264450182563128498}
   motionState: 0
-  run: 0
+  attack1:
+    motionTime: 0
+    adjustMotionTime: 0
+    <interval>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      time: 0
+      timeOverride: 0
+    exist:
+      <state>k__BackingField: 0
+      end: 0
+    easAnim:
+      nowRatio: 0
+      maxTime: 0
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.5108212
+          value: 0.17310199
+          inSlope: -3.7513185
+          outSlope: 5.6413093
+          tangentMode: 1
+          weightedMode: 0
+          inWeight: 0.047247145
+          outWeight: 0.035335317
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
 --- !u!114 &4064012994823538040
 MonoBehaviour:
   m_ObjectHideFlags: 0

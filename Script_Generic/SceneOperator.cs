@@ -87,3 +87,9 @@ public static class Tags
     public static string Player01 = nameof(Player01);
     public static string Player02 = nameof(Player02);
 }
+
+public static class Anims
+{
+    public static string AnimIdx = nameof(AnimIdx);
+    public static string attack1 = nameof(attack1);
+}

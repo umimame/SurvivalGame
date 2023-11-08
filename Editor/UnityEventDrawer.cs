@@ -11,9 +11,9 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
-[CustomPropertyDrawer(typeof(UnityEvent), true)]
-[CustomPropertyDrawer(typeof(UnityEvent<bool>), true)]
-public class UnityEventDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(Action), true)]
+[CustomPropertyDrawer(typeof(Action<bool>), true)]
+public class ActionDrawer : PropertyDrawer
 {
     private Dictionary<string, State> m_States = new Dictionary<string, State>();
     // Find internal methods with reflection
@@ -393,7 +393,7 @@ public class UnityEventDrawer : PropertyDrawer
     {
         var type = Type.GetType(prop.FindPropertyRelative("m_TypeName").stringValue, false);
         if (type == null)
-            return new UnityEvent();
+            return new Action();
         return Activator.CreateInstance(type) as UnityEventBase;
     }
 #endif
@@ -466,7 +466,7 @@ public class UnityEventDrawer : PropertyDrawer
             target1 = (target as Component).gameObject;
         var propertyRelative = listener.FindPropertyRelative("m_MethodName");
         var menu = new GenericMenu();
-        menu.AddItem(new GUIContent("No Function"), string.IsNullOrEmpty(propertyRelative.stringValue), new GenericMenu.MenuFunction2(ClearEventFunction), new UnityEventFunction(listener, null, null, PersistentListenerMode.EventDefined));
+        menu.AddItem(new GUIContent("No Function"), string.IsNullOrEmpty(propertyRelative.stringValue), new GenericMenu.MenuFunction2(ClearEventFunction), new ActionFunction(listener, null, null, PersistentListenerMode.EventDefined));
         if (target1 == null)
             return menu;
         menu.AddSeparator(string.Empty);
@@ -552,7 +552,7 @@ public class UnityEventDrawer : PropertyDrawer
         if (on && mode1 == PersistentListenerMode.Object && method.methodInfo.GetParameters().Length == 1)
             on &= method.methodInfo.GetParameters()[0].ParameterType.AssemblyQualifiedName == propertyRelative.stringValue;
         var formattedMethodName = GetFormattedMethodName(targetName, method.methodInfo.Name, stringBuilder.ToString(), mode1 == PersistentListenerMode.EventDefined);
-        menu.AddItem(new GUIContent(formattedMethodName), on, new GenericMenu.MenuFunction2(SetEventFunction), new UnityEventFunction(listener, method.target, method.methodInfo, mode1));
+        menu.AddItem(new GUIContent(formattedMethodName), on, new GenericMenu.MenuFunction2(SetEventFunction), new ActionFunction(listener, method.target, method.methodInfo, mode1));
     }
 
     private static string GetTypeName(Type t)
@@ -583,12 +583,12 @@ public class UnityEventDrawer : PropertyDrawer
 
     private static void SetEventFunction(object source)
     {
-        ((UnityEventFunction)source).Assign();
+        ((ActionFunction)source).Assign();
     }
 
     private static void ClearEventFunction(object source)
     {
-        ((UnityEventFunction)source).Clear();
+        ((ActionFunction)source).Clear();
     }
 
     protected class State
@@ -611,14 +611,14 @@ public class UnityEventDrawer : PropertyDrawer
         public PersistentListenerMode mode;
     }
 
-    private struct UnityEventFunction
+    private struct ActionFunction
     {
         private readonly SerializedProperty m_Listener;
         private readonly UnityEngine.Object m_Target;
         private readonly MethodInfo m_Method;
         private readonly PersistentListenerMode m_Mode;
 
-        public UnityEventFunction(SerializedProperty listener, UnityEngine.Object target, MethodInfo method, PersistentListenerMode mode)
+        public ActionFunction(SerializedProperty listener, UnityEngine.Object target, MethodInfo method, PersistentListenerMode mode)
         {
             m_Listener = listener;
             m_Target = target;
