@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+public class orange : Item
 {
-    [SerializeField] protected int score;
-    public int Score { get { return score; } }
     // Start is called before the first frame update
-   
-    public virtual void HitThePlayer(GameObject other)
+    public orange()
     {
-        if(other.CompareTag ("Player"))
+        score = 1;
+    }
+    // Update is called once per frame
+    public override void HitThePlayer(GameObject other)
+    {
+        if (other.CompareTag("Player"))
         {
             //Chara player = other.GetComponent<Chara>();
-            //if(player != null)
+            //if (player != null)
             //{
                 //player.AddScore(score);
+                //player.ApplyPowerup("orange");
+                Debug.Log(score);
             //}
             Destroy(gameObject);
         }
