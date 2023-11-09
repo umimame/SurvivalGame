@@ -5,7 +5,6 @@ public class player : MonoBehaviour
     //ˆÚ“®‘¬“x
     [SerializeField]private float _speed = 3.0f;
     [SerializeField]private float getpoint = 0;
-    [SerializeField] private GameObject Item;
     //xŽ²•ûŒü‚Ì“ü—Í‚ð•Û‘¶
     private float _input_x;
     //zŽ²•ûŒü‚Ì“ü—Í‚ð•Û‘¶
