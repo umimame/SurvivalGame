@@ -92,4 +92,7 @@ public static class Anims
 {
     public static string AnimIdx = nameof(AnimIdx);
     public static string attack1 = nameof(attack1);
+    public static string attack2 = nameof(attack2);
+    public static string damege = nameof(damege);
+    public static string die = nameof(die);
 }

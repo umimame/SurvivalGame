@@ -196,50 +196,46 @@ namespace My
 
     public enum ExistState
     {
-        None,
+        Disable,
         Start,
-        Update,
+        Enable,
         Ending,
     }
 
     [Serializable] public class Exist
     {
-        [field: SerializeField, NonEditable] public ExistState state { get; private set; } = ExistState.None;
-        [field: SerializeField] public Action none { get; set; }
+        [field: SerializeField, NonEditable] public ExistState state { get; private set; } = ExistState.Disable;
+        [field: SerializeField] public Action initialize { get; set; }  
+        [field: SerializeField] public Action disable { get; set; }
         [field: SerializeField] public Action start { get; set; }
-        [field: SerializeField] public Action update { get; set; }
+        [field: SerializeField] public Action enable { get; set; }
         [field: SerializeField] public Action toEnd { get; set; }
         [field: SerializeField] public Action ending { get; set; }
 
-        [SerializeField] private bool end;
+        [field: SerializeField] public bool started { get; private set; }
 
-        public void Initialize()
+        public void Initialize(bool started = false)
         {
-            state = ExistState.None;
-            end = false;
+            initialize?.Invoke();
+            this.started = started;
+            state = ExistState.Disable;
         }
 
-        public void Enable()
+        public void Update()
         {
             switch (state)
             {
-                case ExistState.None:
-                    none?.Invoke();
+                case ExistState.Disable:
+                    disable?.Invoke();
                     break;
 
                 case ExistState.Start:
                     start?.Invoke();
-                    state = ExistState.Update;
+                    state = ExistState.Enable;
                     break;
-                case ExistState.Update:
-                    update?.Invoke();
 
-                    if(end == true) 
-                    { 
-                        toEnd?.Invoke();
-                        state = ExistState.Ending;
-                    }
-
+                case ExistState.Enable:
+                    enable?.Invoke();
                     break;
                 case ExistState.Ending:
 
@@ -247,14 +243,32 @@ namespace My
             }
         }
 
+        public void Stop()
+        {
+            state = ExistState.Disable;
+        }
+
         public void Start()
         {
-            state = ExistState.Start;
+                state = ExistState.Start;
+        }
+
+        /// <summary>
+        /// 一度のみ
+        /// </summary>
+        public void StartOneShot()
+        {
+            if (started == false)
+            {
+                state = ExistState.Start;
+                started = true;
+            }
         }
 
         public void Finish()
         {
-            end = true;
+            toEnd?.Invoke();
+            state = ExistState.Ending;
         }
     }
 
@@ -338,9 +352,9 @@ namespace My
         [field: SerializeField] public bool active { get; private set; }
         [SerializeField] private float interval;
         [SerializeField] private float time;
-        [field: SerializeField] public bool timeOverride;
         private bool autoReset;
-        public Action action { get; set; }
+        public Action limitAction { get; set; }
+        public Action riseAction { get; set; }
 
         /// <summary>
         /// 引数には最初から使用できるかどうかを記述する
@@ -366,12 +380,13 @@ namespace My
             time += Time.deltaTime;
             if (time >= interval)
             {
-                action?.Invoke();
+                limitAction?.Invoke();
                 if(autoReset == true) { Reset(); }
                 active = true;
             }
             else
             {
+                riseAction?.Invoke();
                 active = false;
             }
         }
@@ -403,6 +418,17 @@ namespace My
 
         }
 
+    }
+
+    [Serializable] public class EntityAndPlan<T>
+    {
+        [field: SerializeField, NonEditable] public T entity { get; set; }
+        [field: SerializeField, NonEditable] public T plan { get; set; }
+
+        public void Assign()
+        {
+            plan = entity;
+        }
     }
 
     /// <summary>
