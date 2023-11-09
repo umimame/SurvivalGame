@@ -1,3 +1,4 @@
+using My;
 using System;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class Chara : MonoBehaviour
     [field: SerializeField] public Parameter pow;
     protected Engine engine;
     [field: SerializeField, NonEditable] public bool alive { get; protected set; }  //  ê∂ë∂
-    [SerializeField] protected Vector2 inputSurfaceVelocityPlan;
+    [SerializeField] protected EntityAndPlan<Vector2> inputMoveVelocity;
 
     protected virtual void Start()
     {
@@ -34,8 +35,8 @@ public class Chara : MonoBehaviour
     public void AddVelocityPlan()
     {
         Vector3 assign = Vector3.zero;
-        assign.x = inputSurfaceVelocityPlan.x * assignSpeed;
-        assign.z = inputSurfaceVelocityPlan.y * assignSpeed;
+        assign.x = inputMoveVelocity.plan.x * assignSpeed;
+        assign.z = inputMoveVelocity.plan.y * assignSpeed;
         engine.velocityPlan += assign;
     }
 }
