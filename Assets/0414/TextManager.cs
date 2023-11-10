@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 public class TextManager:MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI PushAnyKey;
     public void Start()
     {
-        StartCoroutine(BlinkText());    
+        StartCoroutine(BlinkText());
     }
-    IEnumerator BlinkText()//テキスト点滅用
+    private void Update()
+    {
+        if (Input.anyKey)
+        {
+            SceneManager.LoadScene("TestScene");
+        }
+    }
+   
+IEnumerator BlinkText()//テキスト点滅用
     {
         while (true)
         {
