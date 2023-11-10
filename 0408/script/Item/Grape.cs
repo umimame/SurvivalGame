@@ -9,7 +9,7 @@ public class Grape : Item
         score = 3;
     }
     // Update is called once per frame
-    public override void HitThePlayer(GameObject other)
+    public override void HitThePlayer(player other)
     {
         if (other.CompareTag("Player"))
         {

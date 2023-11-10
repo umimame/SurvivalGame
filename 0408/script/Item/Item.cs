@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     public int Score { get { return score; } }
     // Start is called before the first frame update
    
-    public virtual void HitThePlayer(GameObject other)
+    public virtual void HitThePlayer(player other)
     {
         if(other.CompareTag ("Player"))
         {
