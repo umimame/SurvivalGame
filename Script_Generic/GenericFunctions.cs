@@ -434,6 +434,107 @@ namespace My
         }
     }
 
+    /// <summary>
+    /// 範囲毎にActionを実行する
+    /// </summary>
+    [Serializable] public class ThresholdRatio
+    {
+        [SerializeField, NonEditable] private bool reaching;
+        [SerializeField, NonEditable] private bool beforeBool;
+
+        [SerializeField] private Vector2 thresholdRange;
+        [SerializeField, NonEditable] private float currentValue;
+        [SerializeField, NonEditable] private Vector2 beforeRange;
+        public MomentAction withinRangeAction { get; set; } = new MomentAction();
+        public Action inRangeAction { get; set; }
+        public MomentAction exitRangeAction { get; set; } = new MomentAction();
+        public Action outOfRangeAction { get; set; }
+
+        public void Initialize(float min, float max)
+        {
+            thresholdRange = new Vector2(min, max);
+            Reset();
+        }
+        public void Initialize(Vector2 range = default)
+        {
+            if (range != default) { thresholdRange = range; }
+            Reset();
+        }
+
+        public void Reset()
+        {
+            beforeBool = false;
+            beforeRange = Vector2.zero;
+            withinRangeAction.Initialize();
+            exitRangeAction.Initialize();
+        }
+
+        /// <summary>
+        /// 引数:現在の割合
+        /// </summary>
+        /// <param name="value"></param>
+        public void Update(float value)
+        {
+            currentValue = value;
+            
+            // 範囲内なら
+            if (thresholdRange.x <= currentValue && currentValue <= thresholdRange.y) { reaching = true; }
+            else { reaching = false; }
+
+
+            if(reaching == true)        // 範囲内で
+            {
+                if (beforeBool == false)    // 入った瞬間なら
+                {
+                    withinRangeAction.Enable();
+                }
+
+                inRangeAction?.Invoke();
+
+            }
+
+            if(beforeBool == true)      // 前回範囲内で
+            {
+                if (reaching == false)  // 出る瞬間なら
+                {
+                    exitRangeAction.Enable();
+                }
+            }
+
+            if(reaching == false)   // 範囲外なら
+            {
+                outOfRangeAction?.Invoke();
+            }
+
+            beforeBool = reaching;
+            beforeRange = thresholdRange;
+        }
+
+    }
+
+    /// <summary>
+    /// Update内でも一度だけ実行できる
+    /// </summary>
+    [Serializable] public class MomentAction
+    {
+        public Action action { get; set; }
+        [SerializeField, NonEditable] private bool activated;
+
+        public void Initialize()
+        {
+            activated = false;
+        }
+
+        public void Enable()
+        {
+            if(activated == false) 
+            { 
+                action?.Invoke(); 
+                activated = true;
+            }
+        }
+    }
+
     [Serializable]
     public class Shake
     {

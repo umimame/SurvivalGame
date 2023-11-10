@@ -27,7 +27,7 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool inputting;   // 移動の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
-    private Vector3 dirrection;
+    [SerializeField] private Vector3 dirrection;
     [SerializeField] private Animator animator;
     [SerializeField] private CharaState motionState;
     private float velocitySum;
@@ -55,9 +55,8 @@ public class Chara_Player : Chara
         attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
         attack1.endAction += () => StateChange(CharaState.None);  
         attack1.endAction += () => rigor = false;
-        attack1.thresholdBeyondAction += () => Debug.Log("Attack");
-
-        interruptByDamageMotions.Add(attack1);
+        attack1.inThreshold += () => Debug.Log("Attack");
+        attack1.outThreshold += () => Debug.Log("Breach");
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => inputMotionReset();
@@ -67,6 +66,7 @@ public class Chara_Player : Chara
         damage.endAction += () => StateChange(CharaState.None);
         damage.endAction += () => rigor = false;
 
+        interruptByDamageMotions.Add(attack1);
         interruptByDamageMotions.Add(damage);
 
         death.Initialize(animator, Anims.die);
@@ -199,7 +199,8 @@ public class Chara_Player : Chara
 
             beforeinputVelocity = inputMoveVelocity.entity;
         }
-        smooth.Update(dirrection);
+        if(dirrection != Vector3.zero) { smooth.Update(dirrection); }   // 条件分岐を書かないとエラーが出る
+        
         norCircle.Limit();
     }
 
@@ -270,103 +271,3 @@ public class Chara_Player : Chara
 
 }
 
-
-[Serializable] public class Motion
-{
-    [SerializeField] private float motionTime;
-    [SerializeField] private float adjustMotionTime;
-    [field: SerializeField] public Interval interval { get; set; }
-    [field: SerializeField] public Interval motionRatioThreshold { get; set; }
-    [field: SerializeField] public Exist exist { get; set; }
-    [field: SerializeField] public EasingAnimator easAnim { get; private set; }
-    [field: SerializeField] public float thresholdByRatio { get; set; }
-    public void Initialize(Animator animator, string clipName)
-    {
-        motionTime = AddFunction.GetAnimationClipLength(animator, clipName);
-        motionTime += adjustMotionTime;
-
-        motionRatioThreshold.valueIncreseType = Interval.IncreseType.Manual;
-
-        exist.start += () => easAnim.Initialize(motionTime, animator);
-        exist.start += easAnim.Reset;
-        exist.start += () => interval.Initialize(false, true, motionTime);
-        exist.start += () => motionRatioThreshold.Initialize(false, false, thresholdByRatio);
-
-        exist.enable += easAnim.Update;
-        exist.enable += () => interval.Update();
-        exist.enable += () => motionRatioThreshold.Update(easAnim.nowRatio);
-
-        interval.beyondAction += exist.Finish;
-    }
-
-    public void Reset()
-    {
-        easAnim.Reset();
-        exist.Initialize();
-        interval.Initialize(false, true, motionTime);
-        motionRatioThreshold.Initialize(false, false, thresholdByRatio);
-    }
-
-    public void Update()
-    {
-        exist.Update();
-    }
-
-    public void Start()
-    {
-        exist.Start();
-    }
-    public void StartOneShot()
-    {
-        exist.StartOneShot();
-    }
-
-    public bool active
-    {
-        get
-        {
-            return !interval.active;
-        }
-    }
-
-    public Action initializeAction
-    {
-        get { return exist.initialize; }
-        set { exist.initialize = value; }
-    }
-    public Action startAction
-    {
-        get { return exist.start; }
-        set { exist.start = value; }
-    }
-
-    public Action enableAction
-    {
-        get { return exist.enable; }
-        set { exist.enable = value; }
-    }
-    public Action endAction
-    {
-        get { return interval.beyondAction; }
-        set { interval.beyondAction = value; }
-    }
-
-    public Action thresholdBeyondAction
-    {
-        get { return motionRatioThreshold.beyondAction; }
-        set { motionRatioThreshold.beyondAction = value; }
-    }
-
-    public Action thresholdLowAction
-    {
-        get { return motionRatioThreshold.lowAction; }
-        set { motionRatioThreshold.lowAction = value; }
-    }
-
-
-    public float nowMotionRatio
-    {
-        get { return easAnim.nowRatio; }
-    }
-
-}
