@@ -27,7 +27,7 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool inputting;   // 移動の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
-    private Vector3 direction;
+    private Vector3 dirrection;
     [SerializeField] private Animator animator;
     [SerializeField] private CharaState motionState;
     private float velocitySum;
@@ -52,7 +52,7 @@ public class Chara_Player : Chara
 
         attack1.Initialize(animator, Anims.attack1);
         attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
-        attack1.endAction += () => StateChange(CharaState.Idle);  
+        attack1.endAction += () => StateChange(CharaState.None);  
         attack1.endAction += () => rigor = false;
 
         interruptByDamageMotions.Add(attack1);
@@ -62,7 +62,7 @@ public class Chara_Player : Chara
         damage.startAction += () => inputMotionReset();
         damage.startAction += () => StateChange(CharaState.Damage, true);
         damage.enableAction += () => StateChange(CharaState.Damage, true);
-        damage.endAction += () => StateChange(CharaState.Idle);
+        damage.endAction += () => StateChange(CharaState.None);
         damage.endAction += () => rigor = false;
 
         interruptByDamageMotions.Add(damage);
@@ -82,7 +82,7 @@ public class Chara_Player : Chara
         dashSpeed.Update();
         animator.speed = 1;
         if (hp.entity <= 0) { alive = false; }
-        inputting = (inputMoveVelocity.plan != Vector2.zero) ? true : false;
+        inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;
         rigor = false;
 
         if (alive == true)
@@ -95,8 +95,15 @@ public class Chara_Player : Chara
                 }
                 else
                 {
-                    if (run == false) { StateChange(CharaState.Walk); }
-                    else { StateChange(CharaState.Run); }
+                    if (run == true && velocitySum >= 1)
+                    {
+                        StateChange(CharaState.Run);
+
+                    }
+                    else 
+                    {
+                        StateChange(CharaState.Walk);
+                    }
                 }
             }
         }
@@ -116,20 +123,25 @@ public class Chara_Player : Chara
         attack1.Update();
         damage.Update();
         death.Update();
+
+        if(velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
         {
             case CharaState.Idle:
-
+                DirrectionManager();
                 break;
 
             case CharaState.Walk:
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
 
+                DirrectionManager();
                 break;
             case CharaState.Run:
+                velocitySum = 1;
                 assignSpeed = dashSpeed.entity;
 
+                DirrectionManager();
                 break;
 
             case CharaState.Attack:
@@ -146,23 +158,6 @@ public class Chara_Player : Chara
         }
         animator.SetInteger(Anims.AnimIdx, (int)motionState);
 
-        if (inputting == true)  // 入力されていれば
-        {                       // 向きを制御
-            norCircle.AdjustByCenter();
-            Vector3 addPos;
-            addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
-            addPos.y = transform.position.y;
-            addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
-            addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
-            Vector3 newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
-            norCircle.moveObject.transform.position = newPos;
-            direction = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
-
-            beforeinputVelocity = inputMoveVelocity.plan;
-        }
-        smooth.Update(direction);
-
-        norCircle.Limit();
 
         RigorReset();
     }
@@ -183,6 +178,27 @@ public class Chara_Player : Chara
         {
             inputMoveVelocity.Assign();
         }
+    }
+
+    public void DirrectionManager()
+    {
+
+        if (inputting == true)  // 入力されていれば
+        {                       // 向きを制御
+            norCircle.AdjustByCenter();
+            Vector3 addPos;
+            addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
+            addPos.y = transform.position.y;
+            addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
+            addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
+            Vector3 newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
+            norCircle.moveObject.transform.position = newPos;
+            dirrection = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
+
+            beforeinputVelocity = inputMoveVelocity.entity;
+        }
+        smooth.Update(dirrection);
+        norCircle.Limit();
     }
 
     public void inputMotionReset()
@@ -231,7 +247,7 @@ public class Chara_Player : Chara
 
     public void OnAttack1(InputValue value)
     {
-
+        if(rigor == true) { return; }
         attack1.Start();
     }
 
