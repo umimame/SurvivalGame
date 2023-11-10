@@ -321,9 +321,9 @@ namespace My
 
     [Serializable] public class EasingAnimator
     {
-        [SerializeField, NonEditable] private float nowRatio; 
-        [SerializeField, NonEditable] private float maxTime;
-        [SerializeField] AnimationCurve curve;
+        [field: SerializeField, NonEditable] public float nowRatio { get; private set; } 
+        [field: SerializeField, NonEditable] public float maxTime { get; private set; }
+        [SerializeField] private AnimationCurve curve;
         public Animator animator { get; set; }
         public void Initialize(float maxTime,Animator animator = null)
         {
@@ -349,15 +349,27 @@ namespace My
     [Serializable]
     public class Interval
     {
+        public enum IncreseType
+        {
+            DeltaTime,
+            Frame,
+            Manual,
+        }
         [field: SerializeField] public bool active { get; private set; }
         [SerializeField] private float interval;
-        [SerializeField] private float time;
+        [field: SerializeField, NonEditable] public float value;
+        [field: SerializeField] public IncreseType valueIncreseType { get; set; }
         private bool autoReset;
-        public Action limitAction { get; set; }
-        public Action riseAction { get; set; }
+        private bool reached;
+        public Action reachAction { get; set; }
+        public Action beyondAction { get; set; }
+        public Action lowAction { get; set; }
 
         /// <summary>
-        /// 引数には最初から使用できるかどうかを記述する
+        /// 引数:<br/>
+        /// ・最初からactiveにする(interval値とvalueを同じにする)か<br/>
+        /// ・valueがinterval値に到達したら0に戻るか<br/>
+        /// ・最初のinterval値
         /// </summary>
         /// <param name="start"></param>
         public void Initialize(bool start, bool autoReset = true, float interval = 0.0f)
@@ -366,27 +378,50 @@ namespace My
             this.autoReset = autoReset;
             if (start == true)
             {
-                time = interval;
+                value = interval;
             }
             else
             {
-                time = 0.0f;
+                value = 0.0f;
             }
-            active = (time >= interval) ? true : false;
+
+            active = (value >= interval) ? true : false;
+            reached = false;
         }
 
-        public void Update()
+        public void Update(float manualValue = 0.0f)
         {
-            time += Time.deltaTime;
-            if (time >= interval)
+            switch (valueIncreseType)
             {
-                limitAction?.Invoke();
+                case IncreseType.DeltaTime:
+                value += Time.deltaTime;
+
+                    break;
+
+                case IncreseType.Frame:
+                    value++;
+
+                    break;
+
+                case IncreseType.Manual:
+                    value = manualValue;
+                    break;
+            }
+            if (value >= interval)
+            {
+                if(reached == false)
+                {
+                    reachAction?.Invoke();
+                    reached = true;
+                }
+
+                beyondAction?.Invoke();
                 if(autoReset == true) { Reset(); }
                 active = true;
             }
             else
             {
-                riseAction?.Invoke();
+                lowAction?.Invoke();
                 active = false;
             }
         }
@@ -394,7 +429,8 @@ namespace My
 
         public void Reset()
         {
-            time = 0.0f;
+            reached = false;
+            value = 0.0f;
         }
     }
 

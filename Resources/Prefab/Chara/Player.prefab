@@ -423,7 +423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp:
     <entity>k__BackingField: 0
-    <max>k__BackingField: 100
+    <max>k__BackingField: 1000
   speed:
     <entity>k__BackingField: 0
     <max>k__BackingField: 5
@@ -452,90 +452,50 @@ MonoBehaviour:
   animator: {fileID: 6264450182563128498}
   motionState: 0
   attack1:
-    motionTime: 0
-    adjustMotionTime: 0.2
+    motionTime: -0.3
+    adjustMotionTime: 0
     <interval>k__BackingField:
       <active>k__BackingField: 0
       interval: 0
-      time: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 0
+    <motionRatioThreshold>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 2
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <started>k__BackingField: 0
-    easAnim:
-      nowRatio: 0
-      maxTime: 0
+    <easAnim>k__BackingField:
+      <nowRatio>k__BackingField: 0
+      <maxTime>k__BackingField: 0
       curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 0.5108212
-          value: 0.17310199
-          inSlope: -3.7513185
-          outSlope: 5.6413093
-          tangentMode: 1
-          weightedMode: 0
-          inWeight: 0.047247145
-          outWeight: 0.035335317
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-  damage:
-    motionTime: 0
-    adjustMotionTime: -0.5
-    <interval>k__BackingField:
-      <active>k__BackingField: 0
-      interval: 0
-      time: 0
-    <exist>k__BackingField:
-      <state>k__BackingField: 0
-      <started>k__BackingField: 0
-    easAnim:
-      nowRatio: 0
-      maxTime: 0
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 2
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
+          value: 1.5
+          inSlope: -1.2311558
+          outSlope: -1.2311558
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.3880043
-          value: 1.0039978
-          inSlope: -7.72534
+          time: 0.40612245
+          value: 1
+          inSlope: 0
           outSlope: 0
-          tangentMode: 1
+          tangentMode: 0
           weightedMode: 0
-          inWeight: 0.025393525
+          inWeight: 0.33333334
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: -0.006532403
-          outSlope: -0.006532403
+          inSlope: 0
+          outSlope: 0
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -543,19 +503,79 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+    <thresholdByRatio>k__BackingField: 0.4
+  damage:
+    motionTime: 0
+    adjustMotionTime: -0.5
+    <interval>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 0
+    <motionRatioThreshold>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 0
+    <exist>k__BackingField:
+      <state>k__BackingField: 0
+      <started>k__BackingField: 0
+    <easAnim>k__BackingField:
+      <nowRatio>k__BackingField: 0
+      <maxTime>k__BackingField: 0
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 2
+          inSlope: -1.4770216
+          outSlope: -1.4770216
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.39954787
+          value: 1.4098592
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: -0.6825843
+          outSlope: -0.6825843
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    <thresholdByRatio>k__BackingField: 0
   death:
     motionTime: 0
     adjustMotionTime: 1
     <interval>k__BackingField:
       <active>k__BackingField: 0
       interval: 0
-      time: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 0
+    <motionRatioThreshold>k__BackingField:
+      <active>k__BackingField: 0
+      interval: 0
+      value: 0
+      <valueIncreseType>k__BackingField: 0
     <exist>k__BackingField:
       <state>k__BackingField: 0
       <started>k__BackingField: 0
-    easAnim:
-      nowRatio: 0
-      maxTime: 0
+    <easAnim>k__BackingField:
+      <nowRatio>k__BackingField: 0
+      <maxTime>k__BackingField: 0
       curve:
         serializedVersion: 2
         m_Curve:
@@ -564,31 +584,23 @@ MonoBehaviour:
           value: 1
           inSlope: 0
           outSlope: 0
-          tangentMode: 0
+          tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 0.64752895
-          value: 0.6328585
-          inSlope: -1.181095
-          outSlope: -3.9567623
-          tangentMode: 1
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.08002953
+          outWeight: 0
         - serializedVersion: 3
           time: 1
-          value: 0.1
-          inSlope: -0.06987523
-          outSlope: -0.06987523
-          tangentMode: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
           weightedMode: 0
-          inWeight: 0.23407601
+          inWeight: 0
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+    <thresholdByRatio>k__BackingField: 0
 --- !u!114 &4064012994823538040
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -50,17 +50,19 @@ public class Chara_Player : Chara
         base.Start();
         dashSpeed.Initialize();
 
+        //  Motionの設定
         attack1.Initialize(animator, Anims.attack1);
         attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
         attack1.endAction += () => StateChange(CharaState.None);  
         attack1.endAction += () => rigor = false;
+        attack1.thresholdBeyondAction += () => Debug.Log("Attack");
 
         interruptByDamageMotions.Add(attack1);
 
         damage.Initialize(animator, Anims.damege);
-        damage.startAction += () => Damage(50);
         damage.startAction += () => inputMotionReset();
         damage.startAction += () => StateChange(CharaState.Damage, true);
+        damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
         damage.enableAction += () => StateChange(CharaState.Damage, true);
         damage.endAction += () => StateChange(CharaState.None);
         damage.endAction += () => rigor = false;
@@ -205,7 +207,7 @@ public class Chara_Player : Chara
     {
         foreach(Motion m in interruptByDamageMotions)
         {
-            m.exist.Initialize();
+            m.Reset();
         }
     }
 
@@ -224,10 +226,16 @@ public class Chara_Player : Chara
         }
     }
 
-    public void Damage(float damage)
+    /// <summary>
+    /// 引数はダメージ量と被弾モーションを行うかどうか
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="damageMotion"></param>
+    public void Damage(float damage, bool damageMotion = true)
     {
         if (alive == false) { return; }
         hp.entity -= damage;
+        this.damage.Start();
     }
 
     #region PlayerInputに自動で登録されるEvent
@@ -254,8 +262,7 @@ public class Chara_Player : Chara
 
     public void OnDamage(InputValue value)
     {
-        if(alive == false) { return; }
-        damage.Start();
+        Damage(50, true);
 
     }
     #endregion
@@ -269,22 +276,35 @@ public class Chara_Player : Chara
     [SerializeField] private float motionTime;
     [SerializeField] private float adjustMotionTime;
     [field: SerializeField] public Interval interval { get; set; }
-
+    [field: SerializeField] public Interval motionRatioThreshold { get; set; }
     [field: SerializeField] public Exist exist { get; set; }
-    [SerializeField] private EasingAnimator easAnim;
+    [field: SerializeField] public EasingAnimator easAnim { get; private set; }
+    [field: SerializeField] public float thresholdByRatio { get; set; }
     public void Initialize(Animator animator, string clipName)
     {
         motionTime = AddFunction.GetAnimationClipLength(animator, clipName);
         motionTime += adjustMotionTime;
 
-        easAnim.Initialize(motionTime, animator);
-        interval.Initialize(false, true, motionTime);
+        motionRatioThreshold.valueIncreseType = Interval.IncreseType.Manual;
 
+        exist.start += () => easAnim.Initialize(motionTime, animator);
         exist.start += easAnim.Reset;
+        exist.start += () => interval.Initialize(false, true, motionTime);
+        exist.start += () => motionRatioThreshold.Initialize(false, false, thresholdByRatio);
 
-        exist.enable += interval.Update;
         exist.enable += easAnim.Update;
-        interval.limitAction += exist.Finish;
+        exist.enable += () => interval.Update();
+        exist.enable += () => motionRatioThreshold.Update(easAnim.nowRatio);
+
+        interval.beyondAction += exist.Finish;
+    }
+
+    public void Reset()
+    {
+        easAnim.Reset();
+        exist.Initialize();
+        interval.Initialize(false, true, motionTime);
+        motionRatioThreshold.Initialize(false, false, thresholdByRatio);
     }
 
     public void Update()
@@ -327,8 +347,26 @@ public class Chara_Player : Chara
     }
     public Action endAction
     {
-        get { return interval.limitAction; }
-        set { interval.limitAction = value; }
+        get { return interval.beyondAction; }
+        set { interval.beyondAction = value; }
+    }
+
+    public Action thresholdBeyondAction
+    {
+        get { return motionRatioThreshold.beyondAction; }
+        set { motionRatioThreshold.beyondAction = value; }
+    }
+
+    public Action thresholdLowAction
+    {
+        get { return motionRatioThreshold.lowAction; }
+        set { motionRatioThreshold.lowAction = value; }
+    }
+
+
+    public float nowMotionRatio
+    {
+        get { return easAnim.nowRatio; }
     }
 
 }
