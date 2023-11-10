@@ -7,15 +7,16 @@ public class Item : MonoBehaviour
     [SerializeField] protected int score;
     public int Score { get { return score; } }
     // Start is called before the first frame update
-   
-    public virtual void HitThePlayer(player other)
+
+    public virtual void HitThePlayer(GameObject other)
     {
         if(other.CompareTag ("Player"))
         {
             //Chara player = other.GetComponent<Chara>();
             //if(player != null)
             //{
-                //player.AddScore(score);
+            //player.AddScore(score);
+            Debug.Log(score);
             //}
             Destroy(gameObject);
         }

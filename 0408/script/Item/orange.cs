@@ -10,7 +10,8 @@ public class orange : Item
         score = 1;
     }
     // Update is called once per frame
-    public override void HitThePlayer(player other)
+
+    public override void HitThePlayer(GameObject other)
     {
         if (other.CompareTag("Player"))
         {
