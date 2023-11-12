@@ -221,6 +221,12 @@ namespace My
             state = ExistState.Disable;
         }
 
+        public void Reset()
+        {
+            started = false;
+            state = ExistState.Disable;
+        }
+
         public void Update()
         {
             switch (state)
@@ -230,8 +236,8 @@ namespace My
                     break;
 
                 case ExistState.Start:
-                    start?.Invoke();
                     state = ExistState.Enable;
+                    start?.Invoke();
                     break;
 
                 case ExistState.Enable:
@@ -267,8 +273,8 @@ namespace My
 
         public void Finish()
         {
-            toEnd?.Invoke();
             state = ExistState.Ending;
+            toEnd?.Invoke();
         }
     }
 
@@ -356,13 +362,13 @@ namespace My
             Manual,
         }
         [field: SerializeField] public bool active { get; private set; }
-        [SerializeField] private float interval;
+        [field: SerializeField] public float interval { get; private set; }
         [field: SerializeField, NonEditable] public float value;
         [field: SerializeField] public IncreseType valueIncreseType { get; set; }
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
-        public Action beyondAction { get; set; }
+        public Action activeAction { get; set; }
         public Action lowAction { get; set; }
 
         /// <summary>
@@ -378,7 +384,7 @@ namespace My
             this.autoReset = autoReset;
             if (start == true)
             {
-                value = interval;
+                value = this.interval;
             }
             else
             {
@@ -411,18 +417,18 @@ namespace My
             {
                 if(reached == false)
                 {
-                    reachAction?.Invoke();
                     reached = true;
+                    reachAction?.Invoke();
                 }
 
-                beyondAction?.Invoke();
-                if(autoReset == true) { Reset(); }
                 active = true;
+                activeAction?.Invoke();
+                if(autoReset == true) { Reset(); }
             }
             else
             {
-                lowAction?.Invoke();
                 active = false;
+                lowAction?.Invoke();
             }
         }
 

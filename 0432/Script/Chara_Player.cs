@@ -31,10 +31,16 @@ public class Chara_Player : Chara
     [SerializeField] private Animator animator;
     [SerializeField] private CharaState motionState;
     private float velocitySum;
+
+    [SerializeField] private MotionCollider fang;
+
     [SerializeField] private Motion attack1;
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
     [SerializeField] private Motion damage;
     [SerializeField] private Motion death;
+
+    [SerializeField] private Collider mouthCollider;
+    [SerializeField] private Collider bodyCollider;
 
     void Awake()
     {
@@ -49,14 +55,18 @@ public class Chara_Player : Chara
         input = GetComponent<PlayerInput>();
         base.Start();
         dashSpeed.Initialize();
+        underAttackAction += Damage;
 
         //  Motionの設定
         attack1.Initialize(animator, Anims.attack1);
         attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
         attack1.endAction += () => StateChange(CharaState.None);  
         attack1.endAction += () => rigor = false;
+        attack1.endAction += fang.Reset;
         attack1.inThreshold += () => Debug.Log("Attack");
+        attack1.withinThreshold += () => fang.Launch(50, 3);
         attack1.outThreshold += () => Debug.Log("Breach");
+        attack1.cutIn += fang.Reset;
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => inputMotionReset();
@@ -73,6 +83,7 @@ public class Chara_Player : Chara
         death.startAction += () => StateChange(CharaState.Death);
         death.enableAction += () => StateChange(CharaState.Death);
 
+        invincible.Initialize(true,false);
     }
 
     /// <summary>
@@ -82,6 +93,7 @@ public class Chara_Player : Chara
     public void Reset()
     {
         dashSpeed.Update();
+        invincible.Update();
         animator.speed = 1;
         if (hp.entity <= 0) { alive = false; }
         inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;
@@ -151,6 +163,7 @@ public class Chara_Player : Chara
                 break;
 
             case CharaState.Damage:
+                Debug.Log("Damage");
                 rigor = true;
                 break;
 
@@ -208,7 +221,15 @@ public class Chara_Player : Chara
     {
         foreach(Motion m in interruptByDamageMotions)
         {
-            m.Reset();
+            if(m.exist.state != ExistState.Disable)
+            {
+                m.cutIn?.Invoke();
+                if(m != interruptByDamageMotions[1])    // 実行中のモーションなら
+                {
+
+                    m.Reset();
+                }
+            }
         }
     }
 
@@ -227,17 +248,16 @@ public class Chara_Player : Chara
         }
     }
 
-    /// <summary>
-    /// 引数はダメージ量と被弾モーションを行うかどうか
-    /// </summary>
-    /// <param name="damage"></param>
-    /// <param name="damageMotion"></param>
-    public void Damage(float damage, bool damageMotion = true)
+    public void Damage(UnderAttackType type)
     {
-        if (alive == false) { return; }
-        hp.entity -= damage;
-        this.damage.Start();
+        if(type == UnderAttackType.Normal)
+        {
+            damage.Start();
+            invincible.Reset();
+
+        }
     }
+
 
     #region PlayerInputに自動で登録されるEvent
 
@@ -263,7 +283,7 @@ public class Chara_Player : Chara
 
     public void OnDamage(InputValue value)
     {
-        Damage(50, true);
+        UnderAttack(50, UnderAttackType.Normal);
 
     }
     #endregion

@@ -11,7 +11,9 @@ public class Chara : MonoBehaviour
     protected Engine engine;
     [field: SerializeField, NonEditable] public bool alive { get; protected set; }  //  生存
     [SerializeField] protected EntityAndPlan<Vector2> inputMoveVelocity;
+    protected Action<UnderAttackType> underAttackAction;
 
+    [SerializeField] protected Interval invincible;
     protected virtual void Start()
     {
         Initialize();
@@ -39,6 +41,29 @@ public class Chara : MonoBehaviour
         assign.z = inputMoveVelocity.plan.y * assignSpeed;
         engine.velocityPlan += assign;
     }
+
+    /// <summary>
+    /// 引数はダメージ量と被弾モーションを行うかどうか
+    /// </summary>
+    /// <param name="damage"></param>
+    /// <param name="damageMotion"></param>
+    public bool UnderAttack(float damage, UnderAttackType type = UnderAttackType.None)
+    {
+        if (alive == false) { return false; }
+        if (invincible.active == false) { return false; }
+
+        hp.entity -= damage;
+        Debug.Log(hp.entity);
+
+        if (type != UnderAttackType.None)
+        {
+            underAttackAction?.Invoke(type);
+        }
+
+
+        return true;
+    }
+
 }
 
 /// <summary>

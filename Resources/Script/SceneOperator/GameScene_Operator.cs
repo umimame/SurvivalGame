@@ -7,10 +7,12 @@ public class GameScene_Operator : SceneOperator
     protected override void Start()
     {
         base.Start();
+        PresetsByPlayerType preset = FrontCanvas.instance.presets;
         for(int i = 0; i < NumberOfPlayer; i++)
         {
             playerInstancer.Instance();
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
+            playerInstancer.lastObj.transform.position = new Vector3(preset.playerPos[i].x, 0.0f, preset.playerPos[i].y);
         }
     }
 

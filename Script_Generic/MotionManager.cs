@@ -18,6 +18,7 @@ public class MotionManager : MonoBehaviour
 
 [Serializable]@public class Motion
 {
+    public Action cutIn { get; set; }
     [SerializeField, NonEditable] private float motionTime;
     [SerializeField] private float adjustMotionTime;
     [field: SerializeField] public Interval interval { get; set; }
@@ -39,8 +40,12 @@ public class MotionManager : MonoBehaviour
         exist.enable += () => interval.Update();
         exist.enable += () => motionThreshold.Update(easAnim.nowRatio);
 
-        interval.beyondAction += exist.Finish;
+        exist.toEnd += Reset;
+
+        interval.activeAction += exist.Finish;
+        interval.activeAction += exist.Reset;
     }
+
 
     public void Reset()
     {
@@ -48,6 +53,8 @@ public class MotionManager : MonoBehaviour
         exist.Initialize();
         interval.Initialize(false, true, motionTime);
         motionThreshold.Reset();
+        Debug.Log("Reset");
+
     }
 
     public void Update()
@@ -95,8 +102,8 @@ public class MotionManager : MonoBehaviour
     }
     public Action endAction
     {
-        get { return interval.beyondAction; }
-        set { interval.beyondAction = value; }
+        get { return interval.activeAction; }
+        set { interval.activeAction = value; }
     }
     #endregion
 
@@ -125,5 +132,10 @@ public class MotionManager : MonoBehaviour
         set { motionThreshold.outOfRangeAction = value; }
     }
     #endregion
+
+}
+
+[Serializable] public class MotionAndCollider : Motion
+{
 
 }
