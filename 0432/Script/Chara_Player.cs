@@ -18,16 +18,17 @@ public class Chara_Player : Chara
         None,
     }
 
+    [field: SerializeField] public float score { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
     [SerializeField] private SmoothRotate smooth;
 
-    [SerializeField] private Vector2 beforeinputVelocity;
+    [SerializeField, NonEditable] private Vector2 beforeinputVelocity;
     [SerializeField, NonEditable] private bool inputting;   // 移動の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
-    [SerializeField] private Vector3 dirrection;
+    [SerializeField, NonEditable] private Vector3 dirrection;
     [SerializeField] private Animator animator;
     [SerializeField, NonEditable] private CharaState motionState;
     private float velocitySum;
@@ -45,6 +46,7 @@ public class Chara_Player : Chara
     }
     protected override void Start()
     {
+        score = 0.0f;
         gameObject.tag = gameObject.transform.parent.tag;
         beforeinputVelocity = Vector2.zero;
         norCircle.Initialize();
@@ -62,6 +64,7 @@ public class Chara_Player : Chara
         _attack1.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
+        damage.startAction += () => Debug.Log("Damage");
         damage.startAction += () => inputMotionReset();
         damage.startAction += () => StateChange(CharaState.Damage, true);
         damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
@@ -128,8 +131,8 @@ public class Chara_Player : Chara
         base.Update();
 
         _attack1.Update();
-        damage.Update();
         death.Update();
+        damage.Update();
 
 
         if(velocitySum > 1) { velocitySum = 1; }
@@ -157,7 +160,6 @@ public class Chara_Player : Chara
                 break;
 
             case CharaState.Damage:
-                Debug.Log("Damage");
                 rigor = true;
                 break;
 
@@ -252,6 +254,26 @@ public class Chara_Player : Chara
         }
     }
 
+    public void AddScore(float score)
+    {
+        this.score += score;
+    }
+
+    /// <summary>
+    /// 倒した側が行う<br/>
+    /// 引数は倒されたプレイヤー
+    /// </summary>
+    /// <param name="you"></param>
+    public void ChangeScoreByKill(Chara_Player you)
+    {
+        if(you.score < 0)
+        {
+            AddScore(you.score / 2);
+            you.score /= 2;
+            Debug.Log(this.score);
+            Debug.Log(you.score);
+        }
+    }
 
     #region PlayerInputに自動で登録されるEvent
 
