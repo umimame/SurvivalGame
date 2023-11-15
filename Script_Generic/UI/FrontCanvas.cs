@@ -1,6 +1,4 @@
 using My;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +6,7 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(AudioListener))]
 public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
 {
-    [SerializeField] private bool debugMode;
+    [field: SerializeField] public bool debugMode { get; private set; }
     [SerializeField] SceneOperator sceneEditor;
     [SerializeField] GameObject[] editors;
     [field: SerializeField] public PresetsByPlayerType presets { get; private set; }

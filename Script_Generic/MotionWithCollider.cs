@@ -2,17 +2,122 @@ using My;
 using System;
 using UnityEngine;
 
-public class MotionManager : MonoBehaviour
+[Serializable] public class MotionWithCollider
 {
-    void Start()
+    [SerializeField] MotionCollider motionCol;
+    [field: SerializeField] public Motion motion { get; set; }
+
+    [SerializeField, NonEditable] private float damage;
+    [SerializeField, NonEditable] private int hitCount;
+
+    public void Initialize(Animator animator, string clipName)
     {
-        
+        motion.Initialize(animator, clipName);
+        // motinoCol.Initialize()はアタッチ先のStart関数で実行される
+
+        Reset();
+
+        withinThreshold += () => motionCol.Launch(damage, hitCount);
+        endAction += motionCol.Reset;
+        cutIn += motionCol.Reset;
     }
 
-    void Update()
+    /// <summary>
+    /// 引数:<br/>
+    /// ・ダメージ<br/>
+    /// ・ヒット回数
+    /// </summary>
+    public void Launch(float damage, int hitCount = 1)
     {
-        
+        motion.Launch();
+        this.damage = damage;
+        this.hitCount = hitCount;
     }
+
+    public void Update()
+    {
+        motion.Update();
+    }
+
+    public void Reset()
+    {
+        motion.Reset();
+        motionCol.Reset();
+
+        damage = 0.0f;
+        hitCount = 0;
+    }
+    public Action cutIn
+    {
+        get { return motion.cutIn; }
+        set { motion.cutIn = value; }
+    }
+
+    #region Existプロパティ
+
+    public Exist exist
+    {
+        get { return motion.exist; }
+        set { motion.exist = value; }
+    }
+    public Action initializeAction
+    {
+        get { return exist.initialize; }
+        set { exist.initialize = value; }
+    }
+    public Action startAction
+    {
+        get { return exist.start; }
+        set { exist.start = value; }
+    }
+
+    public Action enableAction
+    {
+        get { return exist.enable; }
+        set { exist.enable = value; }
+    }
+    public Action endAction
+    {
+        get { return interval.activeAction; }
+        set { interval.activeAction = value; }
+    }
+    #endregion
+
+    #region Thresholdプロパティ
+    public Interval interval
+    {
+        get { return motion.interval; }
+    }
+
+    public ThresholdRatio motionThreshold
+    {
+        get { return motion.motionThreshold; }
+    }
+    public Action withinThreshold
+    {
+        get { return motionThreshold.withinRangeAction.action; }
+        set { motionThreshold.withinRangeAction.action = value; }
+    }
+
+    public Action inThreshold
+    {
+        get { return motionThreshold.inRangeAction; }
+        set { motionThreshold.inRangeAction = value; }
+    }
+
+    public Action exitThreshold
+    {
+        get { return motionThreshold.exitRangeAction.action; }
+        set { motionThreshold.exitRangeAction.action = value; }
+    }
+
+    public Action outThreshold
+    {
+        get { return motionThreshold.outOfRangeAction; }
+        set { motionThreshold.outOfRangeAction = value; }
+    }
+    #endregion
+
 }
 
 
@@ -62,11 +167,11 @@ public class MotionManager : MonoBehaviour
         exist.Update();
     }
 
-    public void Start()
+    public void Launch()
     {
         exist.Start();
     }
-    public void StartOneShot()
+    public void LaunchOneShot()
     {
         exist.StartOneShot();
     }
@@ -132,10 +237,5 @@ public class MotionManager : MonoBehaviour
         set { motionThreshold.outOfRangeAction = value; }
     }
     #endregion
-
-}
-
-[Serializable] public class MotionAndCollider : Motion
-{
 
 }

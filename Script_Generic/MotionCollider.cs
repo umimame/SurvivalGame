@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,16 +10,25 @@ public class MotionCollider : MonoBehaviour
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
     [SerializeField] private List<Chara_Player> targets = new List<Chara_Player>();
 
+    [field: SerializeField] public MeshRenderer mesh;
     private void Start()
     {
         Initialize();
     }
     public void Initialize()
     {
-        thisCollider = GetComponent<Collider>();
+        if (thisCollider == null) { thisCollider = GetComponent<Collider>(); }
+        mesh = GetComponent<MeshRenderer>();
         Reset();
     }
+    private void Update()
+    {
+        if(FrontCanvas.instance.debugMode == true)
+        {
 
+            mesh.enabled = enable;
+        }
+    }
     public void Reset()
     {
         enable = false;
@@ -35,10 +43,10 @@ public class MotionCollider : MonoBehaviour
     /// ・ダメージ<br/>
     /// ・ヒット回数
     /// </summary>
-    public void Launch(float damage, int hitCout = 1)
+    public void Launch(float damage, int hitCount = 1)
     {
         this.damage = damage;
-        this.hitCount = hitCout;
+        this.hitCount = hitCount;
         enable = true;
     }
 
@@ -48,7 +56,6 @@ public class MotionCollider : MonoBehaviour
 
         bool firstTime = false;
         bool attacked = false;
-        Debug.Log("ActiveFang");
         if(targets.Count == 0 ) 
         {
             firstTime = true;

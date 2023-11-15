@@ -29,18 +29,15 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
     [SerializeField] private Vector3 dirrection;
     [SerializeField] private Animator animator;
-    [SerializeField] private CharaState motionState;
+    [SerializeField, NonEditable] private CharaState motionState;
     private float velocitySum;
 
-    [SerializeField] private MotionCollider fang;
 
-    [SerializeField] private Motion attack1;
+    [SerializeField] private MotionWithCollider _attack1;
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
     [SerializeField] private Motion damage;
     [SerializeField] private Motion death;
 
-    [SerializeField] private Collider mouthCollider;
-    [SerializeField] private Collider bodyCollider;
 
     void Awake()
     {
@@ -58,15 +55,11 @@ public class Chara_Player : Chara
         underAttackAction += Damage;
 
         //  Motionの設定
-        attack1.Initialize(animator, Anims.attack1);
-        attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
-        attack1.endAction += () => StateChange(CharaState.None);  
-        attack1.endAction += () => rigor = false;
-        attack1.endAction += fang.Reset;
-        attack1.inThreshold += () => Debug.Log("Attack");
-        attack1.withinThreshold += () => fang.Launch(50, 3);
-        attack1.outThreshold += () => Debug.Log("Breach");
-        attack1.cutIn += fang.Reset;
+
+        _attack1.Initialize(animator, Anims.attack1);
+        _attack1.enableAction += () => StateChange(CharaState.Attack);
+        _attack1.endAction += () => StateChange(CharaState.None);
+        _attack1.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => inputMotionReset();
@@ -76,7 +69,7 @@ public class Chara_Player : Chara
         damage.endAction += () => StateChange(CharaState.None);
         damage.endAction += () => rigor = false;
 
-        interruptByDamageMotions.Add(attack1);
+        interruptByDamageMotions.Add(_attack1.motion);
         interruptByDamageMotions.Add(damage);
 
         death.Initialize(animator, Anims.die);
@@ -125,7 +118,7 @@ public class Chara_Player : Chara
         {
             if(motionState != CharaState.Damage)
             {
-                death.StartOneShot();
+                death.LaunchOneShot();
             }
         }
     }
@@ -134,9 +127,10 @@ public class Chara_Player : Chara
         Reset();
         base.Update();
 
-        attack1.Update();
+        _attack1.Update();
         damage.Update();
         death.Update();
+
 
         if(velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
@@ -252,7 +246,7 @@ public class Chara_Player : Chara
     {
         if(type == UnderAttackType.Normal)
         {
-            damage.Start();
+            damage.Launch();
             invincible.Reset();
 
         }
@@ -277,7 +271,7 @@ public class Chara_Player : Chara
     public void OnAttack1(InputValue value)
     {
         if(rigor == true) { return; }
-        attack1.Start();
+        _attack1.Launch(50, 3);
     }
 
 

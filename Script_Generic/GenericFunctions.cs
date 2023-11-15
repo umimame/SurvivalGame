@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Linq;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -149,7 +150,21 @@ namespace My
             }
             return "0";
         }
-        
+
+        /// <summary>
+        /// Rectの隣
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static float Neighbor(Rect rect)
+        {
+            return rect.x + rect.width;
+        }
+        public static float Neighbor(HorizontalRect rect)
+        {
+            return rect.x + rect.width;
+        }
         /// <summary>
         /// Animationの長さを返す
         /// </summary>
@@ -212,7 +227,7 @@ namespace My
         [field: SerializeField] public Action toEnd { get; set; }
         [field: SerializeField] public Action ending { get; set; }
 
-        [field: SerializeField] public bool started { get; private set; }
+        public bool started { get; private set; }
 
         public void Initialize(bool started = false)
         {
@@ -361,7 +376,7 @@ namespace My
             Frame,
             Manual,
         }
-        [field: SerializeField] public bool active { get; private set; }
+        [field: SerializeField, NonEditable] public bool active { get; private set; }
         [field: SerializeField] public float interval { get; private set; }
         [field: SerializeField, NonEditable] public float value;
         [field: SerializeField] public IncreseType valueIncreseType { get; set; }
@@ -574,6 +589,62 @@ namespace My
         }
     }
 
+    [Serializable] public class HorizontalRect
+    {
+        [field: SerializeField] public float x { get; private set; }
+        [field: SerializeField] public float y { get; private set; }
+        [field: SerializeField] public float width { get; private set; }
+        [field: SerializeField] public float height { get; private set; }
+        public Rect entity { get; private set; }
+
+        public HorizontalRect(Rect rect)
+        {
+            x = rect.x;
+            y = rect.y;
+            width = rect.width;
+            height = rect.height;
+
+            entity = rect;
+        }
+
+        public void Initialize(Rect rect)
+        {
+            x = rect.x;
+            y = rect.y;
+            width = rect.width;
+            height = rect.height;
+
+            entity = rect;
+        }
+
+        public void Set(float x, float width)
+        {
+            this.x = x;
+            this.width = width;
+
+            entity = new Rect(this.x, y, this.width, height);
+        }
+
+        public float X
+        {
+            set 
+            { 
+                x = value;
+                entity = new Rect(this.x, y, this.width, height);
+            }
+        }
+
+        public float Width
+        {
+            set
+            {
+                width = value;
+                entity = new Rect(this.x, y, this.width, height);
+            }
+        }
+
+    }
+
     /// <summary>
     /// SpriteRenderer,Image,TMProのすべてを取得する
     /// </summary>
@@ -745,7 +816,7 @@ namespace My
     /// <typeparam name="T"></typeparam>
     public class MyEditor<T> : Editor where T : UnityEngine.Object
     {
-        protected UnityAction serializedObjectUpdate;
+        protected Action serializedObjectUpdate;
         protected T tg;
         protected void Initialize()
         {
@@ -782,6 +853,49 @@ namespace My
 
     }
 
+
+    /// <summary>
+    /// OnEnableに
+    /// </summary>
+    public class MyPropertyDrawer : PropertyDrawer
+    {
+        protected Rect pos;
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            EditorGUI.BeginProperty(position, label, property);
+            {
+                pos = position;
+
+                // 子のフィールドをインデントしない 
+                var indent = EditorGUI.indentLevel;
+                EditorGUI.indentLevel = 0;
+
+                Update(position, property, label);
+
+
+                // インデントを元通りに戻します
+                EditorGUI.indentLevel = indent;
+            }
+            EditorGUI.EndProperty();
+
+
+            EditorGUI.BeginDisabledGroup(true);
+            {
+            }
+            EditorGUI.EndDisabledGroup();
+        }
+
+        public float RightEnd(Rect pos)
+        {
+            return pos.width - 90;
+        }
+        protected virtual void Update(Rect ops, SerializedProperty property, GUIContent label)
+        { }
+
+        protected virtual void ReadOnly(Rect pos, SerializedProperty property, GUIContent label)
+        { }
+
+    }
 
 #endif
 }

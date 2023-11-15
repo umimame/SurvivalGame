@@ -213,6 +213,7 @@ MonoBehaviour:
   damage: 0
   hitCountEntitys: 
   targets: []
+  mesh: {fileID: 0}
 --- !u!1 &1781786014830692569
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,15 +618,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4e20f4d49217334199ab3fd9b2ce914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  potionResult:
+    name: 
+    amount: 1
+    unit: 2
+  potionIngredients:
+  - name: 
+    amount: 0
+    unit: 0
+  - name: 
+    amount: 0
+    unit: 0
+  - name: 
+    amount: 0
+    unit: 0
   hp:
-    <entity>k__BackingField: 0
-    <max>k__BackingField: 1000
+    entity: 0
+    max: 250
   speed:
-    <entity>k__BackingField: 0
-    <max>k__BackingField: 5
+    entity: 0
+    max: 5
   pow:
-    <entity>k__BackingField: 0
-    <max>k__BackingField: 0
+    entity: 0
+    max: 10
   <alive>k__BackingField: 0
   inputMoveVelocity:
     <entity>k__BackingField: {x: 0, y: 0}
@@ -636,8 +651,8 @@ MonoBehaviour:
     value: 0
     <valueIncreseType>k__BackingField: 0
   dashSpeed:
-    <entity>k__BackingField: 0
-    <max>k__BackingField: 10
+    entity: 0
+    max: 0
   input: {fileID: 4064012994823538045}
   norCircle:
     center: {fileID: 4064012994823538021}
@@ -653,60 +668,53 @@ MonoBehaviour:
   dirrection: {x: 0, y: 0, z: 0}
   animator: {fileID: 6264450182563128498}
   motionState: 0
-  fang: {fileID: 8907209045035302119}
-  attack1:
-    motionTime: 0
-    adjustMotionTime: -0.3
-    <interval>k__BackingField:
-      <active>k__BackingField: 0
-      <interval>k__BackingField: 0
-      value: 0
-      <valueIncreseType>k__BackingField: 0
-    <motionThreshold>k__BackingField:
-      reaching: 0
-      beforeBool: 0
-      thresholdRange: {x: 0.4, y: 0.7}
-      currentValue: 0
-      beforeRange: {x: 0, y: 0}
-    <exist>k__BackingField:
-      <state>k__BackingField: 0
-      <started>k__BackingField: 0
-    <easAnim>k__BackingField:
-      <nowRatio>k__BackingField: 0
-      <maxTime>k__BackingField: 0
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1.5
-          inSlope: -0.7563887
-          outSlope: -0.7563887
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 0.6610358
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 0.5
-          inSlope: -1.4750819
-          outSlope: -1.4750819
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
+  _attack1:
+    motionCol: {fileID: 8907209045035302119}
+    <motion>k__BackingField:
+      motionTime: 0
+      adjustMotionTime: -0.3
+      <interval>k__BackingField:
+        <active>k__BackingField: 0
+        <interval>k__BackingField: 0
+        value: 0
+        <valueIncreseType>k__BackingField: 0
+      <motionThreshold>k__BackingField:
+        reaching: 0
+        beforeBool: 0
+        thresholdRange: {x: 0.4, y: 0.7}
+        currentValue: 0
+        beforeRange: {x: 0, y: 0}
+      <exist>k__BackingField:
+        <state>k__BackingField: 0
+      <easAnim>k__BackingField:
+        <nowRatio>k__BackingField: 0
+        <maxTime>k__BackingField: 0
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    damage: 0
+    hitCount: 0
   damage:
     motionTime: 0
     adjustMotionTime: -0.5
@@ -723,7 +731,6 @@ MonoBehaviour:
       beforeRange: {x: 0, y: 0}
     <exist>k__BackingField:
       <state>k__BackingField: 0
-      <started>k__BackingField: 0
     <easAnim>k__BackingField:
       <nowRatio>k__BackingField: 0
       <maxTime>k__BackingField: 0
@@ -776,7 +783,6 @@ MonoBehaviour:
       beforeRange: {x: 0, y: 0}
     <exist>k__BackingField:
       <state>k__BackingField: 0
-      <started>k__BackingField: 0
     <easAnim>k__BackingField:
       <nowRatio>k__BackingField: 0
       <maxTime>k__BackingField: 0
@@ -804,8 +810,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-  mouthCollider: {fileID: 1094091119121942080}
-  bodyCollider: {fileID: 5462996425327737524}
 --- !u!114 &4064012994823538040
 MonoBehaviour:
   m_ObjectHideFlags: 0
