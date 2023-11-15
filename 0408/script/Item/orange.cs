@@ -11,17 +11,31 @@ public class orange : Item
     }
     // Update is called once per frame
 
-    public override void HitThePlayer(GameObject other)
+    void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Trigger Enter: " + other.gameObject.name);
+
         if (other.CompareTag("Player"))
         {
-            //Chara player = other.GetComponent<Chara>();
-            //if (player != null)
-            //{
-                //player.AddScore(score);
-                //player.ApplyPowerup("orange");
+            Item item = GetComponent<Item>();
+            if (item != null)
+            {
+                item.HitThePlayer(other.gameObject);
+            }
+        }
+    }
+
+    public override void HitThePlayer(GameObject other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            PlayerController player = other.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.AddScore(score);
                 Debug.Log(score);
-            //}
+                Debug.Log("orange");
+            }
             Destroy(gameObject);
         }
     }
