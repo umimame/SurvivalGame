@@ -7,8 +7,6 @@ using UnityEditor;
 
 public class Chara : MonoBehaviour
 {
-    public Ingredient potionResult;
-    public Ingredient[] potionIngredients;
     [field: SerializeField] public Parameter hp;
     [field: SerializeField] public Parameter speed;
     protected float assignSpeed;
