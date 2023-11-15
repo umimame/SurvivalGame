@@ -8,16 +8,29 @@ public class Item : MonoBehaviour
     public int Score { get { return score; } }
     // Start is called before the first frame update
 
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Trigger Enter: " + other.gameObject.name);
+
+        if (other.CompareTag("Player"))
+        {
+            Item item = GetComponent<Item>();
+            if (item != null)
+            {
+                item.HitThePlayer(other.gameObject);
+            }
+        }
+    }
     public virtual void HitThePlayer(GameObject other)
     {
-        if(other.CompareTag ("Player"))
+        if(other.gameObject.CompareTag ("Player"))
         {
-            //Chara player = other.GetComponent<Chara>();
-            //if(player != null)
-            //{
-            //player.AddScore(score);
-            Debug.Log(score);
-            //}
+            PlayerController player = other.GetComponent<PlayerController>();
+            if(player != null)
+            {
+                player.AddScore(score);
+                Debug.Log(score);
+            }
             Destroy(gameObject);
         }
     }

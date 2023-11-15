@@ -4,7 +4,6 @@ public class player : MonoBehaviour
 {
     //ˆÚ“®‘¬“x
     [SerializeField]private float _speed = 3.0f;
-    [SerializeField]private float getpoint = 0;
     //x²•ûŒü‚Ì“ü—Í‚ğ•Û‘¶
     private float _input_x;
     //z²•ûŒü‚Ì“ü—Í‚ğ•Û‘¶
