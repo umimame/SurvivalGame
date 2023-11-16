@@ -81,7 +81,7 @@ public class Chara : MonoBehaviour
 {
     public float entity;
     public float max;
-
+    public float autoRecaverValue;
     public void Initialize()
     {
         entity = max;
@@ -89,6 +89,7 @@ public class Chara : MonoBehaviour
 
     public void Update()
     {
+        entity += autoRecaverValue;
         if(entity > max) { entity = max; }
     }
 }

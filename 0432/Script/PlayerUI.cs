@@ -1,13 +1,13 @@
 using My;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
     [SerializeField] private Chara_Player body;
     [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private FillAmoutGuage hpGuageVariable;
     private void Start()
     {
         scoreText.SetText(body.score.ToString());
@@ -16,8 +16,8 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
-
         scoreText.SetText("Score:" + body.score.ToString("d6"));
+        hpGuageVariable.OnChangeValue(body.hp.entity / body.hp.max);
     }
 
     private void AnchorSet()
