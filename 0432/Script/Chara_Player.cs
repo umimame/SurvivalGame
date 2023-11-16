@@ -18,7 +18,7 @@ public class Chara_Player : Chara
         None,
     }
 
-    [field: SerializeField] public float score { get; private set; }
+    [field: SerializeField] public int score { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
@@ -46,7 +46,7 @@ public class Chara_Player : Chara
     }
     protected override void Start()
     {
-        score = 0.0f;
+        score = 0;
         gameObject.tag = gameObject.transform.parent.tag;
         beforeinputVelocity = Vector2.zero;
         norCircle.Initialize();
@@ -58,7 +58,7 @@ public class Chara_Player : Chara
 
         //  Motionの設定
 
-        _attack1.Initialize(animator, Anims.attack1);
+        _attack1.Initialize(animator, Anims.attack1, this);
         _attack1.enableAction += () => StateChange(CharaState.Attack);
         _attack1.endAction += () => StateChange(CharaState.None);
         _attack1.endAction += () => rigor = false;
@@ -77,6 +77,7 @@ public class Chara_Player : Chara
 
         death.Initialize(animator, Anims.die);
         death.startAction += () => StateChange(CharaState.Death);
+        death.startAction += ChangeScoreByKill;
         death.enableAction += () => StateChange(CharaState.Death);
 
         invincible.Initialize(true,false);
@@ -86,7 +87,7 @@ public class Chara_Player : Chara
     /// 前提処理<br/>
     /// Updateの最初に行われる
     /// </summary>
-    public void Reset()
+    protected override void Reset()
     {
         dashSpeed.Update();
         invincible.Update();
@@ -254,24 +255,33 @@ public class Chara_Player : Chara
         }
     }
 
-    public void AddScore(float score)
+    public void AddScore(int score)
     {
         this.score += score;
     }
 
+
+
+
     /// <summary>
-    /// 倒した側が行う<br/>
-    /// 引数は倒されたプレイヤー
+    /// 倒された側が行う<br/>
+    /// 最後に攻撃を与えたプレイヤーが得点を得る
     /// </summary>
     /// <param name="you"></param>
-    public void ChangeScoreByKill(Chara_Player you)
+    public void ChangeScoreByKill()
     {
-        if(you.score < 0)
+        Debug.Log("Death");
+        if(lastAttacker == null)
         {
-            AddScore(you.score / 2);
-            you.score /= 2;
+            Debug.Log("自滅");
+        }
+
+        if(score > 0)
+        {
+            lastAttacker.AddScore(score / 2);
+            score /= 2;
             Debug.Log(this.score);
-            Debug.Log(you.score);
+            Debug.Log(lastAttacker.score);
         }
     }
 

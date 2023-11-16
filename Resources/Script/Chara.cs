@@ -17,12 +17,14 @@ public class Chara : MonoBehaviour
     protected Action<UnderAttackType> underAttackAction;
 
     [SerializeField] protected Interval invincible;
+    [field: SerializeField] public Chara_Player lastAttacker { get; private set; }
     protected virtual void Start()
     {
         Initialize();
         engine = GetComponent<Engine>();
         engine.velocityPlanAction += AddVelocityPlan;
         alive = true;
+
     }
     protected virtual void Update()
     {
@@ -35,6 +37,11 @@ public class Chara : MonoBehaviour
         hp.Initialize();
         speed.Initialize();
         pow.Initialize();
+    }
+
+    protected virtual void Reset()
+    {
+        lastAttacker = null;
     }
 
     public void AddVelocityPlan()
@@ -50,7 +57,7 @@ public class Chara : MonoBehaviour
     /// </summary>
     /// <param name="damage"></param>
     /// <param name="damageMotion"></param>
-    public bool UnderAttack(float damage, UnderAttackType type = UnderAttackType.None)
+    public bool UnderAttack(float damage, UnderAttackType type = UnderAttackType.None, Chara_Player attacker = null)
     {
         if (alive == false) { return false; }
         if (invincible.active == false) { return false; }
@@ -59,7 +66,7 @@ public class Chara : MonoBehaviour
 
         underAttackAction?.Invoke(type);
         
-
+        if(attacker != null) { lastAttacker = attacker; }
 
         return true;
     }

@@ -18,6 +18,7 @@ public class AdulationTarget : MonoBehaviour
     [SerializeField] private float adulationPer;
     [SerializeField] private Vector3 wToS;
     [SerializeField] private RectTransform thisRect;
+    [SerializeField] private Vector2 screenPos;
     private void Start()
     {
         if (target == null) { return; }
@@ -33,9 +34,7 @@ public class AdulationTarget : MonoBehaviour
             case AdulationType.Screen:
                 wToS = targetCamera.WorldToScreenPoint(target.transform.position);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, wToS, targetCamera, out Vector2 outPos);
-                //gameObject.transform.position = new Vector3(outPos.x, outPos.y, 0.0f);
-                Debug.Log(outPos);
-                thisRect.anchoredPosition = Vector3.zero;
+                thisRect.anchoredPosition = outPos;
                 break;
         }
         
@@ -46,7 +45,7 @@ public class AdulationTarget : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        //PosAdulation();
+        PosAdulation();
 
     }
     void PosAdulation()
@@ -58,20 +57,20 @@ public class AdulationTarget : MonoBehaviour
         {
             case AdulationType.World:
                 adulation = gameObject.transform.position + (target.transform.position + adjustPos - gameObject.transform.position) * adulationPer;
+                gameObject.transform.position = adulation;
                 break;
 
             case AdulationType.Screen:
 
+                wToS = targetCamera.WorldToScreenPoint(target.transform.position);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, wToS, targetCamera, out Vector2 outPos);
-                Vector3 screenPos = Vector3.zero;
-                screenPos = outPos;
-                adulation = gameObject.transform.position + (screenPos + adjustPos - gameObject.transform.position) * adulationPer;
-                adulation = outPos;
-                Debug.Log(target.tag + screenPos);
+                screenPos  =  outPos;
+                adulation = thisRect.anchoredPosition + (screenPos + (new Vector2 (adjustPos.x, adjustPos.y)) - thisRect.anchoredPosition) * adulationPer;
+                gameObject.transform.localPosition = outPos;
+                //thisRect.anchoredPosition = adulation;
                 break;
         }
 
-        gameObject.transform.position = adulation;
 
         
     }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class MotionCollider : MonoBehaviour
 {
+    [field: SerializeField] public Chara_Player parent { get; set; }
     [field: SerializeField, NonEditable] public bool enable { get; private set; }
     [SerializeField] private Collider thisCollider;
     [field: SerializeField, NonEditable] public int hitCount { get; private set; }
@@ -82,7 +83,7 @@ public class MotionCollider : MonoBehaviour
         {
             if (hitCountEntitys[i] != hitCount)
             {
-                attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal);    // UŒ‚o—ˆ‚½‚ç
+                attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
                 if(attacked == true) { 
                     hitCountEntitys[i]++;
                     Debug.Log("Hit!!");

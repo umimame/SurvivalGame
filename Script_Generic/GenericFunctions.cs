@@ -513,7 +513,6 @@ namespace My
 
         public void Reset()
         {
-            started = false;
             state = ExistState.Disable;
         }
 

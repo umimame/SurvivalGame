@@ -17,7 +17,7 @@ public class PlayerUI : MonoBehaviour
     private void Update()
     {
 
-        scoreText.SetText("Score:" + body.score.ToString());
+        scoreText.SetText("Score:" + body.score.ToString("d6"));
     }
 
     private void AnchorSet()

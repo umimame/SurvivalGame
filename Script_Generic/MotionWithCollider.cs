@@ -10,13 +10,14 @@ using UnityEngine;
     [SerializeField, NonEditable] private float damage;
     [SerializeField, NonEditable] private int hitCount;
 
-    public void Initialize(Animator animator, string clipName)
+    public void Initialize(Animator animator, string clipName, Chara_Player parent)
     {
         motion.Initialize(animator, clipName);
         // motinoCol.Initialize()はアタッチ先のStart関数で実行される
 
         Reset();
 
+        motionCol.parent = parent;
         withinThreshold += () => motionCol.Launch(damage, hitCount);
         endAction += motionCol.Reset;
         cutIn += motionCol.Reset;
@@ -155,7 +156,7 @@ using UnityEngine;
     public void Reset()
     {
         easAnim.Reset();
-        exist.Initialize();
+        exist.Reset();
         interval.Initialize(false, true, motionTime);
         motionThreshold.Reset();
         Debug.Log("Reset");
