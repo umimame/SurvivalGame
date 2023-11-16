@@ -19,6 +19,7 @@ public class Chara_Player : Chara
     }
 
     [field: SerializeField] public int score { get; private set; }
+    [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
