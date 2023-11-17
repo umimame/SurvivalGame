@@ -27,6 +27,7 @@ public class apple : Item
     // Update is called once per frame
     public override void HitThePlayer(GameObject other)
     {
+        base.HitThePlayer(other);
         if (other.gameObject.CompareTag("Player"))
         {
             PlayerController player = other.GetComponent<PlayerController>();

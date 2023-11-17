@@ -6,6 +6,7 @@ public class Item : MonoBehaviour
 {
     [SerializeField] protected int score;
     public int Score { get { return score; } }
+
     // Start is called before the first frame update
 
     void OnTriggerEnter(Collider other)
@@ -30,6 +31,7 @@ public class Item : MonoBehaviour
             {
                 player.AddScore(score);
                 Debug.Log(score);
+                
             }
             Destroy(gameObject);
         }
