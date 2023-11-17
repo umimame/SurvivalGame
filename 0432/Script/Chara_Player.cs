@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 public class Chara_Player : Chara
 {
-    public enum CharaState
+    public enum MotionState
     {
         Idle,
         Walk,
@@ -21,6 +21,8 @@ public class Chara_Player : Chara
     [field: SerializeField] public int score { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
+    [field: SerializeField] public float dashCost { get; private set; }
+    [field: SerializeField] public Interval overStamina {  get; private set; }
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
     [SerializeField] private SmoothRotate smooth;
@@ -31,7 +33,7 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
     [SerializeField, NonEditable] private Vector3 dirrection;
     [SerializeField] private Animator animator;
-    [SerializeField, NonEditable] private CharaState motionState;
+    [SerializeField, NonEditable] private MotionState motionState;
     private float velocitySum;
 
 
@@ -39,49 +41,73 @@ public class Chara_Player : Chara
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
     [SerializeField] private Motion damage;
     [SerializeField] private Motion death;
-
+    
 
     void Awake()
     {
 
     }
+
+    protected override void Spawn()
+    {
+        base.Spawn();
+
+        hp.Initialize();
+        speed.Initialize();
+        pow.Initialize();
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
+        dashSpeed.Initialize();
+
+        StateChange(MotionState.Idle);
+        alive = true;
+    }
+
     protected override void Start()
     {
         score = 0;
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
+        overStamina.activeAction += stamina.Update;
+        dashSpeed.Initialize();
+
         gameObject.tag = gameObject.transform.parent.tag;
         beforeinputVelocity = Vector2.zero;
         norCircle.Initialize();
         smooth.Initialize(gameObject);
         input = GetComponent<PlayerInput>();
         base.Start();
-        dashSpeed.Initialize();
+
         underAttackAction += Damage;
 
         //  Motionの設定
 
         _attack1.Initialize(animator, Anims.attack1, this);
-        _attack1.enableAction += () => StateChange(CharaState.Attack);
-        _attack1.endAction += () => StateChange(CharaState.None);
+        _attack1.enableAction += () => StateChange(MotionState.Attack);
+        _attack1.endAction += () => StateChange(MotionState.None);
         _attack1.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => Debug.Log("Damage");
-        damage.startAction += () => inputMotionReset();
-        damage.startAction += () => StateChange(CharaState.Damage, true);
+        damage.startAction += () => InputMotionReset();
+        damage.startAction += () => StateChange(MotionState.Damage, true);
         damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
-        damage.enableAction += () => StateChange(CharaState.Damage, true);
-        damage.endAction += () => StateChange(CharaState.None);
+        damage.enableAction += () => StateChange(MotionState.Damage, true);
+        damage.endAction += () => StateChange(MotionState.None);
         damage.endAction += () => rigor = false;
 
         interruptByDamageMotions.Add(_attack1.motion);
         interruptByDamageMotions.Add(damage);
 
         death.Initialize(animator, Anims.die);
+        death.startAction += () => StateChange(MotionState.Death);
         death.startAction += () => StateChange(CharaState.Death);
         death.startAction += ChangeScoreByKill;
-        death.enableAction += () => StateChange(CharaState.Death);
+        death.enableAction += () => StateChange(MotionState.Death);
+        death.startAction += () => StateChange(CharaState.Death);
 
         invincible.Initialize(true,false);
+
     }
 
     /// <summary>
@@ -92,10 +118,19 @@ public class Chara_Player : Chara
     {
         dashSpeed.Update();
         invincible.Update();
-        animator.speed = 1;
-        if (hp.entity <= 0) { alive = false; }
-        inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;
-        rigor = false;
+
+        stamina.ReturnRange();
+        if(stamina.overZero == true) {
+            if(overStamina.active == true)
+            {
+                overStamina.Reset();
+            }
+        }
+
+        animator.speed = 1;                                                     // アニメーションスピードのリセット
+        if (hp.entity <= 0) { alive = false; }                                  // 生存boolのリセット
+        inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;  // 入力boolのリセット
+        rigor = false;                                                          // 硬直boolのリセット
 
         if (alive == true)
         {
@@ -103,29 +138,39 @@ public class Chara_Player : Chara
             {
                 if (inputting == false)
                 {
-                    StateChange(CharaState.Idle);
+                    StateChange(MotionState.Idle);
                 }
                 else
                 {
                     if (run == true && velocitySum >= 1)
                     {
-                        StateChange(CharaState.Run);
+                        if(stamina.overZero == false) { StateChange(MotionState.Run); }
 
+                        else
+                        {
+                            StateChange(MotionState.Walk);
+                        }
                     }
                     else 
                     {
-                        StateChange(CharaState.Walk);
+                        StateChange(MotionState.Walk);
                     }
                 }
             }
         }
         else
         {
-            if(motionState != CharaState.Damage)
+            if(motionState != MotionState.Damage)
             {
                 death.LaunchOneShot();
             }
         }
+    }
+
+    public void IdleUpdate()    // 動ける状態なら
+    {
+        overStamina.Update();
+
     }
     protected override void Update()
     {
@@ -140,32 +185,40 @@ public class Chara_Player : Chara
         if(velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
         {
-            case CharaState.Idle:
+            case MotionState.Idle:
+                IdleUpdate();
+
                 DirrectionManager();
                 break;
 
-            case CharaState.Walk:
+            case MotionState.Walk:
+                IdleUpdate();
+
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
 
                 DirrectionManager();
                 break;
-            case CharaState.Run:
+            case MotionState.Run:
+                IdleUpdate();
+
+                stamina.Update(-dashCost);
                 velocitySum = 1;
                 assignSpeed = dashSpeed.entity;
 
                 DirrectionManager();
                 break;
 
-            case CharaState.Attack:
+            case MotionState.Attack:
                 rigor = true;
                 break;
 
-            case CharaState.Damage:
+            case MotionState.Damage:
+                IdleUpdate();
                 rigor = true;
                 break;
 
-            case CharaState.Death:
+            case MotionState.Death:
                 rigor = true;
                 break;
         }
@@ -215,7 +268,7 @@ public class Chara_Player : Chara
         norCircle.Limit();
     }
 
-    public void inputMotionReset()
+    public void InputMotionReset()
     {
         foreach(Motion m in interruptByDamageMotions)
         {
@@ -231,7 +284,7 @@ public class Chara_Player : Chara
         }
     }
 
-    public void StateChange(CharaState m, bool affectAlive = false)
+    public void StateChange(MotionState m, bool affectAlive = false)
     {
         if (affectAlive == false)
         {

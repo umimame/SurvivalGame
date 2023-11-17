@@ -8,6 +8,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Chara_Player body;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private FillAmoutGuage hpGuageVariable;
+    [SerializeField] private FillAmoutGuage stGuageVariable;
     private void Start()
     {
         scoreText.SetText(body.score.ToString());
@@ -18,6 +19,7 @@ public class PlayerUI : MonoBehaviour
     {
         scoreText.SetText("Score:" + body.score.ToString("d6"));
         hpGuageVariable.OnChangeValue(body.hp.entity / body.hp.max);
+        stGuageVariable.OnChangeValue(body.stamina.entity / body.stamina.max);
     }
 
     private void AnchorSet()
