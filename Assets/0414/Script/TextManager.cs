@@ -13,10 +13,10 @@ public class TextManager:MonoBehaviour
     }
     private void Update()
     {
-        if (Input.anyKey)
-        {
-            SceneManager.LoadScene("TestScene");
-        }
+        //if (Input.anyKey)
+        //{
+        //    SceneManager.LoadScene("TestScene");
+        //}
     }
    
 IEnumerator BlinkText()//テキスト点滅用

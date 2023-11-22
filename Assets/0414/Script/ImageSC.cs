@@ -25,7 +25,7 @@ public class ImageSC : MonoBehaviour
     void Start()
     {
         counter = 0;
-        move = 0.1f;
+        move = 0.2f;
         SetRandomApplePosition(); // 初期ランダムな位置を設定
 
         // CanvasのRectTransformを取得
@@ -62,7 +62,7 @@ public class ImageSC : MonoBehaviour
     }
     void GenerateApple()
     {
-        if (time > 3f)
+        if (time > 5f)
         {
             // Canvas内のランダムな位置にApplePrefabを生成
             GameObject apple = Instantiate(ApplePrefab, new Vector3(X, Y, 0), ApplePrefab.transform.rotation);
@@ -78,7 +78,7 @@ public class ImageSC : MonoBehaviour
     void SetRandomApplePosition()
     {
         // Canvas境界内のランダムな位置を設定
-        X = Random.Range(40f, 450f);
+        X = Random.Range(40f, 765f);
         Y = Random.Range(-70f, 70f);
     }
 }
