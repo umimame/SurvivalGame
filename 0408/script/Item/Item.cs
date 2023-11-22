@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class Item : MonoBehaviour
     [SerializeField] protected int score;
     public int Score { get { return score; } }
 
+    public Action<GameObject> onHitPlayer;
     // Start is called before the first frame update
 
     void OnTriggerEnter(Collider other)
@@ -29,9 +31,7 @@ public class Item : MonoBehaviour
             PlayerController player = other.GetComponent<PlayerController>();
             if(player != null)
             {
-                player.AddScore(score);
-                Debug.Log(score);
-                
+                onHitPlayer?.Invoke(other);
             }
             Destroy(gameObject);
         }
