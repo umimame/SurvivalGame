@@ -104,7 +104,7 @@ namespace My
             return Mathf.Repeat(Mathf.Atan2(v.x, v.y) * Mathf.Rad2Deg, 360);
         }
 
-        public static float GetAngleByVec2(Vector3 start, Vector3 target)
+        public static float GetAngleByVec3(Vector3 start, Vector3 target)
         {
             float angle;
             Vector3 dt = start - target;
@@ -601,16 +601,21 @@ namespace My
     [Serializable] public class SmoothRotate
     {
         [SerializeField] private float speed;
-        [SerializeField] private GameObject targetObj;
+        [SerializeField] private GameObject meObject;
         public void Initialize(GameObject targetObj)
         {
-            this.targetObj = targetObj;
+            this.meObject = targetObj;
         }
         public void Update(Vector3 direction)
         {
-            Quaternion me = targetObj.transform.rotation;
-            Quaternion you = Quaternion.LookRotation(direction);
-            targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
+            if (direction == Vector3.zero) { return; }  // 条件分岐を書かないとエラーが出る
+
+            Quaternion offset;
+            offset = Quaternion.Inverse(Quaternion.LookRotation(Vector3.forward, Vector3.up));  // 前を向く軸と上を向く軸
+
+            Quaternion you = Quaternion.LookRotation(direction, Vector3.up) * offset;
+            Quaternion me = meObject.transform.rotation;
+            meObject.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
         }
     }
 

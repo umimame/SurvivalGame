@@ -14,7 +14,7 @@ public class Engine : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        co = GetComponent<Collider>();
+        if (co == null) { co = GetComponent<Collider>(); }
         PlanReset();
     }
 

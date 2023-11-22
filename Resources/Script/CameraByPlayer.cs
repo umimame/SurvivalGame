@@ -1,3 +1,4 @@
+using My;
 using UnityEngine;
 
 /// <summary>
@@ -8,6 +9,10 @@ public class CameraByPlayer : MonoBehaviour
     [SerializeField] AdulationTarget camByTg;
     [SerializeField] GameObject body;
     [SerializeField] Chara_Player player;
+    [SerializeField] Transform viewPoint;
+    [SerializeField] SmoothRotate smooth;
+    [SerializeField] private Vector3 world;
+    [SerializeField] private float angle;
     [field: SerializeField] public Camera cam { get; private set; }
     private void Start()
     {
@@ -30,5 +35,14 @@ public class CameraByPlayer : MonoBehaviour
                 cam.rect = FrontCanvas.instance.presets.cameraRectPre[1];
             }
         }
+        smooth.Initialize(gameObject);
+    }
+    private void Update()
+    {
+
+        //world = camByTg.target.transform.TransformPoint(camByTg.target.transform.position);
+        //angle = AddFunction.GetAngleByVec3(camByTg.target.transform.TransformPoint(camByTg.target.transform.position), viewPoint.position);
+        //gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, AddFunction.GetAngleByVec3(camByTg.target.transform.TransformPoint(camByTg.target.transform.position), viewPoint.position));
+        transform.LookAt(viewPoint);
     }
 }
