@@ -249,21 +249,24 @@ public class Chara_Player : Chara
     public void DirrectionManager()
     {
 
+        Vector3 addPos; 
+        Vector3 newPos;
         if (inputting == true)  // ì¸óÕÇ≥ÇÍÇƒÇ¢ÇÍÇŒ
         {                       // å¸Ç´Çêßå‰
             norCircle.AdjustByCenter();
-            Vector3 addPos;
             addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
-            addPos.y = transform.position.y;
             addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
             addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
-            Vector3 newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
+            newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
             norCircle.moveObject.transform.position = newPos;
-            dirrection = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
+            dirrection = new Vector3(norCircle.moveObject.transform.position.x - gameObject.transform.position.x, 0, norCircle.moveObject.transform.position.z - gameObject.transform.position.z).normalized;
 
             beforeinputVelocity = inputMoveVelocity.entity;
         }
-        if(dirrection != Vector3.zero) { smooth.Update(dirrection); }   // èåèï™äÚÇèëÇ©Ç»Ç¢Ç∆ÉGÉâÅ[Ç™èoÇÈ
+
+        norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
+
+        smooth.Update(dirrection);  
         
         norCircle.Limit();
     }

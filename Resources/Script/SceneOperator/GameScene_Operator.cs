@@ -12,7 +12,7 @@ public class GameScene_Operator : SceneOperator
         {
             playerInstancer.Instance();
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
-            playerInstancer.lastObj.transform.position = new Vector3(preset.playerPos[i].x, 0.0f, preset.playerPos[i].y);
+            playerInstancer.lastObj.transform.position = preset.playerPos[i];
         }
     }
 
