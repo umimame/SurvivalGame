@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TestSC : MonoBehaviour
+public class TitleSceneChanger : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -22,7 +22,8 @@ public class TestSC : MonoBehaviour
         {
             if (Input.anyKey)
             {
-                SceneManager.LoadScene("TitleScene");
+                Debug.Log("タイトル画面で何かキーが押されたよ");
+                SceneManager.LoadScene("TestScene");
             }
         }
     }
