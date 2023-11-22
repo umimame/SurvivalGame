@@ -1,43 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
-public class apple : Item
+public class Apple: Item
 {
-    // Start is called before the first frame update
-    public apple()
+    public Apple()
     {
-        score = 5;
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Trigger Enter: " + other.gameObject.name);
-
-        if (other.CompareTag("Player"))
-        {
-            Item item = GetComponent<Item>();
-            if (item != null)
-            {
-                item.HitThePlayer(other.gameObject);
-            }
-        }
+        score = 1;
+        onHitPlayer += OnHitApple;
     }
     // Update is called once per frame
-    public override void HitThePlayer(GameObject other)
+
+    public void OnHitApple(GameObject other)
     {
-        base.HitThePlayer(other);
-        if (other.gameObject.CompareTag("Player"))
-        {
-            PlayerController player = other.GetComponent<PlayerController>();
-            if (player != null)
-            {
-                player.AddScore(score);
-                Debug.Log(score);
-                Debug.Log("apple");
-            }
-            Destroy(gameObject);
-        }
+        PlayerController player = other.GetComponent<PlayerController>();
+        player.AddScore(score);
+        Debug.Log(score);
+        Debug.Log("orange");
     }
 }
