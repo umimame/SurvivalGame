@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using My;
+using AddClass;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -14,7 +14,7 @@ using UnityEditor;
     [field: SerializeField] public List<Color> playerColorPre { get; set; } = new List<Color>();
     [field: SerializeField] public List<Color> playerColorSets { get; set; } = new List<Color>();
     [field: SerializeField] public List<Rect> cameraRectPre { get; set; } = new List<Rect>();
-    [field: SerializeField] public List<Vector3> playerPos { get; set; } = new List<Vector3>();
+    [field: SerializeField] public List<Vector2> playerPos { get; set; } = new List<Vector2>();
     public void Initialize()
     {
         colorPre = new List<Color>(playerType);

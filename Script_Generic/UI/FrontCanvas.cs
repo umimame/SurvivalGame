@@ -1,4 +1,4 @@
-using My;
+using AddClass;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

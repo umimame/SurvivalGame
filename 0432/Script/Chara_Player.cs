@@ -1,10 +1,10 @@
-using My;
+using AddClass;
 using System;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using GenericChara;
 public class Chara_Player : Chara
 {
     public enum MotionState
@@ -25,6 +25,7 @@ public class Chara_Player : Chara
     [field: SerializeField] public Interval overStamina {  get; private set; }
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
+    [SerializeField] private TransformOffset norCircleOffset;
     [SerializeField] private SmoothRotate smooth;
 
     [SerializeField, NonEditable] private Vector2 beforeinputVelocity;
@@ -265,7 +266,7 @@ public class Chara_Player : Chara
         }
 
         norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
-
+        norCircleOffset.Update(norCircle.moveObject);
         smooth.Update(dirrection);  
         
         norCircle.Limit();
@@ -335,10 +336,11 @@ public class Chara_Player : Chara
 
         if(score > 0)
         {
-            lastAttacker.AddScore(score / 2);
+            Chara_Player _lastAttacker = (Chara_Player)lastAttacker;
+            _lastAttacker.AddScore(score / 2);
             score /= 2;
             Debug.Log(this.score);
-            Debug.Log(lastAttacker.score);
+            Debug.Log(_lastAttacker.score);
         }
     }
 

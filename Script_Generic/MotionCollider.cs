@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using AddClass;
+using GenericChara;
 public class MotionCollider : MonoBehaviour
 {
-    [field: SerializeField] public Chara_Player parent { get; set; }
+    [field: SerializeField] public Chara parent { get; set; }
     [field: SerializeField, NonEditable] public bool enable { get; private set; }
     [SerializeField] private Collider thisCollider;
     [field: SerializeField, NonEditable] public int hitCount { get; private set; }
     [SerializeField, NonEditable] private float damage;
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
-    [SerializeField] private List<Chara_Player> targets = new List<Chara_Player>();
+    [SerializeField] private List<Chara> targets = new List<Chara>();
 
     [field: SerializeField] public MeshRenderer mesh;
     private void Start()
@@ -63,7 +64,7 @@ public class MotionCollider : MonoBehaviour
         }
         else
         {
-            foreach (Chara_Player c in targets)  // targetsをループして
+            foreach (Chara c in targets)  // targetsをループして
             {
                 if (c == you)
                 {
@@ -75,7 +76,7 @@ public class MotionCollider : MonoBehaviour
 
         if (firstTime == true)          // 同一個体でなければ
         {                               // targetsに追加する
-            targets.Add(you.transform.root.GetChild(0).GetComponent<Chara_Player>());
+            targets.Add(you.transform.root.GetChild(0).GetComponent<Chara>());
             hitCountEntitys.Add(0);
         }
 

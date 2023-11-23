@@ -1,5 +1,4 @@
-using My;
-using Unity.VisualScripting;
+using AddClass;
 using UnityEngine;
 
 public class AdulationTarget : MonoBehaviour
@@ -12,6 +11,7 @@ public class AdulationTarget : MonoBehaviour
     [SerializeField] private AdulationType adulationType;
     [field: SerializeField] public GameObject target { get; set; }
     [SerializeField] private Camera targetCamera;
+    [SerializeField] private Vec3Bool rotation;
     [SerializeField] private RectTransform canvas;
     [SerializeField] private Vector3 adjustPos;
     [SerializeField, NonEditable] private Vector3 adulation;
@@ -58,6 +58,23 @@ public class AdulationTarget : MonoBehaviour
             case AdulationType.World:
                 adulation = gameObject.transform.position + (target.transform.position + adjustPos - gameObject.transform.position) * adulationPer;
                 gameObject.transform.position = adulation;
+
+                Quaternion newRotation = gameObject.transform.rotation;
+                if (rotation.x)
+                {
+                    newRotation.x = target.transform.rotation.x;
+                }
+                if (rotation.y)
+                {
+                    newRotation.y = target.transform.rotation.y;
+                }
+                if (rotation.z)
+                {
+                    newRotation.z = target.transform.rotation.z;
+                    Debug.Log("Z");
+                }
+
+                gameObject.transform.rotation = newRotation;
                 break;
 
             case AdulationType.Screen:
