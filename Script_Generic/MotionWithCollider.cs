@@ -1,7 +1,7 @@
-using My;
+using AddClass;
 using System;
 using UnityEngine;
-
+using GenericChara;
 [Serializable] public class MotionWithCollider
 {
     [SerializeField] MotionCollider motionCol;
@@ -10,7 +10,7 @@ using UnityEngine;
     [SerializeField, NonEditable] private float damage;
     [SerializeField, NonEditable] private int hitCount;
 
-    public void Initialize(Animator animator, string clipName, Chara_Player parent)
+    public void Initialize(Animator animator, string clipName, Chara parent)
     {
         motion.Initialize(animator, clipName);
         // motinoCol.Initialize()はアタッチ先のStart関数で実行される

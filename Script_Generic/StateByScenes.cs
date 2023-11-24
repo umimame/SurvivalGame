@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using My;
+using AddClass;
 
-namespace My
+namespace AddClass
 {
     public class StateByScenes : MonoBehaviour
     {

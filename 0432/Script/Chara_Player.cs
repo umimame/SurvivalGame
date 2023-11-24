@@ -1,10 +1,10 @@
-using My;
+using AddClass;
 using System;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using GenericChara;
 public class Chara_Player : Chara
 {
     public enum MotionState
@@ -25,6 +25,7 @@ public class Chara_Player : Chara
     [field: SerializeField] public Interval overStamina {  get; private set; }
     [SerializeField] private PlayerInput input;
     [SerializeField] private CircleClamp norCircle;
+    [SerializeField] private TransformOffset norCircleOffset;
     [SerializeField] private SmoothRotate smooth;
 
     [SerializeField, NonEditable] private Vector2 beforeinputVelocity;
@@ -249,21 +250,24 @@ public class Chara_Player : Chara
     public void DirrectionManager()
     {
 
+        Vector3 addPos; 
+        Vector3 newPos;
         if (inputting == true)  // “ü—Í‚³‚ê‚Ä‚¢‚ê‚Î
         {                       // Œü‚«‚ð§Œä
             norCircle.AdjustByCenter();
-            Vector3 addPos;
             addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
-            addPos.y = transform.position.y;
             addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
             addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
-            Vector3 newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
+            newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
             norCircle.moveObject.transform.position = newPos;
-            dirrection = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
+            dirrection = new Vector3(norCircle.moveObject.transform.position.x - gameObject.transform.position.x, 0, norCircle.moveObject.transform.position.z - gameObject.transform.position.z).normalized;
 
             beforeinputVelocity = inputMoveVelocity.entity;
         }
-        if(dirrection != Vector3.zero) { smooth.Update(dirrection); }   // ðŒ•ªŠò‚ð‘‚©‚È‚¢‚ÆƒGƒ‰[‚ªo‚é
+
+        norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
+        norCircleOffset.Update(norCircle.moveObject);
+        smooth.Update(dirrection);  
         
         norCircle.Limit();
     }
@@ -332,10 +336,11 @@ public class Chara_Player : Chara
 
         if(score > 0)
         {
-            lastAttacker.AddScore(score / 2);
+            Chara_Player _lastAttacker = (Chara_Player)lastAttacker;
+            _lastAttacker.AddScore(score / 2);
             score /= 2;
             Debug.Log(this.score);
-            Debug.Log(lastAttacker.score);
+            Debug.Log(_lastAttacker.score);
         }
     }
 
