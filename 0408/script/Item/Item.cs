@@ -11,6 +11,11 @@ public class Item : MonoBehaviour
     public Action<GameObject> onHitPlayer;
     // Start is called before the first frame update
 
+    private void Update()
+    {
+        transform.Translate(Vector3.down * 5f * Time.deltaTime);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger Enter: " + other.gameObject.name);

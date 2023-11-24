@@ -16,6 +16,6 @@ public class Apple: Item
         PlayerController player = other.GetComponent<PlayerController>();
         player.AddScore(score);
         Debug.Log(score);
-        Debug.Log("orange");
+        Debug.Log("Apple");
     }
 }
