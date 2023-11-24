@@ -639,7 +639,7 @@ namespace AddClass
 
         public void Initialize()
         {
-            moveObject.transform.position = center.transform.position;
+
         }
         public void AdjustByCenter()
         {
@@ -654,6 +654,65 @@ namespace AddClass
             }
 
         }
+    }
+
+    [Serializable] public class MoveCircleSurface
+    {
+        [field: SerializeField] public Transform centerPos { get; set; }
+        [field: SerializeField] public Transform moveObject { get; set; }
+        [field: SerializeField] bool lookAtCenter { get; set; } // centerを向くか
+        [SerializeField] private Vector3 axis;  // normalizeされる
+
+        [SerializeField, NonEditable] private Vector3 norAxis;
+        [SerializeField, NonEditable] private Quaternion angleAxis;
+        [SerializeField] private float speed;
+        public void Initialize(GameObject moveObject)
+        {
+            this.moveObject = moveObject.transform;
+        }
+        public void Initialize(Transform moveObject)
+        {
+            this.moveObject = moveObject;
+        }
+
+        /// <summary>
+        /// 引数は回転スピード
+        /// </summary>
+        /// <param name="speed"></param>
+        public void Update(float speed )
+        {
+            if (speed == 0.0f) { return; }
+            this.speed = speed;
+
+            norAxis = axis.normalized;
+            angleAxis = Quaternion.AngleAxis(360 * this.speed * Time.deltaTime, norAxis);
+
+            moveObject.position -= centerPos.position;
+            moveObject.position = angleAxis * moveObject.position;
+            moveObject.position += centerPos.position;
+
+            if(lookAtCenter == true)
+            {
+                moveObject.rotation = moveObject.rotation * angleAxis;
+            }
+        }
+        public void Update()
+        {
+            if (this.speed == 0.0f) { return; }
+
+            norAxis = axis.normalized;
+            angleAxis = Quaternion.AngleAxis(360 * this.speed * Time.deltaTime, norAxis);
+
+            moveObject.position -= centerPos.position;
+            moveObject.position = angleAxis * moveObject.position;
+            moveObject.position += centerPos.position;
+
+            if (lookAtCenter == true)
+            {
+                moveObject.rotation = moveObject.rotation * angleAxis;
+            }
+        }
+
     }
 
     [Serializable]
@@ -921,6 +980,9 @@ namespace AddClass
         [field: SerializeField, NonEditable] public T entity { get; set; }
         [field: SerializeField, NonEditable] public T plan { get; set; }
 
+        /// <summary>
+        /// plan = entity
+        /// </summary>
         public void Assign()
         {
             plan = entity;

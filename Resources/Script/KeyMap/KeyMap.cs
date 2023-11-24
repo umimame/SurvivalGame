@@ -37,6 +37,15 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""InputViewPoint"",
+                    ""type"": ""Value"",
+                    ""id"": ""5fe2b712-9fb7-4b9f-ba0e-dacabe884339"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Running"",
                     ""type"": ""Value"",
                     ""id"": ""a2430b69-b197-43aa-a9ee-52e8722cea9f"",
@@ -196,6 +205,28 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                     ""action"": ""Damage"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b046c92-92d5-4762-a740-6c19252e839e"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""InputViewPoint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fc72ef5-4c90-4808-aed7-efa441222b1a"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keybord"",
+                    ""action"": ""InputViewPoint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -228,6 +259,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_InputViewPoint = m_Player.FindAction("InputViewPoint", throwIfNotFound: true);
         m_Player_Running = m_Player.FindAction("Running", throwIfNotFound: true);
         m_Player_Attack1 = m_Player.FindAction("Attack1", throwIfNotFound: true);
         m_Player_Damage = m_Player.FindAction("Damage", throwIfNotFound: true);
@@ -293,6 +325,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_InputViewPoint;
     private readonly InputAction m_Player_Running;
     private readonly InputAction m_Player_Attack1;
     private readonly InputAction m_Player_Damage;
@@ -301,6 +334,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
         private @KeyMap m_Wrapper;
         public PlayerActions(@KeyMap wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @InputViewPoint => m_Wrapper.m_Player_InputViewPoint;
         public InputAction @Running => m_Wrapper.m_Player_Running;
         public InputAction @Attack1 => m_Wrapper.m_Player_Attack1;
         public InputAction @Damage => m_Wrapper.m_Player_Damage;
@@ -316,6 +350,9 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @InputViewPoint.started += instance.OnInputViewPoint;
+            @InputViewPoint.performed += instance.OnInputViewPoint;
+            @InputViewPoint.canceled += instance.OnInputViewPoint;
             @Running.started += instance.OnRunning;
             @Running.performed += instance.OnRunning;
             @Running.canceled += instance.OnRunning;
@@ -332,6 +369,9 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @InputViewPoint.started -= instance.OnInputViewPoint;
+            @InputViewPoint.performed -= instance.OnInputViewPoint;
+            @InputViewPoint.canceled -= instance.OnInputViewPoint;
             @Running.started -= instance.OnRunning;
             @Running.performed -= instance.OnRunning;
             @Running.canceled -= instance.OnRunning;
@@ -379,6 +419,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnInputViewPoint(InputAction.CallbackContext context);
         void OnRunning(InputAction.CallbackContext context);
         void OnAttack1(InputAction.CallbackContext context);
         void OnDamage(InputAction.CallbackContext context);

@@ -18,21 +18,26 @@ public class Chara_Player : Chara
         None,
     }
 
+    [SerializeField] private PlayerInput input;
     [field: SerializeField] public int score { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [field: SerializeField] public float dashCost { get; private set; }
     [field: SerializeField] public Interval overStamina {  get; private set; }
-    [SerializeField] private PlayerInput input;
+    [SerializeField] private MoveCircleSurface viewCircle;
+    [SerializeField] private MoveCircleSurface viewCircleVertical;
     [SerializeField] private CircleClamp norCircle;
     [SerializeField] private TransformOffset norCircleOffset;
-    [SerializeField] private SmoothRotate smooth;
 
-    [SerializeField, NonEditable] private Vector2 beforeinputVelocity;
-    [SerializeField, NonEditable] private bool inputting;   // 移動の入力
+    [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
+    [SerializeField, NonEditable] private bool viewPointInputting;  // 視点の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
     [SerializeField, NonEditable] private Vector3 dirrection;
+    [SerializeField] private Vector2 rangeOfViewPoing;
+    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
+    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputViewPoint;
+
     [SerializeField] private Animator animator;
     [SerializeField, NonEditable] private MotionState motionState;
     private float velocitySum;
@@ -73,9 +78,8 @@ public class Chara_Player : Chara
         dashSpeed.Initialize();
 
         gameObject.tag = gameObject.transform.parent.tag;
-        beforeinputVelocity = Vector2.zero;
+        //viewCircle.Initialize(gameObject);
         norCircle.Initialize();
-        smooth.Initialize(gameObject);
         input = GetComponent<PlayerInput>();
         base.Start();
 
@@ -128,16 +132,17 @@ public class Chara_Player : Chara
             }
         }
 
-        animator.speed = 1;                                                     // アニメーションスピードのリセット
-        if (hp.entity <= 0) { alive = false; }                                  // 生存boolのリセット
-        inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;  // 入力boolのリセット
-        rigor = false;                                                          // 硬直boolのリセット
+        animator.speed = 1;                                                             // アニメーションスピードのリセット
+        if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
+        moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
+        viewPointInputting = (inputViewPoint.entity != Vector2.zero) ? true : false;    // 視点boolのリセット
+        rigor = false;                                                                  // 硬直boolのリセット
 
         if (alive == true)
         {
             if (rigor == false)
             {
-                if (inputting == false)
+                if (moveInputting == false)
                 {
                     StateChange(MotionState.Idle);
                 }
@@ -157,6 +162,7 @@ public class Chara_Player : Chara
                         StateChange(MotionState.Walk);
                     }
                 }
+
             }
         }
         else
@@ -168,7 +174,7 @@ public class Chara_Player : Chara
         }
     }
 
-    public void IdleUpdate()    // 動ける状態なら
+    public void InputMoveUpdate()    // 動ける状態なら
     {
         overStamina.Update();
 
@@ -182,18 +188,21 @@ public class Chara_Player : Chara
         death.Update();
         damage.Update();
 
+        transform.LookAt(new Vector3(viewCircle.moveObject.position.x, gameObject.transform.position.y, viewCircle.moveObject.position.z)); // 本体は自分の高さを中心に注視する
 
-        if(velocitySum > 1) { velocitySum = 1; }
+        moveVelocity.plan = inputMoveVelocity.plan;
+
+        if (velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
         {
             case MotionState.Idle:
-                IdleUpdate();
+                InputMoveUpdate();
 
                 DirrectionManager();
                 break;
 
             case MotionState.Walk:
-                IdleUpdate();
+                InputMoveUpdate();
 
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
@@ -201,7 +210,7 @@ public class Chara_Player : Chara
                 DirrectionManager();
                 break;
             case MotionState.Run:
-                IdleUpdate();
+                InputMoveUpdate();
 
                 stamina.Update(-dashCost);
                 velocitySum = 1;
@@ -215,7 +224,7 @@ public class Chara_Player : Chara
                 break;
 
             case MotionState.Damage:
-                IdleUpdate();
+                InputMoveUpdate();
                 rigor = true;
                 break;
 
@@ -240,35 +249,28 @@ public class Chara_Player : Chara
         if (rigor == true)
         {
             inputMoveVelocity.plan = Vector2.zero;
+            inputViewPoint.plan = Vector2.zero;
         }
         else
         {
-            inputMoveVelocity.Assign();
+            inputMoveVelocity.Assign();  
+            inputViewPoint.Assign();
+
         }
     }
 
     public void DirrectionManager()
     {
 
-        Vector3 addPos; 
-        Vector3 newPos;
-        if (inputting == true)  // 入力されていれば
+        if (viewPointInputting == true)  // 入力されていれば
         {                       // 向きを制御
-            norCircle.AdjustByCenter();
-            addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
-            addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
-            addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
-            newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
-            norCircle.moveObject.transform.position = newPos;
-            dirrection = new Vector3(norCircle.moveObject.transform.position.x - gameObject.transform.position.x, 0, norCircle.moveObject.transform.position.z - gameObject.transform.position.z).normalized;
-
-            beforeinputVelocity = inputMoveVelocity.entity;
+            viewCircle.Update(inputViewPoint.plan.x);
+            viewCircleVertical.Update(inputViewPoint.plan.y);
         }
 
-        norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
-        norCircleOffset.Update(norCircle.moveObject);
-        smooth.Update(dirrection);  
-        
+        //norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
+        //norCircleOffset.Update(norCircle.moveObject);
+
         norCircle.Limit();
     }
 
@@ -352,6 +354,11 @@ public class Chara_Player : Chara
         velocitySum = Mathf.Abs(value.Get<Vector2>().x) + Mathf.Abs(value.Get<Vector2>().y);
 
         
+    }
+
+    public void OnInputViewPoint(InputValue value)
+    {
+        inputViewPoint.entity = value.Get<Vector2>();
     }
 
     public void OnRunning(InputValue value)

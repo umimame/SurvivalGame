@@ -27,7 +27,7 @@ namespace GenericChara
         protected Engine engine;
         [field: SerializeField, NonEditable] public bool alive { get; protected set; }  //  ê∂ë∂
         [SerializeField] private Interval respawnInterval;
-        [SerializeField] protected EntityAndPlan<Vector2> inputMoveVelocity;
+        [SerializeField] protected EntityAndPlan<Vector2> moveVelocity;
         protected Action<UnderAttackType> underAttackAction;
         [SerializeField] private Interval spawnInvincible;
         [SerializeField] protected Interval invincible;
@@ -88,8 +88,8 @@ namespace GenericChara
         public void AddVelocityPlan()
         {
             Vector3 assign = Vector3.zero;
-            assign.x = inputMoveVelocity.plan.x * assignSpeed;
-            assign.z = inputMoveVelocity.plan.y * assignSpeed;
+            assign.x = moveVelocity.plan.x * assignSpeed;
+            assign.z = moveVelocity.plan.y * assignSpeed;
             engine.velocityPlan += assign;
         }
 
