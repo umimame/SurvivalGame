@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private int playerScore = 0;
+    [SerializeField]private int playerScore = 0;
 
     // スコアを加算するメソッド
     public void AddScore(int score)

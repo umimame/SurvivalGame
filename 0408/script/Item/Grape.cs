@@ -16,6 +16,6 @@ public class Grape : Item
         PlayerController player = other.GetComponent<PlayerController>();
         player.AddScore(score);
         Debug.Log(score);
-        Debug.Log("grape");
+        Debug.Log("Grape");
     }
 }
