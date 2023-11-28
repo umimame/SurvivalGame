@@ -715,46 +715,31 @@ namespace AddClass
 
     }
 
-    [Serializable]
-    public class SmoothRotate
+    #region クラスの実行タイプ
+    /// <summary>
+    /// boolで判断し、trueの場合にメインの処理を行う
+    /// </summary>
+    [Serializable] public class Traffic
     {
-        [SerializeField] private float speed;
-        [SerializeField] private GameObject targetObj;
-        public void Initialize(GameObject targetObj)
+        [field: SerializeField] public bool active { get; set; }
+        public Action activeAction { get; set; }
+        public Action nonActiveAction { get; set; }
+        public void Initialize()
         {
-            this.targetObj = targetObj;
-        }
-        public void Update(Vector3 direction)
-        {
-            if(direction == Vector3.zero) { return; }
-            Quaternion me = targetObj.transform.rotation;
-            Quaternion you = Quaternion.LookRotation(direction);
-            targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
-        }
-    }
-
-    [Serializable]
-    public class EasingAnimator
-    {
-        [field: SerializeField, NonEditable] public float nowRatio { get; private set; }
-        [field: SerializeField, NonEditable] public float maxTime { get; private set; }
-        [SerializeField] private AnimationCurve curve;
-        public Animator animator { get; set; }
-        public void Initialize(float maxTime, Animator animator = null)
-        {
-            if (animator != null) { this.animator = animator; }
-            this.maxTime = maxTime;
-            nowRatio = 0.0f;
-        }
-
-        public void Reset()
-        {
-            nowRatio = 0.0f;
+            active = false;
+            activeAction = null;
+            nonActiveAction = null;
         }
         public void Update()
         {
-            animator.speed *= curve.Evaluate(nowRatio);
-            nowRatio += 1 / maxTime * Time.deltaTime;
+            if(active == true)
+            {
+                activeAction?.Invoke();
+            }
+            else
+            {
+                nonActiveAction?.Invoke();
+            }
         }
     }
 
@@ -927,6 +912,108 @@ namespace AddClass
         }
 
     }
+    #endregion
+
+    [Serializable]
+    public class SmoothRotate
+    {
+        [SerializeField] private float speed;
+        [SerializeField] private GameObject targetObj;
+        public void Initialize(GameObject targetObj)
+        {
+            this.targetObj = targetObj;
+        }
+        public void Update(Vector3 direction)
+        {
+            if(direction == Vector3.zero) { return; }
+            Quaternion me = targetObj.transform.rotation;
+            Quaternion you = Quaternion.LookRotation(direction);
+            targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
+        }
+    }
+
+    /// <summary>
+    /// AnimatorをEasingで制御できる
+    /// </summary>
+    [Serializable]
+    public class Easing
+    {
+        [SerializeField] private Traffic traffic;
+        [field: SerializeField, NonEditable] public float nowTime { get; private set; }
+        [field: SerializeField, NonEditable] public float evaluteValue { get; private set; }
+        [field: SerializeField] public AnimationCurve curve { get; set; }
+
+        public void Initialize()
+        {
+            Reset();
+
+            traffic.Initialize();
+            traffic.activeAction += Evalute;
+            traffic.nonActiveAction += Reset;
+        }
+        public void Update()
+        {
+            traffic.Update();
+        }
+
+        public void Reset()
+        {
+            nowTime = 0.0f;
+            evaluteValue *= curve.Evaluate(nowTime);
+        }
+        public void Evalute()
+        {
+            evaluteValue = curve.Evaluate(nowTime);
+            nowTime += Time.deltaTime;
+        }
+
+        public bool active
+        {
+            get { return traffic.active; }
+            set { traffic.active = value; }
+        }
+    }
+
+    /// <summary>
+    /// AnimatorをEasing割合で制御できる
+    /// </summary>
+    [Serializable]
+    public class EasingAnimator
+    {
+        [SerializeField] private Traffic traffic;
+        [field: SerializeField, NonEditable] public float nowRatio { get; private set; }
+        [field: SerializeField, NonEditable] public float maxTime { get; private set; }
+        [SerializeField] private AnimationCurve curve;
+        public Animator animator { get; set; }
+
+        public void Initialize(float maxTime, Animator animator = null)
+        {
+            if (animator != null) { this.animator = animator; }
+            this.maxTime = maxTime;
+            nowRatio = 0.0f;
+
+
+            traffic.Initialize();
+            traffic.activeAction += Evalute;
+            traffic.nonActiveAction += Reset;
+        }
+        public void Update()
+        {
+            traffic.Update();
+        }
+
+        public void Reset()
+        {
+            nowRatio = 0.0f;
+        }
+        public void Evalute()
+        {
+            animator.speed *= curve.Evaluate(nowRatio);
+            nowRatio += 1 / maxTime * Time.deltaTime;
+        }
+    }
+    
+
 
     /// <summary>
     /// Update内でも一度だけ実行できる

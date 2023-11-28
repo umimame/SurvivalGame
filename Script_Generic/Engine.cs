@@ -1,3 +1,4 @@
+using AddClass;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class Engine : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Collider co;
     [field: SerializeField] public SpriteRenderer img { get; private set; }
+    [field: SerializeField] public Easing gravityEasing { get; private set; }
+    [field: SerializeField] public Vector3 gravityScale { get; set; }   // InspectorÇ≈èdóÕï˚å¸ÇéwíËÇ∑ÇÈ
     [field: SerializeField, NonEditable] public Vector3 velocityPlan {  get; set; }
     [field: SerializeField] public UnityAction velocityPlanAction { get; set; }
     private void Start()
@@ -16,12 +19,19 @@ public class Engine : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         co = GetComponent<Collider>();
         PlanReset();
+        gravityEasing.Initialize();
     }
 
     private void Update()
     {
         PlanReset();
         VelocitySolution();
+    }
+
+    public void SetGravity(GravityManager gm)
+    {
+        gravityEasing.curve = gm.easing;
+        gravityScale = gm.gravityScale;
     }
 
     public void PlanReset()
@@ -35,6 +45,22 @@ public class Engine : MonoBehaviour
     private void VelocitySolution()
     {
         velocityPlanAction?.Invoke();
+        GravitySolution();
         rb.velocity = velocityPlan;
+    }
+
+    private void GravitySolution()
+    {
+        if (gravityActive == false) { return; }
+
+        gravityActive = true;
+        gravityEasing.Update();
+        velocityPlan += gravityScale * gravityEasing.evaluteValue;
+    }
+
+    public bool gravityActive
+    {
+        get { return gravityEasing.active; }
+        set { gravityEasing.active = value; }
     }
 }
