@@ -197,6 +197,17 @@
                 },
                 {
                     "name": "",
+                    "id": "d2c9efcc-78ad-4001-a1d4-411552e10d53",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "GamePad",
+                    "action": "InputViewPoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5fc72ef5-4c90-4808-aed7-efa441222b1a",
                     "path": "<Mouse>/delta",
                     "interactions": "",

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1218d26bbef0b543bc027725d5ed784, type: 3}
   m_Name: GravityManager
   m_EditorClassIdentifier: 
-  <gravityScale>k__BackingField: {x: 0, y: 1, z: 0}
+  <gravityScale>k__BackingField: {x: 0, y: -1, z: 0}
   <easing>k__BackingField:
     serializedVersion: 2
     m_Curve:
@@ -27,12 +27,12 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.5
-      value: -1
-      inSlope: -5.1801825
-      outSlope: -5.1801825
+      value: 1
+      inSlope: 6.471699
+      outSlope: 6.471699
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.0371722
+      inWeight: 0.020408154
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

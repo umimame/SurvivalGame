@@ -17,7 +17,7 @@ public class Engine : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        co = GetComponent<Collider>();
+        if (co == null) { co = GetComponent<Collider>(); }
         PlanReset();
         gravityEasing.Initialize();
     }
@@ -51,7 +51,7 @@ public class Engine : MonoBehaviour
 
     private void GravitySolution()
     {
-        if (gravityActive == false) { return; }
+        //if (gravityActive == false) { return; }
 
         gravityActive = true;
         gravityEasing.Update();
