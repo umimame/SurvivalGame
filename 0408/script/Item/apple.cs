@@ -13,7 +13,7 @@ public class Apple: Item
 
     public void OnHitApple(GameObject other)
     {
-        PlayerController player = other.GetComponent<PlayerController>();
+        Chara_Player player = other.GetComponent<Chara_Player>();
         player.AddScore(score);
         Debug.Log(score);
         Debug.Log("Apple");
