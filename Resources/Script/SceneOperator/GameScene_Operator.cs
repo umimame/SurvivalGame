@@ -4,13 +4,20 @@ public class GameScene_Operator : SceneOperator
 {
     [SerializeField] private Instancer playerInstancer;
     [SerializeField] private int NumberOfPlayer;
+    [field: SerializeField] public GravityManager gravity { get; set; }
     protected override void Start()
     {
         base.Start();
+        PresetsByPlayerType preset = FrontCanvas.instance.presets;
         for(int i = 0; i < NumberOfPlayer; i++)
         {
             playerInstancer.Instance();
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
+            playerInstancer.lastObj.transform.position = preset.playerPos[i];
+
+            Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
+            playerEngine.SetGravity(gravity);
+
         }
     }
 

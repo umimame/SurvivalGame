@@ -1,13 +1,13 @@
-using My;
+using AddClass;
 using System;
 using System.Collections.Generic;
 using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using GenericChara;
 public class Chara_Player : Chara
 {
-    public enum CharaState
+    public enum MotionState
     {
         Idle,
         Walk,
@@ -18,58 +18,100 @@ public class Chara_Player : Chara
         None,
     }
 
-    [SerializeField] private Parameter dashSpeed;
     [SerializeField] private PlayerInput input;
+    [field: SerializeField] public int score { get; private set; }
+    [field: SerializeField] public Parameter stamina { get; private set; }
+    [SerializeField] private Parameter dashSpeed;
+    [field: SerializeField] public float dashCost { get; private set; }
+    [field: SerializeField] public Interval overStamina {  get; private set; }
+    [SerializeField] private MoveCircleSurface viewCircle;
+    [SerializeField] private MoveCircleSurface viewCircleVertical;
     [SerializeField] private CircleClamp norCircle;
-    [SerializeField] private SmoothRotate smooth;
+    [SerializeField] private TransformOffset norCircleOffset;
 
-    [SerializeField] private Vector2 beforeinputVelocity;
-    [SerializeField, NonEditable] private bool inputting;   // 移動の入力
+    [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
+    [SerializeField, NonEditable] private bool viewPointInputting;  // 視点の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
-    private Vector3 dirrection;
+    [SerializeField, NonEditable] private Vector3 dirrection;
+    [SerializeField] private Vector2 rangeOfViewPoing;
+    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
+    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputViewPoint;
+
     [SerializeField] private Animator animator;
-    [SerializeField] private CharaState motionState;
+    [SerializeField, NonEditable] private MotionState motionState;
     private float velocitySum;
-    [SerializeField] private Motion attack1;
+
+
+    [SerializeField] private MotionWithCollider _attack1;
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
     [SerializeField] private Motion damage;
     [SerializeField] private Motion death;
+    
 
     void Awake()
     {
 
     }
-    protected override void Start()
+
+    protected override void Spawn()
     {
-        gameObject.tag = gameObject.transform.parent.tag;
-        beforeinputVelocity = Vector2.zero;
-        norCircle.Initialize();
-        smooth.Initialize(gameObject);
-        input = GetComponent<PlayerInput>();
-        base.Start();
+        base.Spawn();
+
+        hp.Initialize();
+        speed.Initialize();
+        pow.Initialize();
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
         dashSpeed.Initialize();
 
-        attack1.Initialize(animator, Anims.attack1);
-        attack1.enableAction += () => StateChange(CharaState.Attack);  // stateを変えるラムダ式
-        attack1.endAction += () => StateChange(CharaState.None);  
-        attack1.endAction += () => rigor = false;
+        StateChange(MotionState.Idle);
+        alive = true;
+    }
 
-        interruptByDamageMotions.Add(attack1);
+    protected override void Start()
+    {
+        score = 0;
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
+        overStamina.activeAction += stamina.Update;
+        dashSpeed.Initialize();
+
+        gameObject.tag = gameObject.transform.parent.tag;
+        //viewCircle.Initialize(gameObject);
+        norCircle.Initialize();
+        input = GetComponent<PlayerInput>();
+        base.Start();
+
+        underAttackAction += Damage;
+
+        //  Motionの設定
+
+        _attack1.Initialize(animator, Anims.attack1, this);
+        _attack1.enableAction += () => StateChange(MotionState.Attack);
+        _attack1.endAction += () => StateChange(MotionState.None);
+        _attack1.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
-        damage.startAction += () => Damage(50);
-        damage.startAction += () => inputMotionReset();
-        damage.startAction += () => StateChange(CharaState.Damage, true);
-        damage.enableAction += () => StateChange(CharaState.Damage, true);
-        damage.endAction += () => StateChange(CharaState.None);
+        damage.startAction += () => Debug.Log("Damage");
+        damage.startAction += () => InputMotionReset();
+        damage.startAction += () => StateChange(MotionState.Damage, true);
+        damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
+        damage.enableAction += () => StateChange(MotionState.Damage, true);
+        damage.endAction += () => StateChange(MotionState.None);
         damage.endAction += () => rigor = false;
 
+        interruptByDamageMotions.Add(_attack1.motion);
         interruptByDamageMotions.Add(damage);
 
         death.Initialize(animator, Anims.die);
+        death.startAction += () => StateChange(MotionState.Death);
         death.startAction += () => StateChange(CharaState.Death);
-        death.enableAction += () => StateChange(CharaState.Death);
+        death.startAction += ChangeScoreByKill;
+        death.enableAction += () => StateChange(MotionState.Death);
+        death.startAction += () => StateChange(CharaState.Death);
+
+        invincible.Initialize(true,false);
 
     }
 
@@ -77,82 +119,116 @@ public class Chara_Player : Chara
     /// 前提処理<br/>
     /// Updateの最初に行われる
     /// </summary>
-    public void Reset()
+    protected override void Reset()
     {
         dashSpeed.Update();
-        animator.speed = 1;
-        if (hp.entity <= 0) { alive = false; }
-        inputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;
-        rigor = false;
+        invincible.Update();
+
+        stamina.ReturnRange();
+        if(stamina.overZero == true) {
+            if(overStamina.active == true)
+            {
+                overStamina.Reset();
+            }
+        }
+
+        animator.speed = 1;                                                             // アニメーションスピードのリセット
+        if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
+        moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
+        viewPointInputting = (inputViewPoint.entity != Vector2.zero) ? true : false;    // 視点boolのリセット
+        rigor = false;                                                                  // 硬直boolのリセット
 
         if (alive == true)
         {
             if (rigor == false)
             {
-                if (inputting == false)
+                if (moveInputting == false)
                 {
-                    StateChange(CharaState.Idle);
+                    StateChange(MotionState.Idle);
                 }
                 else
                 {
                     if (run == true && velocitySum >= 1)
                     {
-                        StateChange(CharaState.Run);
+                        if(stamina.overZero == false) { StateChange(MotionState.Run); }
 
+                        else
+                        {
+                            StateChange(MotionState.Walk);
+                        }
                     }
                     else 
                     {
-                        StateChange(CharaState.Walk);
+                        StateChange(MotionState.Walk);
                     }
                 }
+
             }
         }
         else
         {
-            if(motionState != CharaState.Damage)
+            if(motionState != MotionState.Damage)
             {
-                death.StartOneShot();
+                death.LaunchOneShot();
             }
         }
+    }
+
+    public void InputMoveUpdate()    // 動ける状態なら
+    {
+        overStamina.Update();
+
     }
     protected override void Update()
     {
         Reset();
         base.Update();
 
-        attack1.Update();
-        damage.Update();
+        _attack1.Update();
         death.Update();
+        damage.Update();
 
-        if(velocitySum > 1) { velocitySum = 1; }
+        transform.LookAt(new Vector3(viewCircle.moveObject.position.x, gameObject.transform.position.y, viewCircle.moveObject.position.z)); // 本体は自分の高さを中心に注視する
+
+        moveVelocity.plan = inputMoveVelocity.plan;
+
+        if (velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
         {
-            case CharaState.Idle:
+            case MotionState.Idle:
+                InputMoveUpdate();
+
                 DirrectionManager();
                 break;
 
-            case CharaState.Walk:
+            case MotionState.Walk:
+                InputMoveUpdate();
+
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
 
                 DirrectionManager();
                 break;
-            case CharaState.Run:
+            case MotionState.Run:
+                InputMoveUpdate();
+
+                stamina.Update(-dashCost);
                 velocitySum = 1;
                 assignSpeed = dashSpeed.entity;
 
                 DirrectionManager();
                 break;
 
-            case CharaState.Attack:
+            case MotionState.Attack:
                 rigor = true;
                 break;
 
-            case CharaState.Damage:
+            case MotionState.Damage:
+                InputMoveUpdate();
                 rigor = true;
                 break;
 
-            case CharaState.Death:
+            case MotionState.Death:
                 rigor = true;
                 break;
         }
@@ -173,43 +249,48 @@ public class Chara_Player : Chara
         if (rigor == true)
         {
             inputMoveVelocity.plan = Vector2.zero;
+            inputViewPoint.plan = Vector2.zero;
         }
         else
         {
-            inputMoveVelocity.Assign();
+            inputMoveVelocity.Assign();  
+            inputViewPoint.Assign();
+
         }
     }
 
     public void DirrectionManager()
     {
 
-        if (inputting == true)  // 入力されていれば
+        if (viewPointInputting == true)  // 入力されていれば
         {                       // 向きを制御
-            norCircle.AdjustByCenter();
-            Vector3 addPos;
-            addPos.x = norCircle.moveObject.transform.position.x + beforeinputVelocity.normalized.x;
-            addPos.y = transform.position.y;
-            addPos.z = norCircle.moveObject.transform.position.z + beforeinputVelocity.y;
-            addPos = new Vector3(beforeinputVelocity.x, transform.position.y, beforeinputVelocity.y);
-            Vector3 newPos = norCircle.moveObject.transform.position + (addPos.normalized * norCircle.radius);
-            norCircle.moveObject.transform.position = newPos;
-            dirrection = (norCircle.moveObject.transform.position - gameObject.transform.position).normalized;
-
-            beforeinputVelocity = inputMoveVelocity.entity;
+            viewCircle.Update(inputViewPoint.plan.x);
+            viewCircleVertical.Update(inputViewPoint.plan.y);
         }
-        smooth.Update(dirrection);
+
+        //norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
+        //norCircleOffset.Update(norCircle.moveObject);
+
         norCircle.Limit();
     }
 
-    public void inputMotionReset()
+    public void InputMotionReset()
     {
         foreach(Motion m in interruptByDamageMotions)
         {
-            m.exist.Initialize();
+            if(m.exist.state != ExistState.Disable)
+            {
+                m.cutIn?.Invoke();
+                if(m != interruptByDamageMotions[1])    // 実行中のモーションなら
+                {
+
+                    m.Reset();
+                }
+            }
         }
     }
 
-    public void StateChange(CharaState m, bool affectAlive = false)
+    public void StateChange(MotionState m, bool affectAlive = false)
     {
         if (affectAlive == false)
         {
@@ -224,10 +305,45 @@ public class Chara_Player : Chara
         }
     }
 
-    public void Damage(float damage)
+    public void Damage(UnderAttackType type)
     {
-        if (alive == false) { return; }
-        hp.entity -= damage;
+        if(type == UnderAttackType.Normal)
+        {
+            damage.Launch();
+            invincible.Reset();
+
+        }
+    }
+
+    public void AddScore(int score)
+    {
+        this.score += score;
+    }
+
+
+
+
+    /// <summary>
+    /// 倒された側が行う<br/>
+    /// 最後に攻撃を与えたプレイヤーが得点を得る
+    /// </summary>
+    /// <param name="you"></param>
+    public void ChangeScoreByKill()
+    {
+        Debug.Log("Death");
+        if(lastAttacker == null)
+        {
+            Debug.Log("自滅");
+        }
+
+        if(score > 0)
+        {
+            Chara_Player _lastAttacker = (Chara_Player)lastAttacker;
+            _lastAttacker.AddScore(score / 2);
+            score /= 2;
+            Debug.Log(this.score);
+            Debug.Log(_lastAttacker.score);
+        }
     }
 
     #region PlayerInputに自動で登録されるEvent
@@ -240,6 +356,11 @@ public class Chara_Player : Chara
         
     }
 
+    public void OnInputViewPoint(InputValue value)
+    {
+        inputViewPoint.entity = value.Get<Vector2>();
+    }
+
     public void OnRunning(InputValue value)
     {
         run = Convert.ToBoolean(value.Get<float>());
@@ -248,14 +369,13 @@ public class Chara_Player : Chara
     public void OnAttack1(InputValue value)
     {
         if(rigor == true) { return; }
-        attack1.Start();
+        _attack1.Launch(50, 3);
     }
 
 
     public void OnDamage(InputValue value)
     {
-        if(alive == false) { return; }
-        damage.Start();
+        UnderAttack(50, UnderAttackType.Normal);
 
     }
     #endregion
@@ -263,72 +383,3 @@ public class Chara_Player : Chara
 
 }
 
-
-[Serializable] public class Motion
-{
-    [SerializeField] private float motionTime;
-    [SerializeField] private float adjustMotionTime;
-    [field: SerializeField] public Interval interval { get; set; }
-
-    [field: SerializeField] public Exist exist { get; set; }
-    [SerializeField] private EasingAnimator easAnim;
-    public void Initialize(Animator animator, string clipName)
-    {
-        motionTime = AddFunction.GetAnimationClipLength(animator, clipName);
-        motionTime += adjustMotionTime;
-
-        easAnim.Initialize(motionTime, animator);
-        interval.Initialize(false, true, motionTime);
-
-        exist.start += easAnim.Reset;
-
-        exist.enable += interval.Update;
-        exist.enable += easAnim.Update;
-        interval.limitAction += exist.Finish;
-    }
-
-    public void Update()
-    {
-        exist.Update();
-    }
-
-    public void Start()
-    {
-        exist.Start();
-    }
-    public void StartOneShot()
-    {
-        exist.StartOneShot();
-    }
-
-    public bool active
-    {
-        get
-        {
-            return !interval.active;
-        }
-    }
-
-    public Action initializeAction
-    {
-        get { return exist.initialize; }
-        set { exist.initialize = value; }
-    }
-    public Action startAction
-    {
-        get { return exist.start; }
-        set { exist.start = value; }
-    }
-
-    public Action enableAction
-    {
-        get { return exist.enable; }
-        set { exist.enable = value; }
-    }
-    public Action endAction
-    {
-        get { return interval.limitAction; }
-        set { interval.limitAction = value; }
-    }
-
-}
