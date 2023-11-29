@@ -191,7 +191,7 @@ public class Chara_Player : Chara
         death.Update();
         damage.Update();
 
-        viewPointManager.VerticalOffset(transform);
+        //viewPointManager.VerticalOffset(transform);
         viewPointManager.LookAtViewPoint(transform, true, false, true); // ‚‚³‚Í–{‘Ì‚ğ’†S‚É‚·‚é
 
         moveVelocity.plan = inputMoveVelocity.plan;

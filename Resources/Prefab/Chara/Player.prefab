@@ -910,9 +910,6 @@ MonoBehaviour:
     value: 0
     <valueIncreseType>k__BackingField: 0
   viewPointManager: {fileID: 8138028333509969422}
-  inputViewPoint:
-    <entity>k__BackingField: {x: 0, y: 0}
-    <plan>k__BackingField: {x: 0, y: 0}
   viewCircle:
     <centerPos>k__BackingField: {fileID: 4064012994823538041}
     <moveObject>k__BackingField: {fileID: 8284568979411276808}
@@ -1114,12 +1111,12 @@ MonoBehaviour:
   <inputViewPoint>k__BackingField:
     <entity>k__BackingField: {x: 0, y: 0}
     <plan>k__BackingField: {x: 0, y: 0}
-  viewPointPosPlan:
+  <viewPointPosPlan>k__BackingField:
     <entity>k__BackingField: {x: 0, y: 0, z: 0}
     <plan>k__BackingField: {x: 0, y: 0, z: 0}
   viewPointObject: {fileID: 8284568979411276808}
   viewCircleHorizontal:
-    <centerPos>k__BackingField: {fileID: 4064012994823538041}
+    <centerPos>k__BackingField: {fileID: 2479317589100852677}
     <moveObject>k__BackingField: {fileID: 8284568979411276808}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 1, z: 0}
@@ -1128,7 +1125,7 @@ MonoBehaviour:
     speed: 0
     <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
   viewCircleVertical:
-    <centerPos>k__BackingField: {fileID: 4064012994823538041}
+    <centerPos>k__BackingField: {fileID: 2479317589100852677}
     <moveObject>k__BackingField: {fileID: 8284568979411276808}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 0, z: 0}
@@ -1147,6 +1144,7 @@ MonoBehaviour:
     <moveObject>k__BackingField: {fileID: 4060283382521788183}
     <radius>k__BackingField: 5
   norHorizontalCircleOffset: {fileID: 0}
+  centerPos: {fileID: 2479317589100852677}
 --- !u!114 &4064012994823538040
 MonoBehaviour:
   m_ObjectHideFlags: 0
