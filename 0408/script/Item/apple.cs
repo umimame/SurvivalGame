@@ -14,7 +14,7 @@ public class Apple: Item
     public void OnHitApple(GameObject other)
     {
         Chara_Player player = other.GetComponent<Chara_Player>();
-        //player.AddScore(score);
+        player.AddScore(score);
         Debug.Log(score);
         Debug.Log("Apple");
     }

@@ -14,7 +14,7 @@ public class Grape : Item
     public void OnHitGrape(GameObject other)
     {
         Chara_Player player = other.GetComponent<Chara_Player>();
-        //player.AddScore(score);
+        player.AddScore(score);
         Debug.Log(score);
         Debug.Log("Grape");
     }

@@ -15,7 +15,7 @@ public class Orange : Item
     public void OnHitOrange(GameObject other)
     {
         Chara_Player player = other.GetComponent<Chara_Player>();
-        //player.AddScore(score);
+        player.AddScore(score);
         Debug.Log(score);
         Debug.Log("Orange");
     }
