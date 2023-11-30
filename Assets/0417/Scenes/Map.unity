@@ -1040,15 +1040,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b11a172882d1eb4a8a6bb51ef4f0673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createPrefab: {fileID: 7104513647526755138, guid: 11251117e0f8b204b9d17bb16c0a66ca, type: 3}
-  range1A: {fileID: 1266012691}
-  range1B: {fileID: 907363023}
-  range2A: {fileID: 1580477303}
-  range2B: {fileID: 1887548294}
-  range3A: {fileID: 934680263}
-  range3B: {fileID: 1792058152}
-  range4A: {fileID: 225738223}
-  range4B: {fileID: 946861047}
+  createItem:
+  - {fileID: 7104513647526755138, guid: 11251117e0f8b204b9d17bb16c0a66ca, type: 3}
+  - {fileID: 8480716511039263713, guid: 6376876ae7ac14f46b02695d6ab65df9, type: 3}
+  - {fileID: 6959689696860600343, guid: d5d88dc18bfff994cb5cccbee098624b, type: 3}
+  ranges:
+  - {fileID: 1266012691}
+  - {fileID: 907363023}
+  - {fileID: 1580477303}
+  - {fileID: 1887548294}
+  - {fileID: 934680263}
+  - {fileID: 1792058152}
+  - {fileID: 225738223}
+  - {fileID: 946861047}
   RespawnTime: 1
 --- !u!4 &823292430
 Transform:

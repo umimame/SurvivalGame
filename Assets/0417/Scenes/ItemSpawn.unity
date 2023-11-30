@@ -431,15 +431,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b11a172882d1eb4a8a6bb51ef4f0673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createPrefab: {fileID: 7104513647526755138, guid: 11251117e0f8b204b9d17bb16c0a66ca, type: 3}
-  range1A: {fileID: 634791390}
-  range1B: {fileID: 954573563}
-  range2A: {fileID: 492649209}
-  range2B: {fileID: 1886770119}
-  range3A: {fileID: 1258706092}
-  range3B: {fileID: 1574939591}
-  range4A: {fileID: 1154818563}
-  range4B: {fileID: 1262358236}
+  createItem:
+  - {fileID: 7104513647526755138, guid: 11251117e0f8b204b9d17bb16c0a66ca, type: 3}
+  - {fileID: 8480716511039263713, guid: 6376876ae7ac14f46b02695d6ab65df9, type: 3}
+  - {fileID: 6959689696860600343, guid: d5d88dc18bfff994cb5cccbee098624b, type: 3}
+  ranges:
+  - {fileID: 634791390}
+  - {fileID: 954573563}
+  - {fileID: 492649209}
+  - {fileID: 1886770119}
+  - {fileID: 1258706092}
+  - {fileID: 1574939591}
+  - {fileID: 1154818563}
+  - {fileID: 1262358236}
   RespawnTime: 0.001
 --- !u!1 &954573562
 GameObject:
