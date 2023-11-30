@@ -379,7 +379,7 @@ MonoBehaviour:
   OrangePrefab: {fileID: 4545166431280258023, guid: 9de1b17fac4296548b437f9a3efbedc1, type: 3}
   totalItems: 50
   spawnInterval: 60
-  spawnArea: {x: 10, y: 5}
+  spawnArea: {x: 8, y: 5}
 --- !u!4 &861041125
 Transform:
   m_ObjectHideFlags: 0
