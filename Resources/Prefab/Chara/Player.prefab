@@ -909,6 +909,7 @@ MonoBehaviour:
     <interval>k__BackingField: 1.5
     value: 0
     <valueIncreseType>k__BackingField: 0
+  cam: {fileID: 4064012993921943242}
   viewPointManager: {fileID: 8138028333509969422}
   inputMoveVelocity:
     <entity>k__BackingField: {x: 0, y: 0}

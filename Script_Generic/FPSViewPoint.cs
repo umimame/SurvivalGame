@@ -46,21 +46,18 @@ public class FPSViewPoint : MonoBehaviour
 
         if (inputViewPoint.entity == Vector2.zero)
         {
-            Debug.Log("zero");
             //viewPointPosPlan = viewPointObject.position;
         }
         else
         {
-            Debug.Log("inputting");
         }
         viewPointPosPlan = Vector3.zero;
-        Debug.Log(viewPointPosPlan);
+        Vector3 newPlan = Vector3.zero;
+        newPlan = Vector3.Scale(centerPos.forward, new Vector3(5, 5, 5));
         VerticalOffset(centerPos);
 
-        Debug.Log(viewPointPosPlan);
-        Vector3 newPlan = Vector3.zero;
-        newPlan.x = centerPos.position.x;
-        newPlan.z = centerPos.position.z;
+        //newPlan.x = centerPos.position.x;
+        //newPlan.z = centerPos.position.z;
 
         //newPlan.x += viewCircleHorizontal.NewPosUpdate(inputViewPoint.plan.x).x;
         //newPlan.y += viewCircleHorizontal.NewPosUpdate(inputViewPoint.plan.x).y;
@@ -78,8 +75,7 @@ public class FPSViewPoint : MonoBehaviour
         viewPointPosPlan += newPlan;
 
         viewPointObject.position = viewPointPosPlan;
-        Debug.Log(viewPointObject.position);
-        norHorizontalCircle.Limit();
+        //norHorizontalCircle.Limit();
     }
 
     /// <summary>

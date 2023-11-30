@@ -25,6 +25,7 @@ public class Chara_Player : Chara
     [field: SerializeField] public float dashCost { get; private set; }
     [field: SerializeField] public Interval overStamina {  get; private set; }
 
+    [SerializeField] private Camera cam;
     [SerializeField] private FPSViewPoint viewPointManager;
 
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
@@ -187,7 +188,9 @@ public class Chara_Player : Chara
         //viewPointManager.VerticalOffset(transform);
         viewPointManager.LookAtViewPoint(transform, true, false, true); // ‚‚³‚Í–{‘Ì‚ð’†S‚É‚·‚é
 
-        moveVelocity.plan = inputMoveVelocity.plan;
+        Vector3 cameraForward = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z).normalized;
+        Vector3 movePos = cameraForward * inputMoveVelocity.plan.y + cam.transform.right * inputMoveVelocity.plan.x;
+        moveVelocity.plan = new Vector2(movePos.x, movePos.z);
 
         if (velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
