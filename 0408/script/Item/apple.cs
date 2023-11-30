@@ -11,11 +11,8 @@ public class Apple: Item
     }
     // Update is called once per frame
 
-    public void OnHitApple(GameObject other)
+    public void OnHitApple(Chara_Player player)
     {
-        Chara_Player player = other.GetComponent<Chara_Player>();
         player.AddScore(score);
-        Debug.Log(score);
-        Debug.Log("Apple");
     }
 }

@@ -1,10 +1,9 @@
 using AddClass;
+using GenericChara;
 using System;
 using System.Collections.Generic;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using GenericChara;
 public class Chara_Player : Chara
 {
     public enum MotionState
@@ -30,13 +29,12 @@ public class Chara_Player : Chara
 
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
-    [SerializeField, NonEditable] private bool viewPointInputting;  // 視点の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
     [SerializeField, NonEditable] private Vector3 dirrection;
 
     [SerializeField] private Animator animator;
-    [SerializeField, NonEditable] private MotionState motionState;
+    [field: SerializeField, NonEditable] public MotionState motionState;
     private float velocitySum;
 
 
@@ -53,17 +51,17 @@ public class Chara_Player : Chara
 
     protected override void Spawn()
     {
-        base.Spawn();
+        //base.Spawn();
 
-        hp.Initialize();
-        speed.Initialize();
-        pow.Initialize();
-        stamina.Initialize();
-        overStamina.Initialize(true, false);
-        dashSpeed.Initialize();
+        //hp.Initialize();
+        //speed.Initialize();
+        //pow.Initialize();
+        //stamina.Initialize();
+        //overStamina.Initialize(true, false);
+        //dashSpeed.Initialize();
 
-        StateChange(MotionState.Idle);
-        alive = true;
+        //StateChange(MotionState.Idle);
+        //alive = true;
     }
 
     protected override void Start()
@@ -132,7 +130,6 @@ public class Chara_Player : Chara
         animator.speed = 1;                                                             // アニメーションスピードのリセット
         if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
         moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
-        viewPointInputting = (viewPointManager.inputViewPoint.entity != Vector2.zero) ? true : false;    // 視点boolのリセット
         rigor = false;                                                                  // 硬直boolのリセット
 
         if (alive == true)
@@ -185,12 +182,9 @@ public class Chara_Player : Chara
         death.Update();
         damage.Update();
 
-        //viewPointManager.VerticalOffset(transform);
         viewPointManager.LookAtViewPoint(transform, true, false, true); // 高さは本体を中心にする
 
-        Vector3 cameraForward = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z).normalized;
-        Vector3 movePos = cameraForward * inputMoveVelocity.plan.y + cam.transform.right * inputMoveVelocity.plan.x;
-        moveVelocity.plan = new Vector2(movePos.x, movePos.z);
+        moveVelocity.plan = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan);
 
         if (velocitySum > 1) { velocitySum = 1; }
         switch (motionState)

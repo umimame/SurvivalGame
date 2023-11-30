@@ -8,32 +8,39 @@ public class Item : MonoBehaviour
     [SerializeField] protected int score;
     public int Score { get { return score; } }
 
-    public Action<GameObject> onHitPlayer;
+    public Action<Chara_Player> onHitPlayer;
     // Start is called before the first frame update
 
     
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
-        Debug.Log("Trigger Enter: " + other.gameObject.name);
 
-        if (other.CompareTag("Player"))
+        if (other.tag == Tags.Player01 || other.tag == Tags.Player02)
         {
-            Item item = GetComponent<Item>();
-            if (item != null)
-            {
-                item.HitThePlayer(other.gameObject);
-            }
+            HitThePlayer(other.gameObject);
+            
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+
+
+        if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
+        {
+            HitThePlayer(other.gameObject);
+
         }
     }
     public virtual void HitThePlayer(GameObject other)
     {
-        if(other.gameObject.CompareTag ("Player"))
+        if(other.tag == Tags.Player01 || other.tag == Tags.Player02)
         {
-            Chara_Player player = other.GetComponent<Chara_Player>();
+            Chara_Player player = other.transform.root.GetComponentInChildren<Chara_Player>();
             if(player != null)
             {
-                onHitPlayer?.Invoke(other);
+                onHitPlayer?.Invoke(player);
             }
             Destroy(gameObject);
         }

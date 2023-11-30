@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.094288595, g: 0.1194504, b: 0.15523562, a: 1}
+  m_IndirectSpecularColor: {r: 0.09420606, g: 0.11945187, b: 0.15501773, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   - {fileID: 1792058152}
   - {fileID: 225738223}
   - {fileID: 946861047}
-  RespawnTime: 1
+  RespawnTime: 0.5
 --- !u!4 &823292430
 Transform:
   m_ObjectHideFlags: 0
@@ -1965,7 +1965,9 @@ MonoBehaviour:
     <state>k__BackingField: 0
     instanceSound: {fileID: 0}
     parent: {fileID: 0}
+  players: []
   NumberOfPlayer: 2
+  nextScene: ResultScene
   <gravity>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
 --- !u!4 &1291896755
 Transform:

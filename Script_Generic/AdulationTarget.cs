@@ -71,7 +71,6 @@ public class AdulationTarget : MonoBehaviour
                 if (rotation.z)
                 {
                     newRotation.z = target.transform.rotation.z;
-                    Debug.Log("Z");
                 }
 
                 gameObject.transform.rotation = newRotation;

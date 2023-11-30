@@ -11,11 +11,8 @@ public class Grape : Item
     }
     // Update is called once per frame
 
-    public void OnHitGrape(GameObject other)
+    public void OnHitGrape(Chara_Player player)
     {
-        Chara_Player player = other.GetComponent<Chara_Player>();
         player.AddScore(score);
-        Debug.Log(score);
-        Debug.Log("Grape");
     }
 }

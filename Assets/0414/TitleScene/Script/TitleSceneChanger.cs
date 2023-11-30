@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class TitleSceneChanger : MonoBehaviour
 {
+    [SerializeField] private string changeScene;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +24,7 @@ public class TitleSceneChanger : MonoBehaviour
             if (Input.anyKey)
             {
                 Debug.Log("タイトル画面で何かキーが押されたよ");
-                SceneManager.LoadScene("TestScene");
+                SceneManager.LoadScene(changeScene);
             }
         }
     }

@@ -143,6 +143,7 @@ using GenericChara;
         exist.start += motionThreshold.Reset;
 
         exist.enable += easAnim.Update;
+        
         exist.enable += () => interval.Update();
         exist.enable += () => motionThreshold.Update(easAnim.nowRatio);
 
@@ -159,13 +160,13 @@ using GenericChara;
         exist.Reset();
         interval.Initialize(false, true, motionTime);
         motionThreshold.Reset();
-        Debug.Log("Reset");
 
     }
 
     public void Update()
     {
         exist.Update();
+        easAnim.active = true;
     }
 
     public void Launch()

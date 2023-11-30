@@ -24,7 +24,7 @@ namespace GenericChara
         [field: SerializeField] public Parameter speed;
         protected float assignSpeed;
         [field: SerializeField] public Parameter pow;
-        protected Engine engine;
+        public Engine engine { get; set; }
         [field: SerializeField, NonEditable] public bool alive { get; protected set; }  //  ê∂ë∂
         [SerializeField] private Interval respawnInterval;
         [SerializeField] protected EntityAndPlan<Vector2> moveVelocity;

@@ -28,12 +28,21 @@ public class PlayerUI : MonoBehaviour
         {
             AddFunction.SetAnchor(scoreText.rectTransform, AddFunction.AnchorPresets.TopLeft);
             AddFunction.SetPivot(scoreText.rectTransform, AddFunction.PivotPresets.TopLeft);
-
+            
+            RectTransform rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            if(rect == null) { Debug.Log("null"); }
+            AddFunction.SetAnchor(rect, AddFunction.AnchorPresets.BottomLeft);
+            AddFunction.SetPivot(rect, AddFunction.PivotPresets.BottomLeft);
         }
         else if(body.tag == Tags.Player02) 
         {
             AddFunction.SetAnchor(scoreText.rectTransform, AddFunction.AnchorPresets.BottomLeft);
             AddFunction.SetPivot(scoreText.rectTransform, AddFunction.PivotPresets.BottomLeft);
+
+            RectTransform rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            if (rect == null) { Debug.Log("null"); }
+            AddFunction.SetAnchor(rect, AddFunction.AnchorPresets.TopLeft);
+            AddFunction.SetPivot(rect, AddFunction.PivotPresets.TopLeft);
         }
     }
 }

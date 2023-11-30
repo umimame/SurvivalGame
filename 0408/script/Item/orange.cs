@@ -12,11 +12,8 @@ public class Orange : Item
     }
     // Update is called once per frame
 
-    public void OnHitOrange(GameObject other)
+    public void OnHitOrange(Chara_Player player)
     {
-        Chara_Player player = other.GetComponent<Chara_Player>();
         player.AddScore(score);
-        Debug.Log(score);
-        Debug.Log("Orange");
     }
 }

@@ -200,6 +200,19 @@ namespace AddClass
             return new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f);
         }
 
+        /// <summary>
+        /// â°é≤xÅAâúçsyÇÃVector2Çï‘Ç∑
+        /// </summary>
+        /// <param name="cam"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static Vector3 GetFPSMoveVec2(Camera cam, Vector2 input)
+        {
+            Vector3 cameraForward = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z).normalized;
+            Vector3 movePos = cameraForward * input.y + cam.transform.right * input.x;
+
+            return new Vector2(movePos.x, movePos.z);
+        }
         public static bool IsEven(int value)
         {
             if (value / 2 == 0)
@@ -711,7 +724,7 @@ namespace AddClass
         [SerializeField] private GameObject center;
         [field: SerializeField] public GameObject moveObject { get; set; }
         [field: SerializeField] public float radius { get; private set; }
-
+        [field: SerializeField, NonEditable] public float currentDistance { get; private set; }
         public void Initialize(GameObject center, GameObject moveObject)
         {
             this.center = center;
@@ -723,10 +736,16 @@ namespace AddClass
         }
         public void Limit()
         {
-            if (Vector2.Distance(moveObject.transform.position, center.transform.position) > radius)
+            currentDistance = Vector2.Distance(moveObject.transform.position, center.transform.position);
+            
+            if (currentDistance > radius)
             {
+                Debug.Log("Limitting");
+
                 Vector3 nor = moveObject.transform.position - center.transform.position;
-                moveObject.transform.position = center.transform.position + nor.normalized * radius;
+                moveObject.transform.position = center.transform.position + nor.normalized * radius; 
+                currentDistance = Vector2.Distance(moveObject.transform.position, center.transform.position);
+
             }
 
         }
@@ -1116,6 +1135,12 @@ namespace AddClass
         {
             animator.speed *= curve.Evaluate(nowRatio);
             nowRatio += 1 / maxTime * Time.deltaTime;
+        }
+
+        public bool active
+        {
+            get { return traffic.active; }
+            set { traffic.active = value; }
         }
     }
     

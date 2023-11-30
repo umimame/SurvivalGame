@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 1788070740429727018}
   - component: {fileID: 2988114091879433033}
   - component: {fileID: 2517806049035123477}
+  - component: {fileID: 7266908614892605099}
   m_Layer: 5
   m_Name: FrontCanvas
   m_TagString: Untagged
@@ -60,6 +61,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -115,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab426c993dab504287184563ce3244d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
+  <debugMode>k__BackingField: 0
   sceneEditor: {fileID: 0}
   editors: []
   <presets>k__BackingField: {fileID: 11400000, guid: 9ab8d9d2cb08b80429ce9d21acd6071a, type: 2}
@@ -224,3 +226,15 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7474081723118478971}
   m_Enabled: 1
+--- !u!114 &7266908614892605099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7474081723118478971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f7900a5d8bcf95448a43d7f58359b40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

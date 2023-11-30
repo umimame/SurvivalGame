@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameScene_Operator : SceneOperator
 {
     [SerializeField] private Instancer playerInstancer;
+    [SerializeField] private List<Chara_Player> players = new List<Chara_Player>();
     [SerializeField] private int NumberOfPlayer;
+    [SerializeField] private string nextScene;
     [field: SerializeField] public GravityManager gravity { get; set; }
     protected override void Start()
     {
@@ -11,12 +15,21 @@ public class GameScene_Operator : SceneOperator
         PresetsByPlayerType preset = FrontCanvas.instance.presets;
         for(int i = 0; i < NumberOfPlayer; i++)
         {
-            playerInstancer.Instance();
+            playerInstancer.Instance(); 
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
-            playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
+            players.Add(playerInstancer.lastObj.GetComponentInChildren<Chara_Player>());
 
             Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
             playerEngine.SetGravity(gravity);
+
+            Collider[] colliders = playerInstancer.lastObj.GetComponentsInChildren<Collider>();
+            foreach(Collider collider in colliders)
+            {
+                collider.gameObject.tag = TagAndArray.ArrayToTag(i);
+                collider.gameObject.layer = 6;      // LayerÇPlayerÇ…ïœçX
+            }
+            playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
+
 
         }
     }
@@ -24,6 +37,14 @@ public class GameScene_Operator : SceneOperator
     protected override void Update()
     {
         base.Update();
+
+        for(int i = 0; i < players.Count; i++)
+        {
+            if (players[i].motionState == Chara_Player.MotionState.Death)
+            {
+                SceneManager.LoadScene(nextScene);
+            }
+        }
     }
 
 }

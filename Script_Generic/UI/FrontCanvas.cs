@@ -25,7 +25,7 @@ public class FrontCanvas : SingletonDontDestroy<FrontCanvas>
     private void FindSceneEditor()
     {
         sceneEditor = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<SceneOperator>();
-     }
+    }
 
     private void SceneChanged(Scene scene, LoadSceneMode mode)
     {

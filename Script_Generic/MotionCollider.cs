@@ -55,6 +55,7 @@ public class MotionCollider : MonoBehaviour
     private void OnTriggerStay(Collider you)
     {
         if(enable == false) { return; }
+        if(!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { return; }
 
         bool firstTime = false;
         bool attacked = false;
@@ -87,7 +88,6 @@ public class MotionCollider : MonoBehaviour
                 attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
                 if(attacked == true) { 
                     hitCountEntitys[i]++;
-                    Debug.Log("Hit!!");
                 }      // ƒqƒbƒg‚³‚¹‚é
             }
         }

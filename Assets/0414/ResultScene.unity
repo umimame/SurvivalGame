@@ -681,7 +681,6 @@ GameObject:
   m_Component:
   - component: {fileID: 660535927}
   - component: {fileID: 660535926}
-  - component: {fileID: 660535925}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -689,14 +688,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &660535925
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 660535924}
-  m_Enabled: 1
 --- !u!20 &660535926
 Camera:
   m_ObjectHideFlags: 0
@@ -1340,6 +1331,7 @@ MonoBehaviour:
   addR: 0
   addG: 0
   addB: 0
+  ShowText: 000000000000000000000000
 --- !u!4 &944517055
 Transform:
   m_ObjectHideFlags: 0
@@ -2049,6 +2041,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1698135365}
   m_CullTransparentMesh: 1
+--- !u!1 &1715162987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1715162989}
+  - component: {fileID: 1715162988}
+  m_Layer: 0
+  m_Name: SceneOperator
+  m_TagString: SceneOperator
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1715162988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715162987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 142ee44936482314b93881a4f03a7675, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <debugMode>k__BackingField: 0
+  canvas:
+    <obj>k__BackingField: {fileID: 7474081723118478971, guid: 663c775d986e7d64ab1bd3135aca749f, type: 3}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+  fadeObj:
+    <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+    fadeUI: {fileID: 0}
+    scene: 
+--- !u!4 &1715162989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1715162987}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 160.21515, y: 3.883284, z: 74.44337}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1781213176
 GameObject:
   m_ObjectHideFlags: 0

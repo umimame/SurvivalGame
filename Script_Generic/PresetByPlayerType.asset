@@ -31,5 +31,5 @@ MonoBehaviour:
     width: 1
     height: 0.495
   <playerPos>k__BackingField:
-  - {x: 178, y: 4, z: 60}
-  - {x: 170, y: 4, z: 60}
+  - {x: 190, y: 2, z: 70}
+  - {x: 170, y: 2, z: 60}
