@@ -774,6 +774,30 @@ namespace AddClass
             }
 
             angleFromCenter = AddFunction.Vector3AngleSet(centerPos.position, moveObject.position);
+
+        }
+        public Vector3 NewPosUpdate(float speed)
+        {
+            if (speed == 0.0f) { return Vector3.zero; }
+            this.speed = speed;
+
+            norAxis = axis.normalized;
+            angleAxis = Quaternion.AngleAxis(360 * this.speed * Time.deltaTime, norAxis);
+
+            Vector3 newPos;
+
+            newPos = moveObject.position - centerPos.position;
+            newPos = angleAxis * newPos;
+            newPos += centerPos.position;
+
+            if (lookAtCenter == true)
+            {
+                moveObject.rotation = moveObject.rotation * angleAxis;
+            }
+
+            angleFromCenter = AddFunction.Vector3AngleSet(centerPos.position, moveObject.position);
+
+            return newPos;
         }
         public void Update()
         {

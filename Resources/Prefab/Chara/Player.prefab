@@ -910,34 +910,6 @@ MonoBehaviour:
     value: 0
     <valueIncreseType>k__BackingField: 0
   viewPointManager: {fileID: 8138028333509969422}
-  viewCircle:
-    <centerPos>k__BackingField: {fileID: 4064012994823538041}
-    <moveObject>k__BackingField: {fileID: 8284568979411276808}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 1, z: 0}
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  viewCircleVertical:
-    <centerPos>k__BackingField: {fileID: 4064012994823538041}
-    <moveObject>k__BackingField: {fileID: 8284568979411276808}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 0, z: 0}
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  viewCircleLimitter:
-    <reaching>k__BackingField: 0
-    <beforeBool>k__BackingField: 0
-    thresholdRange: {x: 0, y: 1.3}
-    currentValue: 0
-    beforeRange: {x: 0, y: 0}
-  norCircle:
-    center: {fileID: 4064012994823538021}
-    <moveObject>k__BackingField: {fileID: 4060283382521788183}
-    <radius>k__BackingField: 5
   inputMoveVelocity:
     <entity>k__BackingField: {x: 0, y: 0}
     <plan>k__BackingField: {x: 0, y: 0}
@@ -1111,9 +1083,7 @@ MonoBehaviour:
   <inputViewPoint>k__BackingField:
     <entity>k__BackingField: {x: 0, y: 0}
     <plan>k__BackingField: {x: 0, y: 0}
-  <viewPointPosPlan>k__BackingField:
-    <entity>k__BackingField: {x: 0, y: 0, z: 0}
-    <plan>k__BackingField: {x: 0, y: 0, z: 0}
+  <viewPointPosPlan>k__BackingField: {x: 0, y: 0, z: 0}
   viewPointObject: {fileID: 8284568979411276808}
   viewCircleHorizontal:
     <centerPos>k__BackingField: {fileID: 2479317589100852677}
@@ -1140,10 +1110,9 @@ MonoBehaviour:
     currentValue: 0
     beforeRange: {x: 0, y: 0}
   norHorizontalCircle:
-    center: {fileID: 4064012994823538021}
+    center: {fileID: 7962367881157238509}
     <moveObject>k__BackingField: {fileID: 4060283382521788183}
     <radius>k__BackingField: 5
-  norHorizontalCircleOffset: {fileID: 0}
   centerPos: {fileID: 2479317589100852677}
 --- !u!114 &4064012994823538040
 MonoBehaviour:
@@ -2160,7 +2129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5908563564856023887, guid: 437ae99d52217ac4f86f0878fb98d79e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.38
+      value: 1.88
       objectReference: {fileID: 0}
     - target: {fileID: 5908563564856023887, guid: 437ae99d52217ac4f86f0878fb98d79e, type: 3}
       propertyPath: m_LocalPosition.z

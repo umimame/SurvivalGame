@@ -13,7 +13,7 @@ public class GameScene_Operator : SceneOperator
         {
             playerInstancer.Instance();
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
-            playerInstancer.lastObj.transform.position = preset.playerPos[i];
+            playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
             Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
             playerEngine.SetGravity(gravity);

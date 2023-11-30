@@ -10,7 +10,7 @@ using UnityEngine;
 public class FPSViewPoint : MonoBehaviour
 {
     [field: SerializeField, NonEditable] public EntityAndPlan<Vector2> inputViewPoint { get; set; }
-    [field: SerializeField, NonEditable] public EntityAndPlan<Vector3> viewPointPosPlan { get; set; }
+    [field: SerializeField, NonEditable] public Vector3 viewPointPosPlan { get; set; }
 
 
     [SerializeField] private Transform viewPointObject;
@@ -19,7 +19,7 @@ public class FPSViewPoint : MonoBehaviour
     [SerializeField] private ThresholdRatio verticalLimitter;
 
     [SerializeField] private CircleClamp norHorizontalCircle;
-    [SerializeField] private Transform norHorizontalCircleOffset;
+    [SerializeField] private Transform centerPos;
 
     private void Start()
     {
@@ -37,33 +37,48 @@ public class FPSViewPoint : MonoBehaviour
     
     private void Update()
     {
-        viewPointPosPlan.Reset(viewPointObject.transform.position);
-        Vector3 newPos = Vector3.zero;
-        newPos.x = inputViewPoint.plan.x;
-        newPos.y = inputViewPoint.plan.y;
-
-        viewPointPosPlan.plan += newPos;
-
-        //viewPointObject.position = viewPointPosPlan.plan;
+        DirrectionManager();
     }
     public void DirrectionManager()
     {
         // å¸Ç´Çêßå‰
+        inputViewPoint.Assign();
 
+        if (inputViewPoint.entity == Vector2.zero)
+        {
+            Debug.Log("zero");
+            //viewPointPosPlan = viewPointObject.position;
+        }
+        else
+        {
+            Debug.Log("inputting");
+        }
+        viewPointPosPlan = Vector3.zero;
+        Debug.Log(viewPointPosPlan);
+        VerticalOffset(centerPos);
 
-        viewCircleHorizontal.Update(inputViewPoint.plan.x);
+        Debug.Log(viewPointPosPlan);
+        Vector3 newPlan = Vector3.zero;
+        newPlan.x = centerPos.position.x;
+        newPlan.z = centerPos.position.z;
 
-        viewCircleVertical.axis = transform.right;
-        viewCircleVertical.Update(-viewPointPosPlan.plan.y);
+        //newPlan.x += viewCircleHorizontal.NewPosUpdate(inputViewPoint.plan.x).x;
+        //newPlan.y += viewCircleHorizontal.NewPosUpdate(inputViewPoint.plan.x).y;
+        
+
+        viewCircleVertical.axis = centerPos.right; 
+        //viewPointPosPlan += viewCircleVertical.NewPosUpdate(-inputViewPoint.plan.y);
+        //viewCircleVertical.Update(-inputViewPoint.plan.y);
 
         // Yé≤ÇÃéãì_êßå¿
         verticalLimitter.Update(viewCircleVertical.angleFromCenter.z);
-        if (verticalLimitter.reaching == false) { viewCircleVertical.Update(inputViewPoint.plan.y); }  // îÕàÕäOÇ»ÇÁÇ»Ç©Ç¡ÇΩÇ±Ç∆Ç…Ç∑ÇÈ
+        //if (verticalLimitter.reaching == false) { viewPointPosPlan.plan -= viewCircleVertical.NewPosUpdate(-inputViewPoint.plan.y); }  // îÕàÕäOÇ»ÇÁÇ»Ç©Ç¡ÇΩÇ±Ç∆Ç…Ç∑ÇÈ
 
 
-        //norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
-        //norCircleOffset.Update(norCircle.moveObject);
+        viewPointPosPlan += newPlan;
 
+        viewPointObject.position = viewPointPosPlan;
+        Debug.Log(viewPointObject.position);
         norHorizontalCircle.Limit();
     }
 
@@ -73,10 +88,10 @@ public class FPSViewPoint : MonoBehaviour
     /// <param name="t1"></param>
     public void VerticalOffset(Transform t1)
     {
-        Vector3 newViewPointPos = viewPointPosPlan.entity;
+        Vector3 newViewPointPos = Vector3.zero;
         newViewPointPos.y = t1.gameObject.transform.position.y;
 
-        viewPointPosPlan.plan += newViewPointPos;
+        viewPointPosPlan += newViewPointPos;
     }
 
     /// <summary>

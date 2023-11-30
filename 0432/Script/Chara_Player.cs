@@ -26,11 +26,6 @@ public class Chara_Player : Chara
     [field: SerializeField] public Interval overStamina {  get; private set; }
 
     [SerializeField] private FPSViewPoint viewPointManager;
-    [SerializeField] private MoveCircleSurface viewCircle;
-    [SerializeField] private MoveCircleSurface viewCircleVertical;
-    [SerializeField] private ThresholdRatio viewCircleLimitter;
-
-    [SerializeField] private CircleClamp norCircle;
 
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
@@ -114,8 +109,6 @@ public class Chara_Player : Chara
         invincible.Initialize(true,false);
 
 
-        // 視点関係
-        viewCircleLimitter.Initialize();
     }
 
     /// <summary>
@@ -202,7 +195,6 @@ public class Chara_Player : Chara
             case MotionState.Idle:
                 InputMoveUpdate();
 
-                viewPointManager.DirrectionManager();
                 break;
 
             case MotionState.Walk:
@@ -211,7 +203,6 @@ public class Chara_Player : Chara
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
 
-                viewPointManager.DirrectionManager();
                 break;
             case MotionState.Run:
                 InputMoveUpdate();
@@ -220,7 +211,6 @@ public class Chara_Player : Chara
                 velocitySum = 1;
                 assignSpeed = dashSpeed.entity;
 
-                viewPointManager.DirrectionManager();
                 break;
 
             case MotionState.Attack:
