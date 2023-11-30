@@ -11,10 +11,7 @@ public class Item : MonoBehaviour
     public Action<GameObject> onHitPlayer;
     // Start is called before the first frame update
 
-    private void Update()
-    {
-        transform.Translate(Vector3.down * 5f * Time.deltaTime);
-    }
+    
 
     void OnTriggerEnter(Collider other)
     {
@@ -33,7 +30,7 @@ public class Item : MonoBehaviour
     {
         if(other.gameObject.CompareTag ("Player"))
         {
-            PlayerController player = other.GetComponent<PlayerController>();
+            Chara_Player player = other.GetComponent<Chara_Player>();
             if(player != null)
             {
                 onHitPlayer?.Invoke(other);

@@ -1349,6 +1349,7 @@ MonoBehaviour:
     instanceSound: {fileID: 0}
     parent: {fileID: 0}
   NumberOfPlayer: 2
+  <gravity>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
 --- !u!4 &1274471492
 Transform:
   m_ObjectHideFlags: 0

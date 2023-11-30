@@ -24,19 +24,20 @@ public class Chara_Player : Chara
     [SerializeField] private Parameter dashSpeed;
     [field: SerializeField] public float dashCost { get; private set; }
     [field: SerializeField] public Interval overStamina {  get; private set; }
+
+    [SerializeField] private FPSViewPoint viewPointManager;
     [SerializeField] private MoveCircleSurface viewCircle;
     [SerializeField] private MoveCircleSurface viewCircleVertical;
-    [SerializeField] private CircleClamp norCircle;
-    [SerializeField] private TransformOffset norCircleOffset;
+    [SerializeField] private ThresholdRatio viewCircleLimitter;
 
+    [SerializeField] private CircleClamp norCircle;
+
+    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
     [SerializeField, NonEditable] private bool viewPointInputting;  // 視点の入力
     [SerializeField, NonEditable] private bool run;         // 走り入力
     [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
     [SerializeField, NonEditable] private Vector3 dirrection;
-    [SerializeField] private Vector2 rangeOfViewPoing;
-    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
-    [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputViewPoint;
 
     [SerializeField] private Animator animator;
     [SerializeField, NonEditable] private MotionState motionState;
@@ -79,7 +80,6 @@ public class Chara_Player : Chara
 
         gameObject.tag = gameObject.transform.parent.tag;
         //viewCircle.Initialize(gameObject);
-        norCircle.Initialize();
         input = GetComponent<PlayerInput>();
         base.Start();
 
@@ -113,6 +113,9 @@ public class Chara_Player : Chara
 
         invincible.Initialize(true,false);
 
+
+        // 視点関係
+        viewCircleLimitter.Initialize();
     }
 
     /// <summary>
@@ -135,7 +138,7 @@ public class Chara_Player : Chara
         animator.speed = 1;                                                             // アニメーションスピードのリセット
         if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
         moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
-        viewPointInputting = (inputViewPoint.entity != Vector2.zero) ? true : false;    // 視点boolのリセット
+        viewPointInputting = (viewPointManager.inputViewPoint.entity != Vector2.zero) ? true : false;    // 視点boolのリセット
         rigor = false;                                                                  // 硬直boolのリセット
 
         if (alive == true)
@@ -188,7 +191,8 @@ public class Chara_Player : Chara
         death.Update();
         damage.Update();
 
-        transform.LookAt(new Vector3(viewCircle.moveObject.position.x, gameObject.transform.position.y, viewCircle.moveObject.position.z)); // 本体は自分の高さを中心に注視する
+        //viewPointManager.VerticalOffset(transform);
+        viewPointManager.LookAtViewPoint(transform, true, false, true); // 高さは本体を中心にする
 
         moveVelocity.plan = inputMoveVelocity.plan;
 
@@ -198,7 +202,7 @@ public class Chara_Player : Chara
             case MotionState.Idle:
                 InputMoveUpdate();
 
-                DirrectionManager();
+                viewPointManager.DirrectionManager();
                 break;
 
             case MotionState.Walk:
@@ -207,7 +211,7 @@ public class Chara_Player : Chara
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
                 assignSpeed = speed.entity;
 
-                DirrectionManager();
+                viewPointManager.DirrectionManager();
                 break;
             case MotionState.Run:
                 InputMoveUpdate();
@@ -216,7 +220,7 @@ public class Chara_Player : Chara
                 velocitySum = 1;
                 assignSpeed = dashSpeed.entity;
 
-                DirrectionManager();
+                viewPointManager.DirrectionManager();
                 break;
 
             case MotionState.Attack:
@@ -249,30 +253,16 @@ public class Chara_Player : Chara
         if (rigor == true)
         {
             inputMoveVelocity.plan = Vector2.zero;
-            inputViewPoint.plan = Vector2.zero;
+           viewPointManager.inputViewPoint.plan = Vector2.zero;
         }
         else
         {
             inputMoveVelocity.Assign();  
-            inputViewPoint.Assign();
+           viewPointManager.inputViewPoint.Assign();
 
         }
     }
 
-    public void DirrectionManager()
-    {
-
-        if (viewPointInputting == true)  // 入力されていれば
-        {                       // 向きを制御
-            viewCircle.Update(inputViewPoint.plan.x);
-            viewCircleVertical.Update(inputViewPoint.plan.y);
-        }
-
-        //norCircle.moveObject.transform.position = new Vector3(norCircle.moveObject.transform.position.x, gameObject.transform.transform.position.y, norCircle.moveObject.transform.position.z);
-        //norCircleOffset.Update(norCircle.moveObject);
-
-        norCircle.Limit();
-    }
 
     public void InputMotionReset()
     {
@@ -358,7 +348,7 @@ public class Chara_Player : Chara
 
     public void OnInputViewPoint(InputValue value)
     {
-        inputViewPoint.entity = value.Get<Vector2>();
+        viewPointManager.inputViewPoint.entity = value.Get<Vector2>();
     }
 
     public void OnRunning(InputValue value)

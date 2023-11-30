@@ -110,7 +110,15 @@ namespace AddClass
             return vec;
         }
 
-        public static float GetAngleByVec2(Vector3 start, Vector3 target)
+        public static float GetAngleByVec3(Vector3 start, Vector3 target)
+        {
+            float angle;
+            Vector3 dt = start - target;
+            angle = Mathf.Atan2(dt.y, dt.x) * Mathf.Rad2Deg;
+
+            return angle;
+        }
+        public static float GetAngleByVec2(Vector2 start, Vector2 target)
         {
             float angle;
             Vector3 dt = start - target;
@@ -119,6 +127,73 @@ namespace AddClass
             return angle;
         }
 
+        /// <summary>
+        /// Vector3で各角度を返す
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        public static Vector3 Vector3AngleSet(Vector3 v1, Vector3 v2)
+        {
+            Vector3 angle;
+
+            Vector2 start;
+            Vector2 end;
+
+            // xを求める
+            start.x = v1.y;
+            start.y = v2.z;
+
+            end.x = v1.y;
+            end.y = v2.z;
+
+            angle.x = Vector3.Angle(start, end);
+
+            // yを求める
+            start.x = v1.x;
+            start.y = v2.z;
+
+            end.x = v1.x;
+            end.y = v2.z;
+
+            angle.y = Vector3.Angle(start, end);
+
+            // zを求める
+            start = v1;
+            end = v2;
+
+            angle.z = Vector3.Angle(start, end);
+
+            return angle;
+        }
+        public static Vector3 Vector3AngleSet(Transform t1, Transform t2)
+        {
+            Vector3 angle;
+
+
+            Vector3 v1;
+            Vector3 v2;
+
+            // xを求める
+            v1 = t1.up - t2.up;
+            v2 = t1.forward - t2.forward;
+
+            angle.x = Vector3.Angle(v1, v2);
+
+            // yを求める
+            v1 = t1.right - t2.right;
+            v2 = t1.forward - t2.forward;
+
+            angle.y = Vector3.Angle(v1, v2);
+
+            // zを求める
+            v1 = t1.up - t2.up;
+            v2 = t1.right - t2.right;
+
+            angle.z = Vector3.Angle(v1, v2);
+
+            return angle;
+        }
 
         public static Vector3 CameraToMouse()
         {
@@ -637,9 +712,10 @@ namespace AddClass
         [field: SerializeField] public GameObject moveObject { get; set; }
         [field: SerializeField] public float radius { get; private set; }
 
-        public void Initialize()
+        public void Initialize(GameObject center, GameObject moveObject)
         {
-
+            this.center = center;
+            this.moveObject = moveObject;
         }
         public void AdjustByCenter()
         {
@@ -661,11 +737,12 @@ namespace AddClass
         [field: SerializeField] public Transform centerPos { get; set; }
         [field: SerializeField] public Transform moveObject { get; set; }
         [field: SerializeField] bool lookAtCenter { get; set; } // centerを向くか
-        [SerializeField] private Vector3 axis;  // normalizeされる
+        [field: SerializeField] public Vector3 axis { get; set; }   // transform.rightなどで代入する
 
         [SerializeField, NonEditable] private Vector3 norAxis;
         [SerializeField, NonEditable] private Quaternion angleAxis;
         [SerializeField] private float speed;
+        [field: SerializeField, NonEditable] public Vector3 angleFromCenter { get; private set; }
         public void Initialize(GameObject moveObject)
         {
             this.moveObject = moveObject.transform;
@@ -695,6 +772,8 @@ namespace AddClass
             {
                 moveObject.rotation = moveObject.rotation * angleAxis;
             }
+
+            angleFromCenter = AddFunction.Vector3AngleSet(centerPos.position, moveObject.position);
         }
         public void Update()
         {
@@ -711,7 +790,10 @@ namespace AddClass
             {
                 moveObject.rotation = moveObject.rotation * angleAxis;
             }
+
+            angleFromCenter = AddFunction.Vector3AngleSet(centerPos.position, moveObject.position);
         }
+
 
     }
 
@@ -840,16 +922,16 @@ namespace AddClass
     [Serializable]
     public class ThresholdRatio
     {
-        [SerializeField, NonEditable] private bool reaching;
-        [SerializeField, NonEditable] private bool beforeBool;
+        [field: SerializeField, NonEditable] public bool reaching { get; private set; }
+        [field: SerializeField, NonEditable] public bool beforeBool { get; private set; }
 
         [SerializeField] private Vector2 thresholdRange;
         [SerializeField, NonEditable] private float currentValue;
         [SerializeField, NonEditable] private Vector2 beforeRange;
-        public MomentAction withinRangeAction { get; set; } = new MomentAction();
-        public Action inRangeAction { get; set; }
-        public MomentAction exitRangeAction { get; set; } = new MomentAction();
-        public Action outOfRangeAction { get; set; }
+        public MomentAction withinRangeAction { get; set; } = new MomentAction();   // 範囲内に入る時に一度行われる
+        public Action inRangeAction { get; set; }                                   // 範囲内に入っている間に行われる
+        public MomentAction exitRangeAction { get; set; } = new MomentAction();     // 範囲外に出る時に一度行われる
+        public Action outOfRangeAction { get; set; }                                // 範囲外に出ている間に行われる
 
         public void Initialize(float min, float max)
         {
@@ -1073,6 +1155,17 @@ namespace AddClass
         public void Assign()
         {
             plan = entity;
+        }
+
+        public void Default()
+        {
+            plan = default;
+            entity = default;
+        }
+        public void Reset(T t1)
+        {
+            plan = t1;
+            entity = t1;
         }
     }
 

@@ -13,7 +13,7 @@ public class Grape : Item
 
     public void OnHitGrape(GameObject other)
     {
-        PlayerController player = other.GetComponent<PlayerController>();
+        Chara_Player player = other.GetComponent<Chara_Player>();
         player.AddScore(score);
         Debug.Log(score);
         Debug.Log("Grape");
