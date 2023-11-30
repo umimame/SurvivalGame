@@ -12,6 +12,7 @@ public class AppleSC : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //落下スピードをランダムで取得
         speed = Random.Range(0.05f, 0.1f);
         
         // CanvasのRectTransformを取得
@@ -24,7 +25,7 @@ public class AppleSC : MonoBehaviour
         MoveApple();
         DestroySelf();
     }
-    void MoveApple()
+    void MoveApple()//リンゴを降らせる
     {
         // transformを取得
         Transform myTransform = this.transform;
@@ -36,14 +37,13 @@ public class AppleSC : MonoBehaviour
         pos.y -= speed;    // y座標をspeed分移動
         myTransform.position = pos;  // 座標を設定
         Debug.Log("posY:" + pos.y);
-        if (pos.y <= 100)
+        if (pos.y <= 100)//リンゴが地面についたら
         {
             speed = 0f;
             time = time + Time.deltaTime;
-
         }
     }
-    void DestroySelf()
+    void DestroySelf()//リンゴが地面に落ちてから自身を殺す
     {
         if (time > 3f)
         {
