@@ -648,12 +648,12 @@ namespace AddClass
         [field: SerializeField] public Action toEnd { get; set; }
         [field: SerializeField] public Action ending { get; set; }
 
-        public bool started { get; private set; }
+        [field: SerializeField, NonEditable] public bool oneShot { get; private set; }
 
         public void Initialize(bool started = false)
         {
             initialize?.Invoke();
-            this.started = started;
+            this.oneShot = started;
             state = ExistState.Disable;
         }
 
@@ -699,13 +699,16 @@ namespace AddClass
         /// </summary>
         public void StartOneShot()
         {
-            if (started == false)
+            if (oneShot == false)
             {
                 state = ExistState.Start;
-                started = true;
+                oneShot = true;
             }
         }
-
+        public void OneShotReset()
+        {
+            oneShot = false;
+        }
         public void Finish()
         {
             state = ExistState.Ending;
