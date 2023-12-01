@@ -1309,6 +1309,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e188dec841d0a4f814bf672b960f70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AllText:
+  - {fileID: 363976079}
+  - {fileID: 844240425}
+  - {fileID: 1437552544}
+  - {fileID: 1698135367}
+  - {fileID: 774662495}
+  - {fileID: 1868860323}
+  - {fileID: 804867033}
+  - {fileID: 1900543253}
+  - {fileID: 963796760}
+  - {fileID: 331459567}
+  - {fileID: 283208377}
+  - {fileID: 1410886332}
   Winner: {fileID: 363976079}
   PlayerName: {fileID: 844240425}
   Kill: {fileID: 1437552544}
@@ -2070,21 +2083,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 142ee44936482314b93881a4f03a7675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <debugMode>k__BackingField: 0
-  canvas:
-    <obj>k__BackingField: {fileID: 7474081723118478971, guid: 663c775d986e7d64ab1bd3135aca749f, type: 3}
-    <clones>k__BackingField: []
-    <state>k__BackingField: 0
-    instanceSound: {fileID: 0}
-    parent: {fileID: 0}
-  fadeObj:
-    <obj>k__BackingField: {fileID: 0}
-    <clones>k__BackingField: []
-    <state>k__BackingField: 0
-    instanceSound: {fileID: 0}
-    parent: {fileID: 0}
-    fadeUI: {fileID: 0}
-    scene: 
 --- !u!4 &1715162989
 Transform:
   m_ObjectHideFlags: 0
