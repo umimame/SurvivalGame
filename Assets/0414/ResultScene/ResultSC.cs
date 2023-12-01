@@ -9,6 +9,10 @@ using Unity.VisualScripting;
 
 public class ResultSC : MonoBehaviour
 {
+    [SerializeField] private TextMeshProUGUI[] AllText = new TextMeshProUGUI[12];
+
+
+
     [SerializeField] private TextMeshProUGUI Winner;
     [SerializeField] private TextMeshProUGUI PlayerName;
     [SerializeField] private TextMeshProUGUI Kill;
@@ -36,12 +40,18 @@ public class ResultSC : MonoBehaviour
     //     GrapeAlpha, GrapeAmountsAlpha, GrapeImageAlpha,//ブドウ
     //     PushAnyKeyAlpha;//PushtoTitle
     [SerializeField] bool[] ShowText = new bool[12];
+    int NowIndex;
+
 
     // Start is called before the first frame update
     void Start()
     {
         //ShowTextをすべてfalseに
-        for (int i = 0; i < ShowText.Length; i++) { ShowText[i] = false; }
+        for (int i = 0; i < ShowText.Length; i++)
+        {
+            ShowText[i] = false;
+            AllText[i].alpha = 0f;
+        }
 
 
         //WinnerAlpha = false;
@@ -88,7 +98,12 @@ public class ResultSC : MonoBehaviour
         //最初にTMProを透明に
         TMProTransparent();
         //時間でテキスト等の透明解除
-        StartCoroutine(TextControl());
+        //StartCoroutine(TextControl());
+
+        //StartCoroutine(ShowTextByTime());
+
+
+        StartCoroutine(Test());
     }
 
     // Update is called once per frame
@@ -97,10 +112,12 @@ public class ResultSC : MonoBehaviour
         //PushtoTitleの色変え
         PushKeyColorChange();
 
-        //PushtoShowText();
+        PushtoBoolInversion();
 
         //ボタンを押してシーン遷移
-        SceneChange();
+        //SceneChange();
+
+        ShowAll();
     }
     void SceneChange()//シーン遷移用
     {
@@ -144,68 +161,87 @@ public class ResultSC : MonoBehaviour
         //PushAnyKey
         PushAnyKey.alpha = 0f;
     }
-    void PushtoShowText()//Space押したらテキスト表示(未完成)
+    void PushtoBoolInversion()//Space押したらテキスト表示(未完成)
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!ShowText[0])
+            for (int i = 0; i < ShowText.Length; i++)
             {
-                ShowText[0] = true;
-                if (!ShowText[1])
+
+                Debug.Log("NowIndex" + NowIndex);
+
+                if (!ShowText[i])
                 {
-                    ShowText[1] = true;
-                    if (!ShowText[2])
-                    {
-                        ShowText[2] = true;
-                        if (!ShowText[3])
-                        { ShowText[3] = true;
-                            if (!ShowText[4])
-                            { ShowText[4] = true;
-                                if (!ShowText[5])
-                                {
-                                    ShowText[5] = true;
-                                    if (!ShowText[6])
-                                    {
-                                        ShowText[6] = true;
-                                        if (!ShowText[7])
-                                        {
-                                            ShowText[7] = true;
-                                            if (!ShowText[8])
-                                            {
-                                                ShowText[8] = true;
-                                                if (!ShowText[9])
-                                                {
-                                                    ShowText[9] = true;
-                                                    if (!ShowText[10])
-                                                    {
-                                                        ShowText[10] = true;
-                                                        if (!ShowText[11])
-                                                        { ShowText[11] = true; }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    ShowText[i] = true;
+                    NowIndex = i;
+                    //Debug.Log("NowIndex" + NowIndex);
+                    break;
                 }
             }
-            
         }
-
-
-        //if (Input.GetKeyUp(KeyCode.Space))
-        //{
-        //    for (int i = 0; i < ShowText.Length; i++)
-        //    {
-        //        ShowText[i] = true;
-        //    }
-
-        //}
-
     }
+    void ShowAll()
+    {
+        for (int i = 0; i < ShowText.Length; i++)
+        {
+            if (ShowText[i])
+            {
+                AllText[i].alpha = 1f;
+                if (ShowText[7])
+                {
+                    AppleImage.color = new Color(1f, 0.759434f, 0.759434f, 1f);
+                }
+                if (ShowText[9])
+                {
+                    OrangeImage.color = new Color(0.9433962f, 0.8610221f, 0.7253471f, 1f);
+                }
+                if (ShowText[11])
+                {
+                    GrapeImage.color = new Color(0.745283f, 0.7277056f, 0.7388983f, 1f);
+                }
+            }
+        }
+    }
+
+    private IEnumerator Test()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            for (int i = 0; i < ShowText.Length; i++)
+            {
+                if (!ShowText[i])
+                {
+                    ShowText[i] = true;
+                    NowIndex = i;
+                    //Debug.Log("NowIndex" + NowIndex);
+                    break;
+                }
+                if (ShowText[i])
+                {
+                    yield return new WaitForSeconds(1f);
+                    NowIndex++;
+                }
+            }
+        }
+       
+    }
+
+
+
+    private IEnumerator ShowTextByTime()
+    {
+        for (int i = NowIndex; i < ShowText.Length; i++)
+        {
+            yield return new WaitForSeconds(1f);
+            ShowText[i] = true;
+            Debug.Log("NowIndex==" + NowIndex);
+            if (ShowText[i])
+            {
+                AllText[i].alpha = 1f;
+            }
+        }
+    }
+
     private IEnumerator TextControl()//時間でテキストなどを表示(α値を1に)
     {
         yield return new WaitForSeconds(1f);
