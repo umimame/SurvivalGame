@@ -129,8 +129,8 @@ using GenericChara;
     [SerializeField] private float adjustMotionTime;
     [field: SerializeField] public Interval interval { get; set; }
     [field: SerializeField] public ThresholdRatio motionThreshold { get; set; }
-    [field: SerializeField] public Exist exist { get; set; }
-    [field: SerializeField] public EasingAnimator easAnim { get; private set; }
+    [field: SerializeField] public Exist exist { get; set; } = new Exist();
+    [field: SerializeField] public EasingAnimator easAnim { get; private set; } = new EasingAnimator();
     public void Initialize(Animator animator, string clipName)
     {
         motionTime = AddFunction.GetAnimationClipLength(animator, clipName);

@@ -876,21 +876,27 @@ MonoBehaviour:
   respawnInterval:
     <active>k__BackingField: 0
     <interval>k__BackingField: 3
-    value: 0
-    <valueIncreseType>k__BackingField: 0
+    <time>k__BackingField:
+      <value>k__BackingField: 0
+      increseType: 0
+      reversalIncrese: 0
   moveVelocity:
-    <entity>k__BackingField: {x: 0, y: 0}
-    <plan>k__BackingField: {x: 0, y: 0}
+    <entity>k__BackingField: {x: 0, y: 0, z: 0}
+    <plan>k__BackingField: {x: 0, y: 0, z: 0}
   spawnInvincible:
     <active>k__BackingField: 0
     <interval>k__BackingField: 3
-    value: 0
-    <valueIncreseType>k__BackingField: 0
+    <time>k__BackingField:
+      <value>k__BackingField: 0
+      increseType: 0
+      reversalIncrese: 0
   invincible:
     <active>k__BackingField: 0
     <interval>k__BackingField: 0.1
-    value: 0
-    <valueIncreseType>k__BackingField: 0
+    <time>k__BackingField:
+      <value>k__BackingField: 0
+      increseType: 0
+      reversalIncrese: 0
   <lastAttacker>k__BackingField: {fileID: 0}
   input: {fileID: 4064012994823538045}
   <score>k__BackingField: 1000
@@ -900,14 +906,46 @@ MonoBehaviour:
     autoRecoverValue: 1
   dashSpeed:
     entity: 0
-    max: 10
+    max: 15
     autoRecoverValue: 0
+  dashEasing:
+    curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3
+        value: 1.5
+        inSlope: 0.33333334
+        outSlope: 0.33333334
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    currentTime:
+      <value>k__BackingField: 0
+      increseType: 0
+      reversalIncrese: 0
+    currentValue: 0
   <dashCost>k__BackingField: 2
   <overStamina>k__BackingField:
     <active>k__BackingField: 0
     <interval>k__BackingField: 1.5
-    value: 0
-    <valueIncreseType>k__BackingField: 0
+    <time>k__BackingField:
+      <value>k__BackingField: 0
+      increseType: 0
+      reversalIncrese: 0
   cam: {fileID: 4064012993921943242}
   viewPointManager: {fileID: 8138028333509969422}
   inputMoveVelocity:
@@ -919,7 +957,7 @@ MonoBehaviour:
   dirrection: {x: 0, y: 0, z: 0}
   animator: {fileID: 6264450182563128498}
   motionState: 0
-  _attack1:
+  attack1:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
       motionTime: 0
@@ -927,8 +965,10 @@ MonoBehaviour:
       <interval>k__BackingField:
         <active>k__BackingField: 0
         <interval>k__BackingField: 0
-        value: 0
-        <valueIncreseType>k__BackingField: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          increseType: 0
+          reversalIncrese: 0
       <motionThreshold>k__BackingField:
         <reaching>k__BackingField: 0
         <beforeBool>k__BackingField: 0
@@ -937,6 +977,7 @@ MonoBehaviour:
         beforeRange: {x: 0, y: 0}
       <exist>k__BackingField:
         <state>k__BackingField: 0
+        <oneShot>k__BackingField: 0
       <easAnim>k__BackingField:
         traffic:
           <active>k__BackingField: 0
@@ -968,14 +1009,68 @@ MonoBehaviour:
           m_RotationOrder: 4
     damage: 0
     hitCount: 0
+  attack2:
+    motionCol: {fileID: 8907209045035302119}
+    <motion>k__BackingField:
+      motionTime: 0
+      adjustMotionTime: -0.5
+      <interval>k__BackingField:
+        <active>k__BackingField: 0
+        <interval>k__BackingField: 0
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          increseType: 0
+          reversalIncrese: 0
+      <motionThreshold>k__BackingField:
+        <reaching>k__BackingField: 0
+        <beforeBool>k__BackingField: 0
+        thresholdRange: {x: 0.5, y: 0.7}
+        currentValue: 0
+        beforeRange: {x: 0, y: 0}
+      <exist>k__BackingField:
+        <state>k__BackingField: 0
+        <oneShot>k__BackingField: 0
+      <easAnim>k__BackingField:
+        traffic:
+          <active>k__BackingField: 0
+        <nowRatio>k__BackingField: 0
+        <maxTime>k__BackingField: 0
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1.5
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: -0.5
+            outSlope: -0.5
+            tangentMode: 34
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    damage: 0
+    hitCount: 0
   damage:
     motionTime: 0
     adjustMotionTime: -0.5
     <interval>k__BackingField:
       <active>k__BackingField: 0
       <interval>k__BackingField: 0
-      value: 0
-      <valueIncreseType>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        increseType: 0
+        reversalIncrese: 0
     <motionThreshold>k__BackingField:
       <reaching>k__BackingField: 0
       <beforeBool>k__BackingField: 0
@@ -984,6 +1079,7 @@ MonoBehaviour:
       beforeRange: {x: 0, y: 0}
     <exist>k__BackingField:
       <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
     <easAnim>k__BackingField:
       traffic:
         <active>k__BackingField: 0
@@ -1028,8 +1124,10 @@ MonoBehaviour:
     <interval>k__BackingField:
       <active>k__BackingField: 0
       <interval>k__BackingField: 0
-      value: 0
-      <valueIncreseType>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        increseType: 0
+        reversalIncrese: 0
     <motionThreshold>k__BackingField:
       <reaching>k__BackingField: 0
       <beforeBool>k__BackingField: 0
@@ -1038,6 +1136,7 @@ MonoBehaviour:
       beforeRange: {x: 0, y: 0}
     <exist>k__BackingField:
       <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
     <easAnim>k__BackingField:
       traffic:
         <active>k__BackingField: 0
@@ -1481,12 +1580,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7962367881157238509}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.294, y: -0.146, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.29999968, z: 0.3}
+  m_LocalRotation: {x: -0.0040568532, y: 0.039068934, z: -0.1290865, w: 0.9908551}
+  m_LocalPosition: {x: -1.0879474, y: -0.30015254, z: 0.011450178}
+  m_LocalScale: {x: 0.30000037, y: 0.30000007, z: 0.29999995}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 6264450182555389268}
+  m_Father: {fileID: 6264450182555406038}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8777057623611529861
@@ -2378,7 +2477,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 476206, guid: f8243bb353e5cb74481bb26fe62fd298, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5118749662921119454}
-    - targetCorrespondingSourceObject: {fileID: 493484, guid: f8243bb353e5cb74481bb26fe62fd298, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 476206, guid: f8243bb353e5cb74481bb26fe62fd298, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2479317589100852677}
     - targetCorrespondingSourceObject: {fileID: 493484, guid: f8243bb353e5cb74481bb26fe62fd298, type: 3}

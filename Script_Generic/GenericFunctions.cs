@@ -216,6 +216,15 @@ namespace AddClass
             return vec;
         }
 
+        public static Vector3 VecTCurveConvert(VecT<AnimationCurve> vec, float time)
+        {
+            Vector3 newVec;
+            newVec.x = vec.x.Evaluate(time);
+            newVec.y = vec.y.Evaluate(time);
+            newVec.z = vec.z.Evaluate(time);
+
+            return newVec;
+        }
         public static Vector3 IndexToDirrection(int index, Transform tra)
         {
             switch (index % 3)
@@ -228,6 +237,7 @@ namespace AddClass
             Debug.Log("Indexが違います");
             return Vector3.zero;
         }
+
 
         public static float IndexToVec3(int index, Vector3 vec3)
         {
@@ -905,14 +915,24 @@ namespace AddClass
 
     #region クラスの実行タイプ
     /// <summary>
-    /// boolで判断し、trueの場合にメインの処理を行う
+    /// activeを評価し、それぞれのActionを実行する
     /// </summary>
     [Serializable] public class Traffic
     {
         [field: SerializeField] public bool active { get; set; }
         public Action activeAction { get; set; }
         public Action nonActiveAction { get; set; }
-        public void Initialize()
+
+        public Traffic()
+        {
+            Initialize();
+        }
+
+        /// <summary>
+        /// active = false<br/>
+        /// AllAction = null
+        /// </summary>
+        private void Initialize()
         {
             active = false;
             activeAction = null;
@@ -945,7 +965,7 @@ namespace AddClass
         }
         [field: SerializeField, NonEditable] public bool active { get; private set; }
         [field: SerializeField] public float interval { get; private set; }
-        [field: SerializeField, NonEditable] public VariedTime time { get; private set; }
+        [field: SerializeField, NonEditable] public VariedTime time { get; private set; } = new VariedTime();
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
@@ -1113,7 +1133,7 @@ namespace AddClass
     [Serializable]
     public class Easing
     {
-        [SerializeField] private Traffic traffic;
+        [SerializeField] private Traffic traffic = new Traffic();
         [field: SerializeField, NonEditable] public float nowTime { get; private set; }
         [field: SerializeField, NonEditable] public float evaluteValue { get; private set; }
         [field: SerializeField] public AnimationCurve curve { get; set; }
@@ -1122,7 +1142,7 @@ namespace AddClass
         {
             Reset();
 
-            traffic.Initialize();
+            traffic = new Traffic();
             traffic.activeAction += Evalute;
             traffic.nonActiveAction += Reset;
         }
@@ -1155,7 +1175,7 @@ namespace AddClass
     [Serializable]
     public class EasingAnimator
     {
-        [SerializeField] private Traffic traffic;
+        [SerializeField] private Traffic traffic = new Traffic();
         [field: SerializeField, NonEditable] public float nowRatio { get; private set; }
         [field: SerializeField, NonEditable] public float maxTime { get; private set; }
         [SerializeField] private AnimationCurve curve;
@@ -1168,7 +1188,7 @@ namespace AddClass
             nowRatio = 0.0f;
 
 
-            traffic.Initialize();
+            traffic = new Traffic();
             traffic.activeAction += Evalute;
             traffic.nonActiveAction += Reset;
         }
@@ -1839,13 +1859,53 @@ namespace AddClass
 
     }
 
+    [Serializable] public class Inertia
+    {
+        public Vector3 value;
+    }
+
+    [Serializable] public class Curve
+    {
+        public AnimationCurve curve = new AnimationCurve();
+        public VariedTime currentTime = new VariedTime();
+        public float currentValue;
+
+        public Curve()
+        {
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            Clear();
+        }
+
+        public void Clear()
+        {
+
+            currentTime.Initialize();
+            currentValue = Eva(currentTime.value);
+        }
+
+        public float Update()
+        {
+            float returnF = curve.Evaluate(currentTime.value);
+            currentValue = returnF;
+            currentTime.Update();
+
+            return returnF;
+        }
+
+        public float Eva(float time)
+        {
+            return curve.Evaluate(time);
+        }
+
+    }
 
     [Serializable] public class Vec3Curve
     {
-        public AnimationCurve xCurve;
-        public AnimationCurve yCurve;
-        public AnimationCurve zCurve;
-        private List<AnimationCurve> curves = new List<AnimationCurve>();
+        public VecT<AnimationCurve> curves = new VecT<AnimationCurve>();
         
         public void Initialize()
         {
@@ -1854,55 +1914,51 @@ namespace AddClass
 
         public void Reset()
         {
-
-            curves.Clear();
-            curves.Add(xCurve);
-            curves.Add(yCurve);
-            curves.Add(zCurve);
+            curves = new VecT<AnimationCurve> ();
 
         }
 
         public void ZeroFill()
         {
-            for(int i = 0; i < curves.Count; ++i)
+            for(int i = 0; i < curves.List.Count; ++i)
             {
                 bool artificial = false;
-                if (curves[i].length != 0 && curves[i].length != 1)
+                if (curves.List[i].length != 0 && curves.List[i].length != 1)
                 {
                     artificial = true;
                 }
 
                 if(artificial == false)
                 {
-                    for (int j = 0; j < curves[i].length; ++j)
+                    for (int j = 0; j < curves.List[i].length; ++j)
                     {
 
-                        curves[i].RemoveKey(j);
+                        curves.List[i].RemoveKey(j);
                     }
 
-                    curves[i].AddKey(0.0f, 0.0f);
-                    curves[i].AddKey(1.0f, 0.0f);
+                    curves.List[i].AddKey(0.0f, 0.0f);
+                    curves.List[i].AddKey(1.0f, 0.0f);
 
-                    for (int j = 0; j < curves[i].length; ++j)
+                    for (int j = 0; j < curves.List[i].length; ++j)
                     {
-                        curves[i].MoveKey(j, new Keyframe(j, 0));
+                        curves.List[i].MoveKey(j, new Keyframe(j, 0));
                     }
 
-                    curves[i].postWrapMode = WrapMode.Loop;
-                    curves[i].preWrapMode = WrapMode.Loop;
+                    curves.List[i].postWrapMode = WrapMode.Loop;
+                    curves.List[i].preWrapMode = WrapMode.Loop;
                 }
             }
         }
         public void Clear()
         {
-            for (int i = 0; i < curves.Count; ++i)
+            for (int i = 0; i < curves.List.Count; ++i)
             {
                 for (int k = 0; k < 3; ++k)
                 {
-                    for (int j = 0; j < curves[i].length; ++j)
+                    for (int j = 0; j < curves.List[i].length; ++j)
                     {
-                        curves[i].MoveKey(j, new Keyframe(0, 0));
-                        curves[i].RemoveKey(0);
+                        curves.List[i].MoveKey(j, new Keyframe(0, 0));
+                        curves.List[i].RemoveKey(0);
                     }
 
                 }
@@ -1914,12 +1970,7 @@ namespace AddClass
         /// </summary>
         public Vector3 Eva(float time)
         {
-            Vector3 newEva;
-            newEva.x = xCurve.Evaluate(time);
-            newEva.y = yCurve.Evaluate(time);
-            newEva.z = zCurve.Evaluate(time);
-
-            return newEva;
+            return AddFunction.VecTCurveConvert(curves, time);
         }
 
     }

@@ -11,7 +11,8 @@ public class Chara_Player : Chara
         Idle,
         Walk,
         Run,
-        Attack,
+        Attack1,
+        Attack2,
         Damage,
         Death,
         None,
@@ -21,6 +22,7 @@ public class Chara_Player : Chara
     [field: SerializeField] public int score { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
+    [SerializeField] private Curve dashEasing = new Curve();
     [field: SerializeField] public float dashCost { get; private set; }
     [field: SerializeField] public Interval overStamina {  get; private set; }
 
@@ -37,11 +39,12 @@ public class Chara_Player : Chara
     [field: SerializeField, NonEditable] public MotionState motionState;
     private float velocitySum;
 
-
-    [SerializeField] private MotionWithCollider _attack1;
+    
+    [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
+    [SerializeField] private MotionWithCollider attack2 = new MotionWithCollider();
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
-    [SerializeField] private Motion damage;
-    [SerializeField] private Motion death;
+    [SerializeField] private Motion damage = new Motion();
+    [SerializeField] private Motion death = new Motion();
     
 
     void Awake()
@@ -56,9 +59,9 @@ public class Chara_Player : Chara
         hp.Initialize();
         speed.Initialize();
         pow.Initialize();
+        dashSpeed.Initialize();
         stamina.Initialize();
         overStamina.Initialize(true, false);
-        dashSpeed.Initialize();
 
         death.exist.OneShotReset();
 
@@ -72,7 +75,6 @@ public class Chara_Player : Chara
         stamina.Initialize();
         overStamina.Initialize(true, false);
         overStamina.activeAction += stamina.Update;
-        dashSpeed.Initialize();
 
         gameObject.tag = gameObject.transform.parent.tag;
         //viewCircle.Initialize(gameObject);
@@ -82,11 +84,15 @@ public class Chara_Player : Chara
         underAttackAction += Damage;
 
         //  Motionの設定
+        attack1.Initialize(animator, Anims.attack1, this);
+        attack1.enableAction += () => StateChange(MotionState.Attack1);
+        attack1.endAction += () => StateChange(MotionState.Idle);
+        attack1.endAction += () => rigor = false;
 
-        _attack1.Initialize(animator, Anims.attack1, this);
-        _attack1.enableAction += () => StateChange(MotionState.Attack);
-        _attack1.endAction += () => StateChange(MotionState.Idle);
-        _attack1.endAction += () => rigor = false;
+        attack2.Initialize(animator, Anims.attack2, this);
+        attack2.enableAction += () => StateChange(MotionState.Attack2);
+        attack2.endAction += () => StateChange(MotionState.Idle);
+        attack2.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => Debug.Log("Damage");
@@ -97,7 +103,8 @@ public class Chara_Player : Chara
         damage.endAction += () => StateChange(MotionState.Idle);
         damage.endAction += () => rigor = false;
 
-        interruptByDamageMotions.Add(_attack1.motion);
+        interruptByDamageMotions.Add(attack1.motion);
+        interruptByDamageMotions.Add(attack2.motion);
         interruptByDamageMotions.Add(damage);
 
         death.Initialize(animator, Anims.die);
@@ -118,7 +125,6 @@ public class Chara_Player : Chara
     /// </summary>
     public void InitialUpdate()
     {
-        dashSpeed.Update();
         invincible.Update();
 
         stamina.ReturnRange();
@@ -133,6 +139,7 @@ public class Chara_Player : Chara
         if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
         moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
         rigor = false;                                                                  // 硬直boolのリセット
+        if (motionState != MotionState.Run) { dashEasing.Clear(); }                     // Curveのリセット
 
         if (alive == true)
         {
@@ -179,14 +186,14 @@ public class Chara_Player : Chara
     {
         InitialUpdate();
         base.Update();
-
-        _attack1.Update();
-        death.Update();
-        damage.Update();
+        MotionUpdate();
 
         viewPointManager.LookAtViewPoint(transform, true, false, true); // 高さは本体を中心にする
 
-        moveVelocity.plan = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan);
+        Vector3 addVelo = Vector3.zero;
+        addVelo.x = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan).x;
+        addVelo.z = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan).y;
+        AddAssignedMoveVelocity(addVelo);
 
         if (velocitySum > 1) { velocitySum = 1; }
         switch (motionState)
@@ -208,11 +215,16 @@ public class Chara_Player : Chara
 
                 stamina.Update(-dashCost);
                 velocitySum = 1;
-                assignSpeed = dashSpeed.entity;
+                animator.speed = dashEasing.currentValue;   // 走りモーションのスピードを加速度に応じて変える
+                assignSpeed = dashEasing.Update() * dashSpeed.entity;
 
                 break;
 
-            case MotionState.Attack:
+            case MotionState.Attack1:
+                rigor = true;
+                break;
+
+            case MotionState.Attack2:
                 rigor = true;
                 break;
 
@@ -231,7 +243,14 @@ public class Chara_Player : Chara
         RigorReset();
     }
 
+    public void MotionUpdate()
+    {
 
+        attack1.Update();
+        attack2.Update();
+        death.Update();
+        damage.Update();
+    }
 
     /// <summary>
     /// 硬直状態(rigor == true)の時に行われる
@@ -260,7 +279,7 @@ public class Chara_Player : Chara
             if(m.exist.state != ExistState.Disable)
             {
                 m.cutIn?.Invoke();
-                if(m != interruptByDamageMotions[1])    // 実行中のモーションなら
+                if(m != interruptByDamageMotions[interruptByDamageMotions.Count - 1])    // 実行中のモーションなら
                 {
 
                     m.Reset();
@@ -348,7 +367,13 @@ public class Chara_Player : Chara
     public void OnAttack1(InputValue value)
     {
         if(rigor == true) { return; }
-        _attack1.Launch(50, 3);
+        attack1.Launch(50, 3);
+    }
+
+    public void OnAttack2(InputValue value)
+    {
+        if (rigor == true) { return; }
+        attack2.Launch(100, 1);
     }
 
 

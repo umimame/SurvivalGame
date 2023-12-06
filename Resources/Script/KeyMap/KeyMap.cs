@@ -64,6 +64,15 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Attack2"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e41b071-4da7-46fa-8ea3-f53365a5f3f7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Damage"",
                     ""type"": ""Button"",
                     ""id"": ""6be77c0d-82f3-4e47-8ca4-4bec4f03d932"",
@@ -238,6 +247,28 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                     ""action"": ""InputViewPoint"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f5b7b68-2522-4357-ae37-1322a39b563d"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""GamePad"",
+                    ""action"": ""Attack2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d57e47ae-318c-4683-a973-205149e68edc"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keybord"",
+                    ""action"": ""Attack2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -273,6 +304,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
         m_Player_InputViewPoint = m_Player.FindAction("InputViewPoint", throwIfNotFound: true);
         m_Player_Running = m_Player.FindAction("Running", throwIfNotFound: true);
         m_Player_Attack1 = m_Player.FindAction("Attack1", throwIfNotFound: true);
+        m_Player_Attack2 = m_Player.FindAction("Attack2", throwIfNotFound: true);
         m_Player_Damage = m_Player.FindAction("Damage", throwIfNotFound: true);
     }
 
@@ -339,6 +371,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_InputViewPoint;
     private readonly InputAction m_Player_Running;
     private readonly InputAction m_Player_Attack1;
+    private readonly InputAction m_Player_Attack2;
     private readonly InputAction m_Player_Damage;
     public struct PlayerActions
     {
@@ -348,6 +381,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
         public InputAction @InputViewPoint => m_Wrapper.m_Player_InputViewPoint;
         public InputAction @Running => m_Wrapper.m_Player_Running;
         public InputAction @Attack1 => m_Wrapper.m_Player_Attack1;
+        public InputAction @Attack2 => m_Wrapper.m_Player_Attack2;
         public InputAction @Damage => m_Wrapper.m_Player_Damage;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -370,6 +404,9 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
             @Attack1.started += instance.OnAttack1;
             @Attack1.performed += instance.OnAttack1;
             @Attack1.canceled += instance.OnAttack1;
+            @Attack2.started += instance.OnAttack2;
+            @Attack2.performed += instance.OnAttack2;
+            @Attack2.canceled += instance.OnAttack2;
             @Damage.started += instance.OnDamage;
             @Damage.performed += instance.OnDamage;
             @Damage.canceled += instance.OnDamage;
@@ -389,6 +426,9 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
             @Attack1.started -= instance.OnAttack1;
             @Attack1.performed -= instance.OnAttack1;
             @Attack1.canceled -= instance.OnAttack1;
+            @Attack2.started -= instance.OnAttack2;
+            @Attack2.performed -= instance.OnAttack2;
+            @Attack2.canceled -= instance.OnAttack2;
             @Damage.started -= instance.OnDamage;
             @Damage.performed -= instance.OnDamage;
             @Damage.canceled -= instance.OnDamage;
@@ -433,6 +473,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
         void OnInputViewPoint(InputAction.CallbackContext context);
         void OnRunning(InputAction.CallbackContext context);
         void OnAttack1(InputAction.CallbackContext context);
+        void OnAttack2(InputAction.CallbackContext context);
         void OnDamage(InputAction.CallbackContext context);
     }
 }
