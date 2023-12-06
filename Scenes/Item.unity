@@ -374,9 +374,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f165d99f039d403429adeb9d96d38824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApplePrefab: {fileID: 5670634376248469262, guid: 44ccc562e31c0be4ba84e4ade6f0a1e9, type: 3}
-  GrapePrefab: {fileID: 9084666085521601494, guid: 17e0c71c82e710b408312bbc59e6343f, type: 3}
-  OrangePrefab: {fileID: 4545166431280258023, guid: 9de1b17fac4296548b437f9a3efbedc1, type: 3}
+  ApplePrefab: {fileID: 1629775187986640667, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
+  GrapePrefab: {fileID: 1955758425059793843, guid: a4b019ec1d3c8344a8d227dce355ea73, type: 3}
+  OrangePrefab: {fileID: 8757576603560997499, guid: 6733a6ca115a8014987f1289961868c8, type: 3}
   totalItems: 50
   spawnInterval: 60
   spawnArea: {x: 8, y: 5}
@@ -504,7 +504,7 @@ GameObject:
   - component: {fileID: 1100585723}
   m_Layer: 4
   m_Name: player
-  m_TagString: Player
+  m_TagString: Player01
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
