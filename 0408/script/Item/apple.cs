@@ -6,7 +6,7 @@ public class Apple: Item
 {
     public Apple()
     {
-        score = 1;
+        score = 5;
         onHitPlayer += OnHitApple;
     }
     // Update is called once per frame
