@@ -24,7 +24,7 @@ public class ItemSpawnPos : MonoBehaviour
             //アイテム出現のエリアを抽選
             int RandomArea = Random.Range(0, 10);
             //アイテムをランダムで選択
-            int RandomItem = Random.Range(0, 3);
+            int RandomItem = Random.Range(0, createItem.Length);
 
             //ItemRespawn1に出現
             if (RandomArea <= 6)

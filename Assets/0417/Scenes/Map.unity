@@ -1053,7 +1053,7 @@ MonoBehaviour:
   - {fileID: 1792058152}
   - {fileID: 225738223}
   - {fileID: 946861047}
-  RespawnTime: 0.01
+  RespawnTime: 1
 --- !u!4 &823292430
 Transform:
   m_ObjectHideFlags: 0
