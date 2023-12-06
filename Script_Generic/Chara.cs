@@ -1,12 +1,14 @@
 using AddClass;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem.Users;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace GenericChara
 {
+    
     public class Chara : MonoBehaviour
     {
         public enum CharaState
@@ -27,7 +29,7 @@ namespace GenericChara
         public Engine engine { get; set; }
         [field: SerializeField, NonEditable] public bool alive { get; protected set; }  //  生存
         [SerializeField] private Interval respawnInterval;
-        [SerializeField] protected EntityAndPlan<Vector2> moveVelocity;
+        [SerializeField] protected EntityAndPlan<Vector3> moveVelocity;
         protected Action<UnderAttackType> underAttackAction;
         [SerializeField] private Interval spawnInvincible;
         [SerializeField] protected Interval invincible;
@@ -44,6 +46,9 @@ namespace GenericChara
             respawnInterval.reachAction += () => StateChange(CharaState.Spawn);
         }
 
+        /// <summary>
+        /// SpawnStateに行われる
+        /// </summary>
         protected virtual void Spawn()
         {
 
@@ -51,12 +56,19 @@ namespace GenericChara
             spawnInvincible.Reset();
         }
 
+        /// <summary>
+        /// ParameterのUpdate<br/>
+        /// State駆動処理<br/>
+        /// moveVelocityのリセット
+        /// </summary>
         protected virtual void Update()
         {
             hp.Update();
             speed.Update();
             pow.Update();
             spawnInvincible.Update();
+
+            moveVelocity.plan = Vector3.zero;
             switch (charaState)
             {
                 case CharaState.Spawn:
@@ -80,17 +92,21 @@ namespace GenericChara
             pow.Initialize();
         }
 
-        protected virtual void Reset()
+
+        public Vector3 GetAssignedSpeedVelocity(Vector3 value)
         {
-            lastAttacker = null;
+            return value * assignSpeed;
         }
+
+        public void AddAssignedMoveVelocity(Vector3 value)
+        {
+            moveVelocity.plan += GetAssignedSpeedVelocity(value);
+        }
+
 
         public void AddVelocityPlan()
         {
-            Vector3 assign = Vector3.zero;
-            assign.x = moveVelocity.plan.x * assignSpeed;
-            assign.z = moveVelocity.plan.y * assignSpeed;
-            engine.velocityPlan += assign;
+            engine.velocityPlan += moveVelocity.plan;
         }
 
         /// <summary>

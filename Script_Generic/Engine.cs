@@ -42,11 +42,13 @@ public class Engine : MonoBehaviour
     /// <summary>
     /// velocityPlan‚ğ˜M‚éŠÖ”‚ğ“o˜^‚µA‚»‚ÌŒãˆÚ“®‚³‚¹‚é
     /// </summary>
-    private void VelocitySolution()
+    private Vector3 VelocitySolution()
     {
         velocityPlanAction?.Invoke();
         GravitySolution();
         rb.velocity = velocityPlan;
+
+        return transform.position;
     }
 
     private void GravitySolution()

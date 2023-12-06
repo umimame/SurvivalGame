@@ -116,7 +116,7 @@ public class Chara_Player : Chara
     /// ‘O’ñˆ—<br/>
     /// Update‚ÌÅ‰‚És‚í‚ê‚é
     /// </summary>
-    protected override void Reset()
+    public void InitialUpdate()
     {
         dashSpeed.Update();
         invincible.Update();
@@ -177,7 +177,7 @@ public class Chara_Player : Chara
     }
     protected override void Update()
     {
-        Reset();
+        InitialUpdate();
         base.Update();
 
         _attack1.Update();
