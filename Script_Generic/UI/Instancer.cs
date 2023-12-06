@@ -39,12 +39,18 @@ using System;
         if (afterObj != null) { this.afterObj = afterObj; }
     }
 
+
+    /// <summary>
+    /// Listの更新
+    /// </summary>
     public virtual void Update()
     {
-        foreach(GameObject clone in clones) 
+
+        for(int i = clones.Count - 1; i >= 0; i--)
         {
-            if (clone != null) { state = DisplayState.Displaying; }// 一つでも表示中なら
-            
+            if (clones[i] != null) { state = DisplayState.Displaying; }// 一つでも表示中なら
+            else { clones.RemoveAt(i); }
+
         }
 
         switch (state)
@@ -53,7 +59,6 @@ using System;
                 break;
 
             case DisplayState.Displaying:
-                clones.RemoveAll(value => value == null);
                 if (clones.Count == 0) { state = DisplayState.Death; }
                 break;
 
@@ -71,6 +76,15 @@ using System;
         if (instanceSound != null) { FrontCanvas.instance.source.PlayOneShot(instanceSound); }
         clones.Add(GameObject.Instantiate(obj, parent.transform));
     }
+    public virtual void Instance(Transform instancePos)
+    {
+        if (instanceSound != null) { FrontCanvas.instance.source.PlayOneShot(instanceSound); }
+        GameObject clone =  GameObject.Instantiate(obj);
+        clone.transform.position = instancePos.position;
+        clones.Add(clone);
+    }
+
+
 
     /// <summary>
     /// stateがNotDisplayYetの場合のみInstanceを行う
@@ -91,6 +105,7 @@ using System;
     public GameObject lastObj
     {
         get { return clones[clones.Count - 1]; }
+        private set { clones[clones.Count -1] = value; }
     }
 
     public bool displaying

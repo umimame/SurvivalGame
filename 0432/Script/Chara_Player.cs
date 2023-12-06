@@ -51,17 +51,19 @@ public class Chara_Player : Chara
 
     protected override void Spawn()
     {
-        //base.Spawn();
+        base.Spawn();
 
-        //hp.Initialize();
-        //speed.Initialize();
-        //pow.Initialize();
-        //stamina.Initialize();
-        //overStamina.Initialize(true, false);
-        //dashSpeed.Initialize();
+        hp.Initialize();
+        speed.Initialize();
+        pow.Initialize();
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
+        dashSpeed.Initialize();
 
-        //StateChange(MotionState.Idle);
-        //alive = true;
+        death.exist.OneShotReset();
+
+        StateChange(MotionState.Idle);
+        alive = true;
     }
 
     protected override void Start()
@@ -83,7 +85,7 @@ public class Chara_Player : Chara
 
         _attack1.Initialize(animator, Anims.attack1, this);
         _attack1.enableAction += () => StateChange(MotionState.Attack);
-        _attack1.endAction += () => StateChange(MotionState.None);
+        _attack1.endAction += () => StateChange(MotionState.Idle);
         _attack1.endAction += () => rigor = false;
 
         damage.Initialize(animator, Anims.damege);
@@ -92,7 +94,7 @@ public class Chara_Player : Chara
         damage.startAction += () => StateChange(MotionState.Damage, true);
         damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // ˜A‘±‚ÅÄ¶‚Å‚«‚é
         damage.enableAction += () => StateChange(MotionState.Damage, true);
-        damage.endAction += () => StateChange(MotionState.None);
+        damage.endAction += () => StateChange(MotionState.Idle);
         damage.endAction += () => rigor = false;
 
         interruptByDamageMotions.Add(_attack1.motion);
@@ -114,7 +116,7 @@ public class Chara_Player : Chara
     /// ‘O’ñˆ—<br/>
     /// Update‚ÌÅ‰‚És‚í‚ê‚é
     /// </summary>
-    protected override void Reset()
+    public void InitialUpdate()
     {
         dashSpeed.Update();
         invincible.Update();
@@ -175,7 +177,7 @@ public class Chara_Player : Chara
     }
     protected override void Update()
     {
-        Reset();
+        InitialUpdate();
         base.Update();
 
         _attack1.Update();

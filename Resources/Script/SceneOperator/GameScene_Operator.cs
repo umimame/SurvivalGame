@@ -8,6 +8,7 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private List<Chara_Player> players = new List<Chara_Player>();
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
+    [SerializeField] private Transform[] respownPos;
     [field: SerializeField] public GravityManager gravity { get; set; }
     protected override void Start()
     {
@@ -42,7 +43,7 @@ public class GameScene_Operator : SceneOperator
         {
             if (players[i].motionState == Chara_Player.MotionState.Death)
             {
-                SceneManager.LoadScene(nextScene);
+                Debug.Log("Ž€");
             }
         }
     }
