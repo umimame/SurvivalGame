@@ -69,7 +69,7 @@ public class ItemSpawnPos : MonoBehaviour
                 float y4 = Random.Range(ranges[6].position.y, ranges[7].position.y);
                 // range4Aとrange4Bのz座標の範囲内でランダムな数値を作成
                 float z4 = Random.Range(ranges[6].position.z, ranges[7].position.z);
-                Instantiate(createItem[RandomItem], new Vector3(x4, y4, z4), createItem[0].transform.rotation);
+                Instantiate(createItem[RandomItem], new Vector3(x4, y4, z4), createItem[RandomItem].transform.rotation);
             }
 
             // 経過時間リセット
