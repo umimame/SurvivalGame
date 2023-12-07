@@ -92,6 +92,10 @@ namespace GenericChara
             pow.Initialize();
         }
 
+        protected virtual void Reset()
+        {
+            lastAttacker = null;
+        }
 
         public Vector3 GetAssignedSpeedVelocity(Vector3 value)
         {

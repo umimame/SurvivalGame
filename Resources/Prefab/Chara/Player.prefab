@@ -937,11 +937,11 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    currentTime:
+    time:
       <value>k__BackingField: 0
       increseType: 0
       reversalIncrese: 0
-    currentValue: 0
+    <currentValue>k__BackingField: 0
   <dashCost>k__BackingField: 2
   <overStamina>k__BackingField:
     <active>k__BackingField: 0
@@ -988,11 +988,11 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    currentTime:
+    time:
       <value>k__BackingField: 0
       increseType: 0
       reversalIncrese: 0
-    currentValue: 0
+    <currentValue>k__BackingField: 0
   attack1:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
@@ -1228,7 +1228,7 @@ MonoBehaviour:
     <moveObject>k__BackingField: {fileID: 8284568979411276808}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 1, z: 0}
-    <distanceFromCenter>k__BackingField: 0
+    distanceFromCenter: 0
     norAxis: {x: 0, y: 0, z: 0}
     angleAxis: {x: 0, y: 0, z: 0, w: 0}
     speed: 0
@@ -1238,7 +1238,7 @@ MonoBehaviour:
     <moveObject>k__BackingField: {fileID: 8284568979411276808}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 0, z: 0}
-    <distanceFromCenter>k__BackingField: 0
+    distanceFromCenter: 0
     norAxis: {x: 0, y: 0, z: 0}
     angleAxis: {x: 0, y: 0, z: 0, w: 0}
     speed: 0
@@ -1282,7 +1282,7 @@ MonoBehaviour:
     <moveObject>k__BackingField: {fileID: 2479317589100852677}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 1, z: 0}
-    <distanceFromCenter>k__BackingField: 2
+    distanceFromCenter: 2
     norAxis: {x: 0, y: 0, z: 0}
     angleAxis: {x: 0, y: 0, z: 0, w: 0}
     speed: 0
@@ -1292,7 +1292,7 @@ MonoBehaviour:
     <moveObject>k__BackingField: {fileID: 2281196825584979772}
     <lookAtCenter>k__BackingField: 0
     <axis>k__BackingField: {x: 0, y: 0, z: 0}
-    <distanceFromCenter>k__BackingField: 2
+    distanceFromCenter: 2
     norAxis: {x: 0, y: 0, z: 0}
     angleAxis: {x: 0, y: 0, z: 0, w: 0}
     speed: 0
