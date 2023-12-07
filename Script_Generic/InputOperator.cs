@@ -85,7 +85,9 @@ public class Inputting
 [Serializable] public class InputVecOrFloat<T> : Inputting where T : struct
 {
     [field: SerializeField, NonEditable] public EntityAndPlan<T> input { get; set; } = new EntityAndPlan<T>();
+    [field: SerializeField] public AddClass.Range floatRange = new AddClass.Range();
     [SerializeField, NonEditable] private InputType thisType;
+
     public override void Initialize()
     {
         if (typeof(T).Equals(typeof(Vector3)))
@@ -113,7 +115,14 @@ public class Inputting
             case InputType.Float:
                 if ((float)(object)input.entity != 0.0f) 
                 { 
-                    inputting = true; 
+                    if(floatRange.min == 0.0f &&  floatRange.max == 0.0f)
+                    {
+                        inputting = true;
+                    }
+                    else
+                    {
+                        inputting = floatRange.JudgeRange((float)(object)input.entity);
+                    }
                     return;
                 }
                 break;

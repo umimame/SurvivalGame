@@ -255,6 +255,7 @@ namespace AddClass
             Debug.Log("Index‚ªˆá‚¢‚Ü‚·");
             return default;
         }
+
         public static Vector3 CameraToMouse()
         {
             return new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f);
