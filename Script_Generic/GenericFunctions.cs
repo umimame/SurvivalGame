@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine.Assertions;
 using System.Collections;
 using Unity.VisualScripting;
+using System.Security.Cryptography;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -830,7 +831,7 @@ namespace AddClass
         [field: SerializeField] public Transform moveObject { get; set; }
         [field: SerializeField] bool lookAtCenter { get; set; } // center‚ðŒü‚­‚©
         [field: SerializeField] public Vector3 axis { get; set; }   // transform.right‚È‚Ç‚Å‘ã“ü‚·‚é
-
+        [field: SerializeField] public float distanceFromCenter { get; set; }
         [SerializeField, NonEditable] private Vector3 norAxis;
         [SerializeField, NonEditable] private Quaternion angleAxis;
         [SerializeField] private float speed;
@@ -842,6 +843,11 @@ namespace AddClass
         public void Initialize(Transform moveObject)
         {
             this.moveObject = moveObject;
+        }
+
+        public void SetDistance(Vector3 axis)
+        {
+            moveObject.position = centerPos.position + (axis * distanceFromCenter);
         }
 
         /// <summary>
@@ -1276,7 +1282,7 @@ namespace AddClass
             plan = entity;
         }
 
-        public void Default()
+        public void DefaultAssign()
         {
             plan = default;
             entity = default;
@@ -1285,6 +1291,11 @@ namespace AddClass
         {
             plan = t1;
             entity = t1;
+        }
+
+        public void PlanDefault()
+        {
+            plan = default;
         }
     }
 
@@ -1355,6 +1366,12 @@ namespace AddClass
             Manual,
         }
 
+        public VariedTime(float startTime = 0.0f)
+        {
+            Initialize(startTime);
+        }
+
+
         [field: SerializeField, NonEditable] public float value { get; private set; }
         [SerializeField] private IncreseType increseType;
         [SerializeField] private bool reversalIncrese;
@@ -1362,6 +1379,7 @@ namespace AddClass
         {
             value = startTime;
         }
+
         public void Update(float value = 0.0f)
         {
             switch(increseType)
@@ -1861,9 +1879,39 @@ namespace AddClass
 
     [Serializable] public class Inertia
     {
-        public Vector3 value;
+        [field: SerializeField, NonEditable] public Vector3 inputValue { get; set; }
+        [field: SerializeField, NonEditable] public Vector3 addValue { get; set; }
+        [field: SerializeField] public Vec3Curve curves { get; set; } = new Vec3Curve();
+
+        public Inertia()
+        {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            curves.Initialize();
+        }
+
+        public Vector3 Update(Vector3 inputValue)
+        {
+            this.inputValue = inputValue;
+            addValue = curves.Update();
+
+            return Vector3.Scale(inputValue, addValue);
+
+        }
+
+        public void Clear()
+        {
+            curves.Initialize(); 
+        }
     }
 
+    /// <summary>
+    /// time‚ðŠÜ‚ñ‚¾AnimationCurve<br/>
+    /// Update‚ÅEva‚ð•Ô‚·
+    /// </summary>
     [Serializable] public class Curve
     {
         public AnimationCurve curve = new AnimationCurve();
@@ -1906,7 +1954,8 @@ namespace AddClass
     [Serializable] public class Vec3Curve
     {
         public VecT<AnimationCurve> curves = new VecT<AnimationCurve>();
-        
+        public VariedTime currentTime = new VariedTime();
+
         public void Initialize()
         {
             Reset();
@@ -1914,8 +1963,8 @@ namespace AddClass
 
         public void Reset()
         {
-            curves = new VecT<AnimationCurve> ();
-
+            curves = new VecT<AnimationCurve>();
+            currentTime.Initialize();
         }
 
         public void ZeroFill()
@@ -1963,6 +2012,13 @@ namespace AddClass
 
                 }
             }
+        }
+        public Vector3 Update()
+        {
+            Vector3 returnVec = AddFunction.VecTCurveConvert(curves, currentTime.value);
+            currentTime.Update();
+
+            return returnVec;
         }
 
         /// <summary>

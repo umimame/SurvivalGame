@@ -17,6 +17,12 @@ public class Chara_Player : Chara
         Death,
         None,
     }
+    public enum InputState
+    {
+        Idle,
+        Move,
+        Rigor,
+    }
 
     [SerializeField] private PlayerInput input;
     [field: SerializeField] public int score { get; private set; }
@@ -27,17 +33,21 @@ public class Chara_Player : Chara
     [field: SerializeField] public Interval overStamina {  get; private set; }
 
     [SerializeField] private Camera cam;
-    [SerializeField] private FPSViewPoint viewPointManager;
+    [SerializeField] private TPSViewPoint viewPointManager;
 
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
-    [SerializeField, NonEditable] private bool run;         // 走り入力
-    [SerializeField, NonEditable] private bool rigor;       // 硬直状態（入力を受け付けない）
+    [SerializeField, NonEditable] private bool run;                 // 走り入力
+    [SerializeField, NonEditable] private bool rigor;               // 硬直状態（入力を受け付けない）
     [SerializeField, NonEditable] private Vector3 dirrection;
 
     [SerializeField] private Animator animator;
-    [field: SerializeField, NonEditable] public MotionState motionState;
+    [field: SerializeField, NonEditable] public MotionState motionState { get; private set; }
+    [field: SerializeField, NonEditable] public InputState inputState { get; private set; }
     private float velocitySum;
+
+    [SerializeField] private Vector3 savedVelocity;
+    [SerializeField] private Curve inertia = new Curve();
 
     
     [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
@@ -46,11 +56,6 @@ public class Chara_Player : Chara
     [SerializeField] private Motion damage = new Motion();
     [SerializeField] private Motion death = new Motion();
     
-
-    void Awake()
-    {
-
-    }
 
     protected override void Spawn()
     {
@@ -188,7 +193,7 @@ public class Chara_Player : Chara
         base.Update();
         MotionUpdate();
 
-        viewPointManager.LookAtViewPoint(transform, true, false, true); // 高さは本体を中心にする
+        viewPointManager.AssignCamAngle(transform, true, false, true); // 高さは本体を中心にする
 
         Vector3 addVelo = Vector3.zero;
         addVelo.x = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan).x;
@@ -199,11 +204,13 @@ public class Chara_Player : Chara
         switch (motionState)
         {
             case MotionState.Idle:
+                inputState = InputState.Idle;
                 InputMoveUpdate();
 
                 break;
 
             case MotionState.Walk:
+                inputState = InputState.Move;
                 InputMoveUpdate();
 
                 animator.speed = velocitySum;   // 歩きモーションのスピードをスティックに応じて変える
@@ -211,6 +218,7 @@ public class Chara_Player : Chara
 
                 break;
             case MotionState.Run:
+                inputState = InputState.Move;
                 InputMoveUpdate();
 
                 stamina.Update(-dashCost);
@@ -221,19 +229,23 @@ public class Chara_Player : Chara
                 break;
 
             case MotionState.Attack1:
+                inputState = InputState.Rigor;
                 rigor = true;
                 break;
 
             case MotionState.Attack2:
+                inputState = InputState.Rigor;
                 rigor = true;
                 break;
 
             case MotionState.Damage:
+                inputState = InputState.Rigor;
                 InputMoveUpdate();
                 rigor = true;
                 break;
 
             case MotionState.Death:
+                inputState = InputState.Rigor;
                 rigor = true;
                 break;
         }
@@ -241,6 +253,57 @@ public class Chara_Player : Chara
 
 
         RigorReset();
+        InputStateUpdate();
+    }
+
+    public void InputStateUpdate()
+    {
+
+        switch (motionState)    // MotionによってInputStateを変える
+        {
+            case MotionState.Idle:
+                inputState = InputState.Idle;
+                break;
+
+            case MotionState.Walk:
+                inputState = InputState.Move;
+                break;
+            case MotionState.Run:
+                inputState = InputState.Move;
+                break;
+
+            case MotionState.Attack1:
+                inputState = InputState.Rigor;
+                break;
+
+            case MotionState.Attack2:
+                inputState = InputState.Rigor;
+                break;
+
+            case MotionState.Damage:
+                inputState = InputState.Rigor;
+                break;
+
+            case MotionState.Death:
+                inputState = InputState.Rigor;
+                break;
+        }
+
+        switch (inputState)
+        {
+            case InputState.Idle:
+                moveVelocity.plan += savedVelocity * inertia.Update();
+                break;
+
+            case InputState.Move:
+                savedVelocity = moveVelocity.plan;
+                inertia.Clear();
+                break;
+
+            case InputState.Rigor:
+                moveVelocity.plan += savedVelocity * inertia.Update();
+                break;
+        }
     }
 
     public void MotionUpdate()
@@ -252,16 +315,18 @@ public class Chara_Player : Chara
         damage.Update();
     }
 
+
     /// <summary>
-    /// 硬直状態(rigor == true)の時に行われる
+    /// 硬直状態(rigor == true)の時に行われる<br/>
+    /// 入力の代入
     /// </summary>
     public void RigorReset()
     {
 
         if (rigor == true)
         {
-            inputMoveVelocity.plan = Vector2.zero;
-           viewPointManager.inputViewPoint.plan = Vector2.zero;
+            inputMoveVelocity.PlanDefault();
+            viewPointManager.InputZeroAssign();
         }
         else
         {
