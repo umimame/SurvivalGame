@@ -9,7 +9,7 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
     [SerializeField] private Transform[] respownPos;
-    [field: SerializeField] public GravityManager gravity { get; set; }
+    [field: SerializeField] public GravityProfile gravity { get; set; }
     protected override void Start()
     {
         base.Start();
