@@ -12,12 +12,8 @@ public class TPSViewPoint : MonoBehaviour
     [SerializeField, NonEditable] private Vector3 beforePlan;
 
     [SerializeField] private Transform viewPointObject;
-    [SerializeField] private MoveCircleSurface viewCircleHorizontal;
-    [SerializeField] private MoveCircleSurface viewCircleVertical;
-    [SerializeField] private ThresholdRatio verticalLimitter;
-
-    [SerializeField] private CircleClamp norHorizontalCircle;
-    [SerializeField] private Transform centerPos;
+    [SerializeField] private VecRangeClamp vertical;
+    [SerializeField] private Transform seesaw;
 
     private void Start()
     {
@@ -26,15 +22,7 @@ public class TPSViewPoint : MonoBehaviour
     }
     public void Initialize()
     {
-        Debug.Log(transform.position);
-        viewCircleHorizontal.SetDistance(centerPos.forward);
-        viewCircleVertical.SetDistance(viewCircleHorizontal.moveObject.forward);
-        //verticalLimitter.Initialize();
-
-
-        Debug.Log(transform.position);
-        //norHorizontalCircle.Initialize(centerPos.gameObject, viewPointObject.gameObject);
-
+        
     }
 
     public void Reset()
@@ -44,41 +32,20 @@ public class TPSViewPoint : MonoBehaviour
 
     public void Update()
     {
+        SeeSawController();
         cam.transform.LookAt(viewPointObject);
-        //CameraContorller();
     }
 
-    public void CameraContorller()
+    public void SeeSawController()
     {
-
-        viewCircleHorizontal.Update();
-        viewCircleVertical.axis = viewCircleHorizontal.moveObject.transform.right;
-        viewCircleVertical.Update();
-        //// CameraのRotationを変更
-        //Vector3 newCamEuler = cam.transform.eulerAngles;
-        //newCamEuler.y += inputViewPoint.plan.x * sensitivity;
-        //newCamEuler.x += -inputViewPoint.plan.y * sensitivity;
-        //cam.transform.eulerAngles = newCamEuler;
-
-        //// Y軸の視点制限
-        //if (cam.transform.eulerAngles.x != 0.0f)
-        //{
-        //    verticalLimitter.Update(cam.transform.eulerAngles.x);
-        //    if (verticalLimitter.reaching == true)  // 視点の角度が範囲外なら
-        //    {
-        //        newCamEuler.x -= -inputViewPoint.plan.y * sensitivity;    // なかったことにする
-        //    }
-        //}
-        //cam.transform.eulerAngles = newCamEuler;
+        Vector3 newSeesawEuler = seesaw.localEulerAngles;
+        newSeesawEuler.y += inputViewPoint.plan.x * sensitivity;
+        newSeesawEuler.x -= inputViewPoint.plan.y * sensitivity;
+        newSeesawEuler.x = AddFunction.GetNormalizedAngle(newSeesawEuler.x, -180, 180);
 
 
-
-        //// PlayerのRotationを変更(Y軸のみ)
-        //Vector3 newPlayerEuler = transform.eulerAngles;
-        //newPlayerEuler.y = newCamEuler.y;
-        //transform.eulerAngles = newPlayerEuler;
-
-
+        newSeesawEuler = vertical.Update(newSeesawEuler);
+        seesaw.localEulerAngles = newSeesawEuler;
 
     }
 
@@ -91,23 +58,11 @@ public class TPSViewPoint : MonoBehaviour
     }
 
     /// <summary>
-    /// Y軸を追従する
-    /// </summary>
-    /// <param name="t1"></param>
-    public void VerticalOffset(Transform t1)
-    {
-        Vector3 newViewPointPos = Vector3.zero;
-        newViewPointPos.y = t1.gameObject.transform.position.y;
-
-        viewPointPosPlan += newViewPointPos;
-    }
-
-    /// <summary>
     /// Cameraの方を向かせる<br/>
     /// 引数は向かせるオブジェクト、向かせる方向
     /// </summary>
     /// <param name="objTransform"></param>
-    public void AssignCamAngle(Transform objTransform, bool x = true, bool y = true, bool z = true)
+    public void AssignCamEulerAngle(Transform objTransform, bool x = true, bool y = true, bool z = true)
     {
         Vector3 newRotation = objTransform.eulerAngles;
 
@@ -116,6 +71,5 @@ public class TPSViewPoint : MonoBehaviour
         if (z == true) { newRotation.z = cam.transform.eulerAngles.z; }
 
         objTransform.eulerAngles = newRotation;
-        Debug.Log(cam.transform.eulerAngles);
     }
 }

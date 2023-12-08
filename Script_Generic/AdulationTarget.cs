@@ -1,8 +1,21 @@
 using AddClass;
+using UnityEditor;
 using UnityEngine;
 
 public class AdulationTarget : MonoBehaviour
 {
+    private EditorUpdate editorUpdate;
+    private void OnEnable()
+    {
+        editorUpdate = gameObject.AddComponent<EditorUpdate>();
+        Debug.Log("Add");
+        
+        editorUpdate.EnableAction(PosAdulation);
+    }
+    private void OnDisable()
+    {
+        editorUpdate.DisableAction();
+    }
     enum AdulationType
     {
         World,
@@ -15,7 +28,7 @@ public class AdulationTarget : MonoBehaviour
     [SerializeField] private RectTransform canvas;
     [SerializeField] private Vector3 adjustPos;
     [SerializeField, NonEditable] private Vector3 adulation;
-    [SerializeField] private float adulationPer;
+    [SerializeField] private float adulationRatio;
     [SerializeField] private Vector3 wToS;
     [SerializeField] private RectTransform thisRect;
     [SerializeField] private Vector2 screenPos;
@@ -40,14 +53,12 @@ public class AdulationTarget : MonoBehaviour
         
     }
 
-    private void Update()
-    {
-    }
     private void FixedUpdate()
     {
         PosAdulation();
-
     }
+
+
     void PosAdulation()
     {
         if (target == null) { return; }
@@ -56,7 +67,7 @@ public class AdulationTarget : MonoBehaviour
         switch (adulationType)
         {
             case AdulationType.World:
-                adulation = gameObject.transform.position + (target.transform.position + adjustPos - gameObject.transform.position) * adulationPer;
+                adulation = gameObject.transform.position + (target.transform.position + adjustPos - gameObject.transform.position) * adulationRatio;
                 gameObject.transform.position = adulation;
 
                 Quaternion newRotation = gameObject.transform.rotation;
@@ -81,13 +92,13 @@ public class AdulationTarget : MonoBehaviour
                 wToS = targetCamera.WorldToScreenPoint(target.transform.position);
                 RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas, wToS, targetCamera, out Vector2 outPos);
                 screenPos  =  outPos;
-                adulation = thisRect.anchoredPosition + (screenPos + (new Vector2 (adjustPos.x, adjustPos.y)) - thisRect.anchoredPosition) * adulationPer;
+                adulation = thisRect.anchoredPosition + (screenPos + (new Vector2 (adjustPos.x, adjustPos.y)) - thisRect.anchoredPosition) * adulationRatio;
                 gameObject.transform.localPosition = outPos;
                 //thisRect.anchoredPosition = adulation;
                 break;
         }
 
-
+        SceneView.RepaintAll();
         
     }
 }
