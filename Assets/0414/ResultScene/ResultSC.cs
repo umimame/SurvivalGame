@@ -7,6 +7,7 @@ using TMPro;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor.Build;
+using static Chara_Player;
 
 public class ResultSC : MonoBehaviour
 {
@@ -31,24 +32,13 @@ public class ResultSC : MonoBehaviour
     [SerializeField] bool[] ShowText = new bool[12];
     bool rAdd, gAdd, bAdd, SceneChangeFlag;
     int NowIndex;
-    [SerializeField] private AudioSource DramRollEnd;
+    int playerScore, playerKill, playerApple, playerOrange, playerGrape;
+    //Chara_Playerオブジェクトを取得
+    Chara_Player charaPlayer;
     // Start is called before the first frame update
     void Start()
     {
-        //PlayerScript playerScript = FindAnyObjectByType<PlayerScript>();
-
-        //PlayerNameに表示する文字を設定,どっちが勝ったかで変えれるようにする。未実装
-        PlayerName.text = "Player1";
-        //キル数取得(変数で取る)未実装
-        KillAmounts.text = "12";
-        //スコア取得(変数でとる)未実装
-        ScoreAmounts.text = "123";
-        //リンゴ取得数、未実装
-        AppleAmounts.text = "12";
-        //ミカン取得数、未実装
-        OrangeAmounts.text = "123";
-        //ブドウ取得数、未実装
-        GrapeAmounts.text = "12";
+        charaPlayer = FindObjectOfType<Chara_Player>();
 
         //色々な物の初期化
         TMProTransparent();
@@ -58,6 +48,8 @@ public class ResultSC : MonoBehaviour
         StartCoroutine(PushKeyBlinking());
 
         SceneChangeFlag = false;
+
+        GetPlayerScore();
     }
     // Update is called once per frame
     void Update()
@@ -87,6 +79,8 @@ public class ResultSC : MonoBehaviour
             {
                 if (Input.anyKey)//一部反応しないキーがある
                 {
+                    charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
+
                     SceneManager.LoadScene("TitleScene");
                 }
             }
@@ -120,6 +114,7 @@ public class ResultSC : MonoBehaviour
         rAdd = true;
         gAdd = true;
         bAdd = true;
+        playerScore = 0;
     }
     void PushtoBoolInversion()//Space押したらテキスト表示フラグをtrueに変更
     {
@@ -143,7 +138,6 @@ public class ResultSC : MonoBehaviour
             if (ShowText[i])
             {
                 AllText[i].alpha = 1f;
-                PlayDramRollEnd();
                 if (ShowText[7])
                 {
                     AppleImage.color = new Color(1f, 0.759434f, 0.759434f, 1f);
@@ -155,7 +149,7 @@ public class ResultSC : MonoBehaviour
                 if (ShowText[11])
                 {
                     GrapeImage.color = new Color(0.745283f, 0.7277056f, 0.7388983f, 1f);
-                }              
+                }
             }
         }
     }
@@ -168,7 +162,6 @@ public class ResultSC : MonoBehaviour
             {
                 ShowText[NowIndex] = true;
                 AllText[NowIndex].alpha = 1f;
-                PlayDramRollEnd2();
             }
         }
     }
@@ -223,68 +216,45 @@ public class ResultSC : MonoBehaviour
             Alpha = 0f;//透明化
         }
     }
-    void PlayDramRollEnd()
+    void GetPlayerScore()
     {
-        DramRollEnd.PlayOneShot(DramRollEnd.clip);
-        Debug.Log("音鳴ってますわよ～！！！");
-    }
-    void PlayDramRollEnd2()
-    {
-        DramRollEnd.PlayOneShot(DramRollEnd.clip);
-        Debug.Log("音鳴ってますわよ2222");
-    }
-
-    //プレイヤースコア取得用のスクリプトのテスト------------------------------------------
-    //void GetScore()
-    //{
-    //    int playerScore = playerScript.GetPlayerScore();
-    //    ScoreAmounts.text = playerScore.ToSafeString();
-    //}
-
-    //void GetScore2(Chara_Player player)
-    //{
-    //    ScoreAmounts.text = player.Score.ToSafeString();
-    //}
-
-    //void GetScore3()
-    //{
-    //    //Chara_Playerオブジェクトを取得
-    //    Chara_Player charaPlayer = FindObjectOfType<Chara_Player>();
-    //    if (charaPlayer != null)
-    //    {
-    //        int playerScore = charaPlayer.GetScore();
-    //        ScoreAmounts.text = playerScore.ToString();
-    //    }
-    //    else
-    //    {
-    //        Debug.Log("Chara_Playerが見つからないよ");
-    //    }
-    //}
-
-    //void GetPlayerFruits()
-    //{
-    //    Chara_Playerオブジェクトを取得
-    //    Chara_Player charaPlayer = FindObjectOfType<Chara_Player>();
-    //    if (charaPlayer != null)
-    //    {
-    //        //リンゴ取得
-    //        int playerApple = charaPlayer.GetFruits();
-    //        AppleAmounts.text = playerGrape.ToString();
-    //        //ミカン取得
-    //        int playerOrange= charaPlayer.GetFruits();
-    //        OrangeAmounts.text = playerGrape.ToString();
-    //        //ブドウ取得
-    //        int playerGrape = charaPlayer.GetFruits();
-    //        GrapeAmounts.text=playerGrape.ToString();
-    //        
-    //
-    //
-    //
-    //
-    //
-    //
-    //        
-    //    }
-    //}
-
+        if (charaPlayer != null)
+        {
+            Debug.Log("Chara_Playerが見つかりましたわよ～～お～～ほっほっほ～～～");
+            //Chara_PlayerのGet~を呼び出す
+            playerScore = charaPlayer.GetScore();
+            playerKill = charaPlayer.GetKill();
+            playerApple = charaPlayer.GetApple();
+            playerOrange = charaPlayer.GetOrange();
+            playerGrape = charaPlayer.GetGrape();
+            //スコアを文字に変換
+            ScoreAmounts.text = playerScore.ToString();
+            KillAmounts.text = playerKill.ToString();
+            AppleAmounts.text = playerApple.ToString();
+            OrangeAmounts.text = playerOrange.ToString();
+            GrapeAmounts.text = playerGrape.ToString();
+            //ScoreやKill等を0にする(SceneChange前に実装済み)
+            //charaPlayer.SetScore();
+        }
+        else
+        {
+            Debug.Log("Chara_Playerが見つからないよ");
+        }
+    }    
+//会
+//い
+//た
+//く
+//て
+//「
+//I
+//M
+//i
+//S
+//S
+//Y
+//o
+//u
+//」
+//
 }

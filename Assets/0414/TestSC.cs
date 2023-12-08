@@ -20,7 +20,7 @@ public class TestSC : MonoBehaviour
         }
         else
         {
-            if (Input.anyKey)
+            if (Input.GetKey(KeyCode.Space))
             {
                 SceneManager.LoadScene("ResultScene");
             }
