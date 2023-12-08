@@ -245,7 +245,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -673,6 +673,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 154026870599093452, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
+      propertyPath: SizeModule.separateAxes
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 154026870599093452, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
       propertyPath: InitialModule.startLifetime.scalar
       value: 1
       objectReference: {fileID: 0}
@@ -720,6 +724,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Apple
       objectReference: {fileID: 0}
+    - target: {fileID: 2084525051736149428, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483284952642881729, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
+      propertyPath: m_Constraints
+      value: 122
+      objectReference: {fileID: 0}
     - target: {fileID: 6766804570280010726, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -730,7 +742,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6766804570280010726, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.35
+      value: 2.75
       objectReference: {fileID: 0}
     - target: {fileID: 6766804570280010726, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
       propertyPath: m_LocalPosition.z
