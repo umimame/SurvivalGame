@@ -216,15 +216,6 @@ namespace AddClass
             return vec;
         }
 
-        public static Vector3 VecTCurveConvert(VecT<AnimationCurve> vec, float time)
-        {
-            Vector3 newVec;
-            newVec.x = vec.x.Evaluate(time);
-            newVec.y = vec.y.Evaluate(time);
-            newVec.z = vec.z.Evaluate(time);
-
-            return newVec;
-        }
         public static Vector3 IndexToDirrection(int index, Transform tra)
         {
             switch (index % 3)
@@ -237,7 +228,6 @@ namespace AddClass
             Debug.Log("Indexが違います");
             return Vector3.zero;
         }
-
 
         public static float IndexToVec3(int index, Vector3 vec3)
         {
@@ -265,6 +255,7 @@ namespace AddClass
             Debug.Log("Indexが違います");
             return default;
         }
+
         public static Vector3 CameraToMouse()
         {
             return new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x, Camera.main.ScreenToWorldPoint(Input.mousePosition).y, 0.0f);
@@ -830,7 +821,7 @@ namespace AddClass
         [field: SerializeField] public Transform moveObject { get; set; }
         [field: SerializeField] bool lookAtCenter { get; set; } // centerを向くか
         [field: SerializeField] public Vector3 axis { get; set; }   // transform.rightなどで代入する
-
+        [SerializeField] private float distanceFromCenter;
         [SerializeField, NonEditable] private Vector3 norAxis;
         [SerializeField, NonEditable] private Quaternion angleAxis;
         [SerializeField] private float speed;
@@ -842,6 +833,11 @@ namespace AddClass
         public void Initialize(Transform moveObject)
         {
             this.moveObject = moveObject;
+        }
+
+        public void SetDistance(Vector3 axis)
+        {
+            moveObject.position = centerPos.position + (axis * distanceFromCenter);
         }
 
         /// <summary>
@@ -915,24 +911,14 @@ namespace AddClass
 
     #region クラスの実行タイプ
     /// <summary>
-    /// activeを評価し、それぞれのActionを実行する
+    /// boolで判断し、trueの場合にメインの処理を行う
     /// </summary>
     [Serializable] public class Traffic
     {
         [field: SerializeField] public bool active { get; set; }
         public Action activeAction { get; set; }
         public Action nonActiveAction { get; set; }
-
-        public Traffic()
-        {
-            Initialize();
-        }
-
-        /// <summary>
-        /// active = false<br/>
-        /// AllAction = null
-        /// </summary>
-        private void Initialize()
+        public void Initialize()
         {
             active = false;
             activeAction = null;
@@ -965,7 +951,7 @@ namespace AddClass
         }
         [field: SerializeField, NonEditable] public bool active { get; private set; }
         [field: SerializeField] public float interval { get; private set; }
-        [field: SerializeField, NonEditable] public VariedTime time { get; private set; } = new VariedTime();
+        [field: SerializeField, NonEditable] public VariedTime time { get; private set; }
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
@@ -1133,7 +1119,7 @@ namespace AddClass
     [Serializable]
     public class Easing
     {
-        [SerializeField] private Traffic traffic = new Traffic();
+        [SerializeField] private Traffic traffic;
         [field: SerializeField, NonEditable] public float nowTime { get; private set; }
         [field: SerializeField, NonEditable] public float evaluteValue { get; private set; }
         [field: SerializeField] public AnimationCurve curve { get; set; }
@@ -1142,7 +1128,7 @@ namespace AddClass
         {
             Reset();
 
-            traffic = new Traffic();
+            traffic.Initialize();
             traffic.activeAction += Evalute;
             traffic.nonActiveAction += Reset;
         }
@@ -1175,7 +1161,7 @@ namespace AddClass
     [Serializable]
     public class EasingAnimator
     {
-        [SerializeField] private Traffic traffic = new Traffic();
+        [SerializeField] private Traffic traffic;
         [field: SerializeField, NonEditable] public float nowRatio { get; private set; }
         [field: SerializeField, NonEditable] public float maxTime { get; private set; }
         [SerializeField] private AnimationCurve curve;
@@ -1188,7 +1174,7 @@ namespace AddClass
             nowRatio = 0.0f;
 
 
-            traffic = new Traffic();
+            traffic.Initialize();
             traffic.activeAction += Evalute;
             traffic.nonActiveAction += Reset;
         }
@@ -1285,6 +1271,10 @@ namespace AddClass
         {
             plan = t1;
             entity = t1;
+        }
+        public void PlanDefault()
+        {
+            plan = default;
         }
     }
 
@@ -1385,85 +1375,7 @@ namespace AddClass
 
     }
 
-    [Serializable] public class Vector3T<T> : IEnumerable<T>
-    {
-        [field: SerializeField] public T x { get; set; }
-        [field: SerializeField] public T y { get; set; }
-        [field: SerializeField] public T z { get; set; }
-
-        private T[] elements;
-
-        public Vector3T(T x, T y, T z)
-        {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-
-            elements = new T[3];
-
-            Assign();
-
-        }
-
-        public void Assign()
-        {
-            elements[0] = x;
-            elements[1] = y;
-            elements[2] = z;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return new Vector3TEnumerator(elements);
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public class Vector3TEnumerator : IEnumerator<T>
-        {
-            private T[] elements;
-            private int currentIndex = -1;
-            public Vector3TEnumerator(T[] elements)
-            {
-                this.elements = elements;
-            }
-
-            public bool MoveNext()
-            {
-                currentIndex++;
-                return currentIndex < elements.Length;
-            }
-
-            public void Reset()
-            {
-                currentIndex = -1;
-            }
-
-            public T Current
-            {
-                get
-                {
-                    try
-                    {
-                        return elements[currentIndex];
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        throw new InvalidOperationException();
-                    }
-                }
-            }
-            object IEnumerator.Current => Current;
-
-            public void Dispose()
-            {
-
-            }
-        }
-    }
+    
 
     public class ValueChecker<T> where T : struct
     {
@@ -1859,53 +1771,36 @@ namespace AddClass
 
     }
 
-    [Serializable] public class Inertia
-    {
-        public Vector3 value;
-    }
-
     [Serializable] public class Curve
     {
-        public AnimationCurve curve = new AnimationCurve();
-        public VariedTime currentTime = new VariedTime();
-        public float currentValue;
-
+        [SerializeField] private AnimationCurve curve = new AnimationCurve();
+        [SerializeField] private VariedTime time = new VariedTime();
+        [field: SerializeField] public float currentValue { get; private set; }
         public Curve()
         {
-            Initialize();
+            time = new VariedTime();
         }
-
-        private void Initialize()
+        public float Update()
         {
-            Clear();
+            currentValue = curve.Evaluate(time.value);
+
+            time.Update();
+
+            return currentValue;
         }
 
         public void Clear()
         {
-
-            currentTime.Initialize();
-            currentValue = Eva(currentTime.value);
+            time.Initialize();
         }
-
-        public float Update()
-        {
-            float returnF = curve.Evaluate(currentTime.value);
-            currentValue = returnF;
-            currentTime.Update();
-
-            return returnF;
-        }
-
-        public float Eva(float time)
-        {
-            return curve.Evaluate(time);
-        }
-
     }
 
     [Serializable] public class Vec3Curve
     {
-        public VecT<AnimationCurve> curves = new VecT<AnimationCurve>();
+        public AnimationCurve xCurve;
+        public AnimationCurve yCurve;
+        public AnimationCurve zCurve;
+        private List<AnimationCurve> curves = new List<AnimationCurve>();
         
         public void Initialize()
         {
@@ -1914,51 +1809,55 @@ namespace AddClass
 
         public void Reset()
         {
-            curves = new VecT<AnimationCurve> ();
+
+            curves.Clear();
+            curves.Add(xCurve);
+            curves.Add(yCurve);
+            curves.Add(zCurve);
 
         }
 
         public void ZeroFill()
         {
-            for(int i = 0; i < curves.List.Count; ++i)
+            for(int i = 0; i < curves.Count; ++i)
             {
                 bool artificial = false;
-                if (curves.List[i].length != 0 && curves.List[i].length != 1)
+                if (curves[i].length != 0 && curves[i].length != 1)
                 {
                     artificial = true;
                 }
 
                 if(artificial == false)
                 {
-                    for (int j = 0; j < curves.List[i].length; ++j)
+                    for (int j = 0; j < curves[i].length; ++j)
                     {
 
-                        curves.List[i].RemoveKey(j);
+                        curves[i].RemoveKey(j);
                     }
 
-                    curves.List[i].AddKey(0.0f, 0.0f);
-                    curves.List[i].AddKey(1.0f, 0.0f);
+                    curves[i].AddKey(0.0f, 0.0f);
+                    curves[i].AddKey(1.0f, 0.0f);
 
-                    for (int j = 0; j < curves.List[i].length; ++j)
+                    for (int j = 0; j < curves[i].length; ++j)
                     {
-                        curves.List[i].MoveKey(j, new Keyframe(j, 0));
+                        curves[i].MoveKey(j, new Keyframe(j, 0));
                     }
 
-                    curves.List[i].postWrapMode = WrapMode.Loop;
-                    curves.List[i].preWrapMode = WrapMode.Loop;
+                    curves[i].postWrapMode = WrapMode.Loop;
+                    curves[i].preWrapMode = WrapMode.Loop;
                 }
             }
         }
         public void Clear()
         {
-            for (int i = 0; i < curves.List.Count; ++i)
+            for (int i = 0; i < curves.Count; ++i)
             {
                 for (int k = 0; k < 3; ++k)
                 {
-                    for (int j = 0; j < curves.List[i].length; ++j)
+                    for (int j = 0; j < curves[i].length; ++j)
                     {
-                        curves.List[i].MoveKey(j, new Keyframe(0, 0));
-                        curves.List[i].RemoveKey(0);
+                        curves[i].MoveKey(j, new Keyframe(0, 0));
+                        curves[i].RemoveKey(0);
                     }
 
                 }
@@ -1970,7 +1869,12 @@ namespace AddClass
         /// </summary>
         public Vector3 Eva(float time)
         {
-            return AddFunction.VecTCurveConvert(curves, time);
+            Vector3 newEva;
+            newEva.x = xCurve.Evaluate(time);
+            newEva.y = yCurve.Evaluate(time);
+            newEva.z = zCurve.Evaluate(time);
+
+            return newEva;
         }
 
     }

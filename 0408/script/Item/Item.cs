@@ -19,7 +19,7 @@ public class Item : MonoBehaviour
         if (other.tag == Tags.Player01 || other.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
-            
+            GetComponent<ParticleSystem>().Play();
         }
     }
 
@@ -30,7 +30,6 @@ public class Item : MonoBehaviour
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
-
         }
     }
     public virtual void HitThePlayer(GameObject other)

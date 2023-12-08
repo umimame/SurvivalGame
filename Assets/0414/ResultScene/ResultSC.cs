@@ -27,10 +27,11 @@ public class ResultSC : MonoBehaviour
     [SerializeField] private Image AppleImage;
     [SerializeField] private Image OrangeImage;
     [SerializeField] private Image GrapeImage;
-    [SerializeField] private float r, g, b, addR, addG, addB;
+    [SerializeField] private float Alpha, r, g, b, addR, addG, addB;
     [SerializeField] bool[] ShowText = new bool[12];
     bool rAdd, gAdd, bAdd, SceneChangeFlag;
     int NowIndex;
+    [SerializeField] private AudioSource DramRollEnd;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,6 +54,9 @@ public class ResultSC : MonoBehaviour
         TMProTransparent();
         //時間でテキスト等の透明解除
         StartCoroutine(ShowTextByTime());
+
+        StartCoroutine(PushKeyBlinking());
+
         SceneChangeFlag = false;
     }
     // Update is called once per frame
@@ -88,7 +92,7 @@ public class ResultSC : MonoBehaviour
             }
         }
     }
-    void TMProTransparent()//テキストなどを透明に(α値を0に)
+    void TMProTransparent()//色々な物の初期化
     {
         //ShowTextをすべてfalseに,全部透明に
         for (int i = 0; i < ShowText.Length; i++)
@@ -102,14 +106,16 @@ public class ResultSC : MonoBehaviour
         OrangeImage.color = new Color(1f, 1f, 1f, 0f);
         //ブドウの画像
         GrapeImage.color = new Color(1f, 1f, 1f, 0f);
-        //RGBそれぞれの初期値
+        //PushAnyKeyの初期化
+        Alpha = 0f;
         r = 1f;
         g = 0.5f;
         b = 0f;
+        PushAnyKey.color = new Color(r, g, b, Alpha);//最初は透明
         //RGBに加算する値をランダムで取得
-        addR = Random.Range(0.001f, 0.0001f);
-        addG = Random.Range(0.001f, 0.0001f);
-        addB = Random.Range(0.001f, 0.0001f);
+        addR = Random.Range(0.001f, 0.00001f);
+        addG = Random.Range(0.001f, 0.00001f);
+        addB = Random.Range(0.001f, 0.00001f);
         //RGBそれぞれに加算するか減算するかの判定
         rAdd = true;
         gAdd = true;
@@ -137,6 +143,7 @@ public class ResultSC : MonoBehaviour
             if (ShowText[i])
             {
                 AllText[i].alpha = 1f;
+                PlayDramRollEnd();
                 if (ShowText[7])
                 {
                     AppleImage.color = new Color(1f, 0.759434f, 0.759434f, 1f);
@@ -148,7 +155,7 @@ public class ResultSC : MonoBehaviour
                 if (ShowText[11])
                 {
                     GrapeImage.color = new Color(0.745283f, 0.7277056f, 0.7388983f, 1f);
-                }
+                }              
             }
         }
     }
@@ -161,6 +168,7 @@ public class ResultSC : MonoBehaviour
             {
                 ShowText[NowIndex] = true;
                 AllText[NowIndex].alpha = 1f;
+                PlayDramRollEnd2();
             }
         }
     }
@@ -199,17 +207,84 @@ public class ResultSC : MonoBehaviour
             b -= addB;
             if (b <= 0f) { bAdd = true; }
         }
-        //色変え
-        PushAnyKey.color = new Color(r, g, b);
+        if (SceneChangeFlag)
+        {
+            //色変えと透明化
+            PushAnyKey.color = new Color(r, g, b, Alpha);
+        }
     }
+    private IEnumerator PushKeyBlinking()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1f);
+            Alpha = 1f;//透明化解除
+            yield return new WaitForSeconds(1f);
+            Alpha = 0f;//透明化
+        }
+    }
+    void PlayDramRollEnd()
+    {
+        DramRollEnd.PlayOneShot(DramRollEnd.clip);
+        Debug.Log("音鳴ってますわよ～！！！");
+    }
+    void PlayDramRollEnd2()
+    {
+        DramRollEnd.PlayOneShot(DramRollEnd.clip);
+        Debug.Log("音鳴ってますわよ2222");
+    }
+
+    //プレイヤースコア取得用のスクリプトのテスト------------------------------------------
     //void GetScore()
     //{
     //    int playerScore = playerScript.GetPlayerScore();
     //    ScoreAmounts.text = playerScore.ToSafeString();
     //}
-    
+
     //void GetScore2(Chara_Player player)
     //{
     //    ScoreAmounts.text = player.Score.ToSafeString();
     //}
+
+    //void GetScore3()
+    //{
+    //    //Chara_Playerオブジェクトを取得
+    //    Chara_Player charaPlayer = FindObjectOfType<Chara_Player>();
+    //    if (charaPlayer != null)
+    //    {
+    //        int playerScore = charaPlayer.GetScore();
+    //        ScoreAmounts.text = playerScore.ToString();
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("Chara_Playerが見つからないよ");
+    //    }
+    //}
+
+    //void GetPlayerFruits()
+    //{
+    //    Chara_Playerオブジェクトを取得
+    //    Chara_Player charaPlayer = FindObjectOfType<Chara_Player>();
+    //    if (charaPlayer != null)
+    //    {
+    //        //リンゴ取得
+    //        int playerApple = charaPlayer.GetFruits();
+    //        AppleAmounts.text = playerGrape.ToString();
+    //        //ミカン取得
+    //        int playerOrange= charaPlayer.GetFruits();
+    //        OrangeAmounts.text = playerGrape.ToString();
+    //        //ブドウ取得
+    //        int playerGrape = charaPlayer.GetFruits();
+    //        GrapeAmounts.text=playerGrape.ToString();
+    //        
+    //
+    //
+    //
+    //
+    //
+    //
+    //        
+    //    }
+    //}
+
 }
