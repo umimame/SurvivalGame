@@ -20,11 +20,15 @@ public class PlayerRespawnPos : MonoBehaviour
         //Zキーでリスポーン
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            PlayerRespawn();
+            PlayerRespawn(0);
+        }
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            PlayerRespawn(1);
         }
     }
 
-    void PlayerRespawn()
+    void PlayerRespawn(int player)
     {
         //リスポーンさせる位置をランダムで設定
         int RandomRespawn = Random.Range(0, RespawnPos.Length);
@@ -32,6 +36,6 @@ public class PlayerRespawnPos : MonoBehaviour
         float y1 = RespawnPos[RandomRespawn].position.y;
         float z1 = RespawnPos[RandomRespawn].position.z;
         //プレイヤーのインスタンスを生成     
-         Instantiate(createPlayer[0], new Vector3(x1, y1, z1), createPlayer[0].transform.rotation);
+         Instantiate(createPlayer[player], new Vector3(x1, y1, z1), createPlayer[player].transform.rotation);
     }
 }
