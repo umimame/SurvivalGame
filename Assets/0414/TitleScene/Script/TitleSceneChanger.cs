@@ -24,8 +24,21 @@ public class TitleSceneChanger : MonoBehaviour
             if (Input.anyKey)
             {
                 Debug.Log("タイトル画面で何かキーが押されたよ");
-                SceneManager.LoadScene(changeScene);
+                SceneManager.LoadScene("TestScene");
             }
         }
+
+        //if (Input.GetKey(KeyCode.Escape))
+        //{
+        //    //何もしない
+        //}
+        //else
+        //{
+        //    if (Input.anyKey)
+        //    {
+        //        Debug.Log("タイトル画面で何かキーが押されたよ");
+        //        SceneManager.LoadScene(changeScene);
+        //    }
+        //}
     }
 }

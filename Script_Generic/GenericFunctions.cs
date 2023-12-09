@@ -93,7 +93,17 @@ namespace AddClass
 
     public static class AddFunction
     {
-
+        /// <summary>
+        /// angleを指定した角度に丸める
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float GetNormalizedAngle(float angle, float min, float max)
+        {
+            return Mathf.Repeat(angle - min, max - min) + min;
+        }
         /// <summary>
         /// Vector2を角度(360度)に変更
         /// </summary>
@@ -1646,6 +1656,8 @@ namespace AddClass
         {
             ThanOrEqual,
             Than,
+            LessThanOrEqual,
+            Less,
         }
         public ThanType minThan;
         public float min;
@@ -1656,43 +1668,71 @@ namespace AddClass
 
         public bool JudgeRange(float value)
         {
+            minExcess = false;
             switch (minThan)
             {
                 case ThanType.ThanOrEqual:
                     if(min > value) {
                         minExcess = true;
-                        return false; 
                     }
                     break;
                 case ThanType.Than:
                     if(min >= value)
                     {
                         minExcess = true;
-                        return false; 
                     }
                     break;
+
+                case ThanType.LessThanOrEqual:
+                    if (!(min > value))
+                    {
+                        
+                        minExcess = true;
+                    }
+                    break;
+                case ThanType.Less:
+                    if (!(min >= value))
+                    {
+                        minExcess = true;
+                    }
+                    break;
+
             }
-            minExcess = false;
 
 
+            maxExcess = false;
             switch (maxThan) 
             { 
                 case ThanType.ThanOrEqual:
-                    if(value > max) 
+                    if(value < max) 
                     { 
                         maxExcess = true;
-                        return false; 
                     }
                     break;
                 case ThanType.Than:
-                    if(value >= max) 
+                    if(value <= max) 
                     { 
+                        maxExcess = true; 
+                    }
+                    break;
+                case ThanType.LessThanOrEqual:
+                    if (value > max)
+                    {
                         maxExcess = true;
-                        return false; 
+                    }
+                    break;
+                case ThanType.Less:
+                    if (value >= max)
+                    {
+                        maxExcess = true;
                     }
                     break;
             }
-            maxExcess = false;
+
+            if(maxExcess == true || minExcess == true)
+            {
+                return false;
+            }
 
             return true;
         }
@@ -1714,13 +1754,13 @@ namespace AddClass
     }
 
     
-    [Serializable] public class PosRange
+    [Serializable] public class VecRangeClamp
     {
         [field: SerializeField] public Vec3Bool enableAxis { get; set; }
         [field: SerializeField] public VecT<ValueInRange> valueInRange { get; private set; } = new VecT<ValueInRange>();
         
         /// <summary>
-        /// インスペクタのcenterは参照しません
+        /// 中心点と動かすVector3を指定する
         /// </summary>
         /// <param name="centerPos"></param>
         /// <param name="targetPos"></param>
@@ -1739,6 +1779,31 @@ namespace AddClass
                 {
                     valueInRange.List[i].Update(AddFunction.IndexToVec3(i, vecTTarget));
                     vecTTarget.Assign(i, Mathf.Clamp(vecTTarget.IndexToEntity(i), valueInRange.List[i].min + vecTCenter.List[i], valueInRange.List[i].max + vecTCenter.List[i]));
+                }
+            }
+
+            Vector3 returnPos = AddFunction.VecTFloatConvert(vecTTarget);
+
+            return returnPos;
+        }
+
+        /// <summary>
+        /// 制限するVector3を指定する
+        /// </summary>
+        /// <param name="targetPos"></param>
+        /// <returns></returns>
+        public Vector3 Update(Vector3 targetPos)
+        {
+            VecT<float> vecTTarget = new VecT<float>();
+
+            AddFunction.VecTFloatConvert(vecTTarget, targetPos);
+
+            for (int i = 0; i < VecT<float>.count; ++i)
+            {
+                valueInRange.List[i].Update(AddFunction.IndexToVec3(i, vecTTarget));
+                if (enableAxis.ConvertToVecT().List[i] == true)
+                {
+                    vecTTarget.Assign(i, Mathf.Clamp(vecTTarget.IndexToEntity(i), valueInRange.List[i].min, valueInRange.List[i].max));
                 }
             }
 

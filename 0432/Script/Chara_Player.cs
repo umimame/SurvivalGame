@@ -2,10 +2,22 @@ using AddClass;
 using GenericChara;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Chara_Player : Chara
 {
+    /// <summary>
+    /// 要素によって倍率が異なる
+    /// </summary>
+    public enum BMI
+    {
+        HeavyFat = 9,
+        Fat = 10,
+        LightSkinny = 13,
+        Skinny = 15,
+        Hunger = 20,
+    }
     public enum MotionState
     {
         Idle,
@@ -26,6 +38,7 @@ public class Chara_Player : Chara
 
     [SerializeField] private PlayerInput input;
     [field: SerializeField] public int score { get; private set; }
+    [field: SerializeField, NonEditable] public BMI bmi { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [SerializeField] private Curve dashEasing = new Curve();
@@ -193,7 +206,7 @@ public class Chara_Player : Chara
         base.Update();
         MotionUpdate();
 
-        viewPointManager.AssignCamAngle(transform, true, false, true); // 高さは本体を中心にする
+        viewPointManager.AssignCamEulerAngle(transform, false, true, false); // 高さは本体を中心にする
 
         Vector3 addVelo = Vector3.zero;
         addVelo.x = AddFunction.GetFPSMoveVec2(cam, inputMoveVelocity.plan).x;
@@ -254,6 +267,14 @@ public class Chara_Player : Chara
 
         RigorReset();
         InputStateUpdate();
+    }
+
+    public void AssignSpeedByBMI()
+    {
+        if(score < 10)
+        {
+            bmi = BMI.Skinny;
+        }
     }
 
     public void InputStateUpdate()
