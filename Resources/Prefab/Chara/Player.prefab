@@ -920,7 +920,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4064012994823538041}
   - component: {fileID: 4064012994823538044}
-  - component: {fileID: 8138028333509969422}
   - component: {fileID: 8233601816810178801}
   - component: {fileID: 4064012994823538040}
   - component: {fileID: 4064012994823538042}
@@ -1304,59 +1303,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
---- !u!114 &8138028333509969422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4064012994823538021}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 831fcdeee4480d24097e9198be3b60c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 4064012993921943242}
-  engine: {fileID: 0}
-  sensitivity: 5
-  <inputViewPoint>k__BackingField:
-    <entity>k__BackingField: {x: 0, y: 0}
-    <plan>k__BackingField: {x: 0, y: 0}
-  <viewPointPosPlan>k__BackingField: {x: 0, y: 0, z: 0}
-  beforePlan: {x: 0, y: 0, z: 0}
-  viewPointObject: {fileID: 0}
-  viewCircleHorizontal:
-    <centerPos>k__BackingField: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 1, z: 0}
-    distanceFromCenter: 0
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  viewCircleVertical:
-    <centerPos>k__BackingField: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 0, z: 0}
-    distanceFromCenter: 0
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  verticalLimitter:
-    <reaching>k__BackingField: 0
-    <beforeBool>k__BackingField: 0
-    thresholdRange: {x: 50, y: 310}
-    currentValue: 0
-    beforeRange: {x: 0, y: 0}
-  norHorizontalCircle:
-    center: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <radius>k__BackingField: 5
-    <currentDistance>k__BackingField: 0
-  centerPos: {fileID: 0}
 --- !u!114 &8233601816810178801
 MonoBehaviour:
   m_ObjectHideFlags: 0

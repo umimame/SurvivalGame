@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Chara_Player : MonoBehaviour
+public class ResultPlayer : MonoBehaviour
 {
     [SerializeField] int kill, score, apple, orange, grape;
-    private static Chara_Player instance; // シングルトンインスタンス
+    private static ResultPlayer instance; // シングルトンインスタンス
     // Start is called before the first frame update
     void Start()
     {
@@ -70,12 +70,12 @@ public class Chara_Player : MonoBehaviour
     private void OnEnable()
     {
         // シーンが切り替わるたびに OnSceneChanged メソッドが呼ばれるようにする
-        SceneManager.sceneLoaded += OnSceneChanged;
+        //SceneManager.sceneLoaded += OnSceneChanged;
     }
 
     private void OnDisable()
     {
         // イベントの解除
-        SceneManager.sceneLoaded -= OnSceneChanged;
+        //SceneManager.sceneLoaded -= OnSceneChanged;
     }
 }

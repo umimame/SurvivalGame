@@ -34,11 +34,11 @@ public class ResultSC : MonoBehaviour
     int NowIndex;
     int playerScore, playerKill, playerApple, playerOrange, playerGrape;
     //Chara_Playerオブジェクトを取得
-    Chara_Player charaPlayer;
+    ResultPlayer charaPlayer;
     // Start is called before the first frame update
     void Start()
     {
-        charaPlayer = FindObjectOfType<Chara_Player>();
+        charaPlayer = FindObjectOfType<ResultPlayer>();
 
         //色々な物の初期化
         TMProTransparent();
