@@ -12,7 +12,7 @@ public class TPSViewPoint : MonoBehaviour
     [SerializeField, NonEditable] private Vector3 beforePlan;
 
     [SerializeField] private Transform viewPointObject;
-    [SerializeField] private VecRangeClamp vertical;
+    [SerializeField] private VecRangeOperator vertical;
     [SerializeField] private Transform seesaw;
 
     private void Start()

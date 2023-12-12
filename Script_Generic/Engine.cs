@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class Engine : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private Collider co;
     [field: SerializeField] public SpriteRenderer img { get; private set; }
     [SerializeField] private GravityOperator gravityOperator = new GravityOperator();
     [field: SerializeField, NonEditable] public Vector3 velocityPlan {  get; set; }
@@ -16,7 +15,6 @@ public class Engine : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        if (co == null) { co = GetComponent<Collider>(); }
         PlanReset();
         gravityOperator.Initialize();
     }
