@@ -8,6 +8,7 @@ using System.Linq;
 using UnityEngine.Assertions;
 using System.Collections;
 using Unity.VisualScripting;
+using static UnityEngine.EventSystems.EventTrigger;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -338,9 +339,14 @@ namespace AddClass
         {
             return rect.x + rect.width;
         }
-        public static float Neighbor(HorizontalRect rect)
+        public static float HorizontalityNeighbor(RectNeo rect)
         {
             return rect.x + rect.width;
+        }
+
+        public static float VerticalityNeighbor(RectNeo rect)
+        {
+            return rect.y + rect.height;
         }
 
         /// <summary>
@@ -925,7 +931,7 @@ namespace AddClass
     /// </summary>
     [Serializable] public class Traffic
     {
-        [field: SerializeField] public bool active { get; set; }
+        public bool active;
         public Action activeAction { get; set; }
         public Action nonActiveAction { get; set; }
         public void Initialize()
@@ -1261,8 +1267,8 @@ namespace AddClass
     [Serializable]
     public class EntityAndPlan<T>
     {
-        [field: SerializeField, NonEditable] public T entity { get; set; }
-        [field: SerializeField, NonEditable] public T plan { get; set; }
+        [field: SerializeField] public T entity { get; set; }
+        [field: SerializeField] public T plan { get; set; }
 
         /// <summary>
         /// plan = entity
@@ -1290,7 +1296,7 @@ namespace AddClass
 
     
     [Serializable]
-    public class HorizontalRect
+    public class RectNeo
     {
         [field: SerializeField] public float x { get; private set; }
         [field: SerializeField] public float y { get; private set; }
@@ -1298,7 +1304,7 @@ namespace AddClass
         [field: SerializeField] public float height { get; private set; }
         public Rect entity { get; private set; }
 
-        public HorizontalRect(Rect rect)
+        public RectNeo(Rect rect)
         {
             x = rect.x;
             y = rect.y;
@@ -1318,20 +1324,27 @@ namespace AddClass
             entity = rect;
         }
 
-        public void Set(float x, float width)
+        public void SetHorizontal(float x, float width)
         {
             this.x = x;
             this.width = width;
 
-            entity = new Rect(this.x, y, this.width, height);
+            entity = new Rect(this.x, this.y, this.width, this.height);
         }
 
+        public void SetVertical(float y, float height)
+        {
+            this.y = y;
+            this.height = height;
+
+            entity = new Rect(this.x, this.y, this.width, this.height);
+        }
         public float X
         {
             set
             {
                 x = value;
-                entity = new Rect(this.x, y, this.width, height);
+                entity = new Rect(x, y, width, height);
             }
         }
 
@@ -1340,7 +1353,24 @@ namespace AddClass
             set
             {
                 width = value;
-                entity = new Rect(this.x, y, this.width, height);
+                entity = new Rect(x, y, width, height);
+            }
+        }
+        public float Y
+        {
+            set
+            {
+                y = value;
+                entity = new Rect(x, y, width, height);
+            }
+        }
+
+        public float Height
+        {
+            set
+            {
+                height = value;
+                entity = new Rect(x, y, width, height);
             }
         }
 
@@ -1650,7 +1680,11 @@ namespace AddClass
             return returnVecT;
         }
     }
-    [Serializable] public class Range
+
+    /// <summary>
+    /// Rangeとそれを評価する値を代入する値を含む
+    /// </summary>
+    [Serializable] public class ValueInRange
     {
         public enum ThanType
         {
@@ -1660,11 +1694,13 @@ namespace AddClass
             Less,
         }
         public ThanType minThan;
-        public float min;
+        public MinMax range;
         public ThanType maxThan;
-        public float max;
         public bool minExcess;
         public bool maxExcess;
+
+        public bool inRange;
+        public float currentValue;
 
         public bool JudgeRange(float value)
         {
@@ -1672,26 +1708,27 @@ namespace AddClass
             switch (minThan)
             {
                 case ThanType.ThanOrEqual:
-                    if(min > value) {
+                    if (range.min> value)
+                    {
                         minExcess = true;
                     }
                     break;
                 case ThanType.Than:
-                    if(min >= value)
+                    if (range.min>= value)
                     {
                         minExcess = true;
                     }
                     break;
 
                 case ThanType.LessThanOrEqual:
-                    if (!(min > value))
+                    if (!(range.min> value))
                     {
-                        
+
                         minExcess = true;
                     }
                     break;
                 case ThanType.Less:
-                    if (!(min >= value))
+                    if (!(range.min>= value))
                     {
                         minExcess = true;
                     }
@@ -1701,140 +1738,60 @@ namespace AddClass
 
 
             maxExcess = false;
-            switch (maxThan) 
-            { 
+            switch (maxThan)
+            {
                 case ThanType.ThanOrEqual:
-                    if(value < max) 
-                    { 
+                    if (value < range.max)
+                    {
                         maxExcess = true;
                     }
                     break;
                 case ThanType.Than:
-                    if(value <= max) 
-                    { 
-                        maxExcess = true; 
+                    if (value <= range.max)
+                    {
+                        maxExcess = true;
                     }
                     break;
                 case ThanType.LessThanOrEqual:
-                    if (value > max)
+                    if (value > range.max)
                     {
                         maxExcess = true;
                     }
                     break;
                 case ThanType.Less:
-                    if (value >= max)
+                    if (value >= range.max)
                     {
                         maxExcess = true;
                     }
                     break;
             }
 
-            if(maxExcess == true || minExcess == true)
+            if (maxExcess == true || minExcess == true)
             {
                 return false;
             }
 
             return true;
         }
-    }
-
-    /// <summary>
-    /// Rangeとそれを評価する値を代入する値を含む
-    /// </summary>
-    [Serializable] public class ValueInRange : Range
-    {
-        public bool inRange;
-        public float currentValue;
         public void Update(float value = 0.0f)
         {
             if (value != 0.0f) { currentValue = value; }
 
             inRange = JudgeRange(currentValue);
         }
+
+        public float min
+        {
+            get { return range.min; }
+        }
+        public float max    
+        {
+            get { return range.max; }
+        }
     }
 
     
-    [Serializable] public class VecRangeClamp
-    {
-        [field: SerializeField] public Vec3Bool enableAxis { get; set; }
-        [field: SerializeField] public VecT<ValueInRange> valueInRange { get; private set; } = new VecT<ValueInRange>();
-        
-        /// <summary>
-        /// 中心点と動かすVector3を指定する
-        /// </summary>
-        /// <param name="centerPos"></param>
-        /// <param name="targetPos"></param>
-        /// <returns></returns>
-        public Vector3 Update(Vector3 centerPos, Vector3 targetPos)
-        {
-            VecT<float> vecTCenter = new VecT<float>();
-            VecT<float> vecTTarget = new VecT<float>();
-
-            AddFunction.VecTFloatConvert(vecTCenter, centerPos);
-            AddFunction.VecTFloatConvert(vecTTarget, targetPos);
-
-            for (int i = 0; i < VecT<float>.count; ++i)
-            {
-                if (enableAxis.ConvertToVecT().List[i] == true)
-                {
-                    valueInRange.List[i].Update(AddFunction.IndexToVec3(i, vecTTarget));
-                    vecTTarget.Assign(i, Mathf.Clamp(vecTTarget.IndexToEntity(i), valueInRange.List[i].min + vecTCenter.List[i], valueInRange.List[i].max + vecTCenter.List[i]));
-                }
-            }
-
-            Vector3 returnPos = AddFunction.VecTFloatConvert(vecTTarget);
-
-            return returnPos;
-        }
-
-        /// <summary>
-        /// 制限するVector3を指定する
-        /// </summary>
-        /// <param name="targetPos"></param>
-        /// <returns></returns>
-        public Vector3 Update(Vector3 targetPos)
-        {
-            VecT<float> vecTTarget = new VecT<float>();
-
-            AddFunction.VecTFloatConvert(vecTTarget, targetPos);
-
-            for (int i = 0; i < VecT<float>.count; ++i)
-            {
-                valueInRange.List[i].Update(AddFunction.IndexToVec3(i, vecTTarget));
-                if (enableAxis.ConvertToVecT().List[i] == true)
-                {
-                    vecTTarget.Assign(i, Mathf.Clamp(vecTTarget.IndexToEntity(i), valueInRange.List[i].min, valueInRange.List[i].max));
-                }
-            }
-
-            Vector3 returnPos = AddFunction.VecTFloatConvert(vecTTarget);
-
-            return returnPos;
-        }
-        public Vector3 Update(Transform centerTra, Transform targetTra)
-        {
-            VecT<float> vecTCenter = new VecT<float>();
-            VecT<float> vecTTarget = new VecT<float>();
-
-            AddFunction.VecTFloatConvert(vecTCenter, centerTra.position);
-            AddFunction.VecTFloatConvert(vecTTarget, targetTra.position);
-
-            for (int i = 0; i < VecT<float>.count; ++i)
-            {
-                if (enableAxis.ConvertToVecT().List[i] == true)
-                {
-
-                    valueInRange.List[i].Update(AddFunction.IndexToVec3(i, vecTTarget));
-                    vecTTarget.Assign(i, Mathf.Clamp(vecTTarget.IndexToEntity(i), valueInRange.List[i].min + vecTCenter.List[i], valueInRange.List[i].max + vecTCenter.List[i]));
-                }
-            }
-
-            Vector3 returnPos = AddFunction.VecTFloatConvert(vecTTarget);
-
-            return returnPos;
-        }
-
-    }
+    
 
     [Serializable] public class Curve
     {
@@ -2037,6 +1994,8 @@ namespace AddClass
         public float uniformedFieldWidth;
         public float labelWidthAve;
         public float distance = 4.1f;       // PropertyDrawerの定数
+        public Vector2 elements;
+        public List<List<LabelAndproperty>> verticalProps;
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
             EditorGUI.BeginProperty(position, label, property);
@@ -2061,82 +2020,169 @@ namespace AddClass
 
         }
 
-        public float RightEnd(Rect pos)
+        /// <summary>
+        /// verticalPropsを全て描画する
+        /// </summary>
+
+        public void DrawPropsList()
         {
-            return pos.width - 90;
+            for (int i = 0; i < verticalProps.Count; ++i)
+            {
+                SetElements(i);
+                Uniform(verticalProps[i]);
+                for(int j = 0; j < verticalProps[i].Count; ++j)
+                {
+                    //if(verticalProps[i][j].useRatioInRemainder == 0.0f)
+                    //{
+                    //    verticalProps[i][j].propertyRect.Width = UseHorizontalRatio(1.0f);
+                    //}
+                    //else
+                    //{
+                    //    verticalProps[i][j].propertyRect.Width = UseHorizontalRatio(verticalProps[i][j].useRatioInRemainder);
+
+                    //}
+                    if(i != 0)
+                    {
+                        verticalProps[i][j].verticalNeighbor = verticalProps[i - 1];
+                        verticalProps[i][j].NewLinePosSet();
+                    }
+                }
+                DrawPropsOnHorizontal(verticalProps[i]);
+                
+            }
+        }
+
+        public Vector2 SetElements(int verticalIndex = 0)
+        {
+            Vector2 newEle;
+            newEle.x = verticalProps[verticalIndex].Count;
+            newEle.y = verticalProps.Count;
+            elements = newEle;
+
+            return elements;
+        }
+
+        public void SetPropsList(List<List<LabelAndproperty>> props)
+        {
+            for(int i = 0; i < props.Count; ++i)
+            {
+                for(int j = 0; j < props[i].Count; ++j)
+                {
+                    props[i][j].Set(pos, prop);
+                }
+            }
+        }
+
+
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            // 各変数の高さを計算
+            return EditorGUIUtility.singleLineHeight * elements.y + 1.82f;
         }
         protected virtual void Update(Rect pos, SerializedProperty prop, GUIContent label)
         { }
 
-        protected virtual void ReadOnly(Rect pos, SerializedProperty property, GUIContent label)
-        { }
 
         /// <summary>
         /// Updateの最初に行う<br/>
-        /// 引数は表示する要素数<br/>
+        /// 引数はLabelAndPropertyList<br/>
         /// Labelの大きさ
         /// </summary>
         /// <param name="horizontalElements"></param>
-        public void Uniform(int horizontalElements, float labelWidth = 30)
+        public void Uniform(List<LabelAndproperty> horizontalProps, float aveLabelWidth)
         {
-            uniformedLabelWidth = labelWidth;
-            uniformedFieldWidth = pos.width / horizontalElements - uniformedLabelWidth - distance * 2;
-
+            uniformedLabelWidth = aveLabelWidth;
+            foreach (var prop in horizontalProps)
+            {
+                prop.labelRect.Width = aveLabelWidth;
+            }
+            uniformedFieldWidth = pos.width / horizontalProps.Count - uniformedLabelWidth - distance * 2;
         }
 
 
-        public float UniformedRatio(float horizontalElements, float ratio)
+        public void Uniform(List<LabelAndproperty> horizontalProps)
         {
-            return (pos.width / horizontalElements - labelWidthAve - distance * 2) * (ratio * 2);
+            uniformedLabelWidth = 0.0f;
+            foreach (var prop in horizontalProps)
+            {
+                uniformedLabelWidth += prop.labelRect.width;
+            }
+            labelWidthAve = uniformedLabelWidth / horizontalProps.Count;
+            uniformedLabelWidth = labelWidthAve;
+            uniformedFieldWidth = pos.width / horizontalProps.Count - uniformedLabelWidth - distance * 2;
+
         }
 
-        public void UniformedDraw(List<LabelAndproperty> lavProps)
+        /// <summary>
+        /// 横幅の使用する割合を指定する
+        /// </summary>
+        /// <param name="ratio"></param>
+        /// <returns></returns>
+        public float UseHorizontalRatio(float ratio)
+        {
+            return (pos.width / elements.x - labelWidthAve - distance * 2) * (ratio * elements.x);
+        }
+
+        public void DrawPropsOnHorizontal(List<LabelAndproperty> lavProps)
         {
 
             for (int i = 0; i < lavProps.Count; i++)
             {
-                lavProps[i].Set(pos, prop);
-                if (i == 0)
+                float ratio;
+                if (lavProps[i].useRatioInRemainder == 0.0f)
                 {
-                    lavProps[i].InitialPosSet(pos.x, uniformedLabelWidth, uniformedFieldWidth);
-                    
+                    ratio = UseHorizontalRatio(1.0f);
                 }
                 else
                 {
-                    LabelAndproperty neighbor = lavProps[i - 1];
-                    lavProps[i].Uniform(neighbor);
+                    ratio = UseHorizontalRatio(lavProps[i].useRatioInRemainder);
+                }
+
+
+                if (i == 0)
+                {
+                    lavProps[i].InitialPosSet(pos.x, lavProps[i].labelRect.width, ratio);
+
+                }
+                else
+                {
+                    lavProps[i].horizontalNeighbor = lavProps[i - 1];
+                    lavProps[i].PosSetByHorizontalNeighbor();
+                    lavProps[i].propertyRect.Width = ratio;
+                }
+                lavProps[i].Draw();
+            }
+        }
+        public void UniformedDraw(List<LabelAndproperty> lavProps, float avePropWidth)
+        {
+
+            for (int i = 0; i < lavProps.Count; i++)
+            {
+                if (i == 0)
+                {
+                    lavProps[i].InitialPosSet(pos.x, lavProps[i].labelRect.width, avePropWidth);
+
+                }
+                else
+                {
+                    lavProps[i].horizontalNeighbor = lavProps[i - 1];
+                    lavProps[i].PosSetByHorizontalNeighbor();
+                    lavProps[i].propertyRect.Width = avePropWidth;
                 }
                 lavProps[i].Draw();
             }
         }
 
-        public void UniformedDraw(List<LabelAndproperty> lavProps, float labelWidth, float propWidth)
-        {
-
-            for (int i = 0; i < lavProps.Count; i++)
-            {
-                lavProps[i].Set(pos, prop);
-                if (i == 0)
-                {
-                    lavProps[i].InitialPosSet(pos.x, labelWidth, propWidth);
-
-                }
-                else
-                {
-                    LabelAndproperty neighbor = lavProps[i - 1];
-                    lavProps[i].Uniform(neighbor);
-                }
-                lavProps[i].Draw();
-            }
-        }
         public class LabelAndproperty
         {
-            public HorizontalRect labelRect;
+            public RectNeo labelRect;
             public string label;
-            public HorizontalRect propertyRect;
+            public RectNeo propertyRect;
             public SerializedProperty property;
             public string propName;
-            public LabelAndproperty neighbor;
+            public float useRatioInRemainder;
+            public LabelAndproperty horizontalNeighbor;
+            public List<LabelAndproperty> verticalNeighbor;
             public EditType edit;
 
             /// <summary>
@@ -2151,9 +2197,12 @@ namespace AddClass
             }
             public void Set(Rect rect, SerializedProperty property)
             {
-                labelRect = new HorizontalRect(rect);
-                propertyRect = new HorizontalRect(rect);
+                labelRect = new RectNeo(rect);
+                propertyRect = new RectNeo(rect);
+                labelRect.Height = EditorGUIUtility.singleLineHeight;
+                propertyRect.Height = EditorGUIUtility.singleLineHeight;
                 this.property = property.FindPropertyRelative(propName);
+                useRatioInRemainder = 0.0f;
 
                 char[] array = this.property.displayName.ToCharArray();
                 array[0] = char.ToUpper(array[0]);  // 戦闘を大文字にする
@@ -2161,16 +2210,42 @@ namespace AddClass
                 label = new string(array);
             }
 
+            public void InitialPosSet(float x, float labelWidth, float fieldRatio = 0.0f)
+            {
+                if(fieldRatio != 0.0f)
+                {
+                    labelRect.SetHorizontal(x, labelWidth);
+                    propertyRect.SetHorizontal(AddFunction.HorizontalityNeighbor(labelRect) + 5, fieldRatio);
 
-            public void InitialPosSet(float x, float labelWidth, float fieldWidth)
-            {
-                labelRect.Set(x, labelWidth);
-                propertyRect.Set(AddFunction.Neighbor(labelRect) + 5, fieldWidth);
+                }
+                else
+                {
+                    labelRect.SetHorizontal(x, labelWidth);
+                    propertyRect.SetHorizontal(AddFunction.HorizontalityNeighbor(labelRect) + 5, useRatioInRemainder);
+                }
             }
-            public void NeighborPosSet(float labelWidth, float fieldWidth)
+
+            public void HorizontalityNeighborPosSet(float labelWidth, float fieldWidth = 0.0f)
             {
-                labelRect.Set(AddFunction.Neighbor(neighbor.propertyRect) + 5, labelWidth);
-                propertyRect.Set(AddFunction.Neighbor(labelRect) + 5, fieldWidth);
+                if(fieldWidth != 0.0f)
+                {
+                    labelRect.SetHorizontal(AddFunction.HorizontalityNeighbor(horizontalNeighbor.propertyRect) + 5, labelWidth);
+                    propertyRect.SetHorizontal(AddFunction.HorizontalityNeighbor(labelRect) + 5, fieldWidth);
+                }
+                else
+                {
+                    labelRect.SetHorizontal(AddFunction.HorizontalityNeighbor(horizontalNeighbor.propertyRect) + 5, labelWidth);
+                    propertyRect.SetHorizontal(AddFunction.HorizontalityNeighbor(labelRect) + 5, useRatioInRemainder);
+
+                }
+            }
+
+            public void NewLinePosSet()
+            {
+                float distanceBeforeLine = 1.82f;
+                labelRect.Y = AddFunction.VerticalityNeighbor(verticalNeighbor[0].propertyRect) + distanceBeforeLine;
+                propertyRect.Y = labelRect.y;
+
             }
             public void Draw()
             {
@@ -2211,16 +2286,61 @@ namespace AddClass
                         break;
                 }
             }
+
+            
+
+            /// <summary>
+            /// verticalList内をすべて描画する
+            /// </summary>
+            public void DrawProps()
+            {
+                switch (edit)
+                {
+
+                    case EditType.None:
+                        DrawPropertyField();
+                        break;
+
+                    case EditType.NonEditable:
+                        EditorGUI.LabelField(labelRect.entity, label);
+
+                        EditorGUI.BeginDisabledGroup(true);
+                        {
+                            EditorGUI.PropertyField(propertyRect.entity, property, GUIContent.none);
+                        }
+                        EditorGUI.EndDisabledGroup();
+                        break;
+
+                    case EditType.NonEditableInGame:
+                        EditorGUI.LabelField(labelRect.entity, label);
+
+                        if (EditorApplication.isPlaying)
+                        {
+                            EditorGUI.BeginDisabledGroup(true);
+                            {
+                                EditorGUI.PropertyField(propertyRect.entity, property, GUIContent.none);
+                            }
+                            EditorGUI.EndDisabledGroup();
+                        }
+                        else
+                        {
+                            EditorGUI.PropertyField(propertyRect.entity, property, GUIContent.none);
+
+                        }
+
+                        break;
+                }
+            }
             public void DrawPropertyField()
             {
                 EditorGUI.LabelField(labelRect.entity, label);
                 EditorGUI.PropertyField(propertyRect.entity, property, GUIContent.none);
             }
 
-            public void Uniform(LabelAndproperty target)
+            public void PosSetByHorizontalNeighbor()
             {
-                labelRect.Set(AddFunction.Neighbor(target.propertyRect) + 5, target.labelRect.width);
-                propertyRect.Set(AddFunction.Neighbor(labelRect) + 5, target.propertyRect.width);
+                labelRect.X = AddFunction.HorizontalityNeighbor(horizontalNeighbor.propertyRect) + 5;
+                propertyRect.X = AddFunction.HorizontalityNeighbor(labelRect) + 5;
             }
         }
         public enum EditType
@@ -2309,6 +2429,27 @@ namespace AddClass
         }
     }
 
+    [Serializable] public class MinMax
+    {
+        public float min;
+        public float max;
+
+        public void Clear()
+        {
+            min = 0.0f;
+            max = 0.0f;
+        }
+
+        public void SymmetryMax()
+        {
+            min = -max;
+        }
+        public void SymmetryMin()
+        {
+            max = -min;
+        }
+    }
+
 #if UNITY_EDITOR
     [CustomPropertyDrawer(typeof(Parameter))]
     public class ParameterDrawer : MyPropertyDrawer
@@ -2319,13 +2460,24 @@ namespace AddClass
         LabelAndproperty autoRecoverValue = new LabelAndproperty(nameof(autoRecoverValue));
         protected override void Update(Rect _pos, SerializedProperty property, GUIContent label)
         {
+            autoRecoverValue.label = "Auto";
+
+            List<LabelAndproperty> list = new List<LabelAndproperty>() { entity, max, autoRecoverValue };
+            verticalProps = new List<List<LabelAndproperty>>() { list };
+            SetElements();
+            SetPropsList(verticalProps);
+
+            entity.useRatioInRemainder = 0.4f;
+            max.useRatioInRemainder = 0.3f;
+            autoRecoverValue.useRatioInRemainder = 0.3f;
 
             entity.edit = EditType.NonEditable;
-            List<LabelAndproperty> list = new List<LabelAndproperty>() { entity, max, autoRecoverValue };
-                      
-            
-            Uniform(list.Count, 40);
-            UniformedDraw(list);
+
+            entity.labelRect.Width = 40;
+            max.labelRect.Width = 25;
+            autoRecoverValue.labelRect.Width = 30;
+
+            DrawPropsList();
         }
     }
 
@@ -2338,15 +2490,78 @@ namespace AddClass
         protected override void Update(Rect _pos, SerializedProperty _prop, GUIContent _label)
         {
             
-            List<LabelAndproperty> lavProps = new List<LabelAndproperty>() { x, y, z };
-            Uniform(lavProps.Count, 10);
-            foreach(LabelAndproperty l in lavProps)
+            List<LabelAndproperty> list = new List<LabelAndproperty>() { x, y, z };
+            verticalProps = new List<List<LabelAndproperty>>() { list };
+            SetElements();
+            SetPropsList(verticalProps);
+
+            foreach (LabelAndproperty l in list)
             {
                 l.edit = EditType.NonEditableInGame;
             }
-            UniformedDraw(lavProps, uniformedLabelWidth, boolWidth);
+
+
+            Uniform(list, 10);
+            UniformedDraw(list, boolWidth);
         }
     }
+
+    [CustomPropertyDrawer(typeof(MinMax))]
+    public class RangeDrawer : MyPropertyDrawer
+    {
+        LabelAndproperty min = new LabelAndproperty(nameof(min));
+        LabelAndproperty max = new LabelAndproperty(nameof(max));
+
+        protected override void Update(Rect pos, SerializedProperty prop, GUIContent label)
+        {
+            List<LabelAndproperty> list = new List<LabelAndproperty>() { min, max };
+            verticalProps = new List<List<LabelAndproperty>>() { list };
+            SetElements();
+            SetPropsList(verticalProps);
+
+            foreach (LabelAndproperty l in list)
+            {
+                l.edit = EditType.None;
+            }
+
+            min.labelRect.Width = max.labelRect.Width = 30f;
+
+            min.useRatioInRemainder = max.useRatioInRemainder = 0.5f;
+
+            DrawPropsList();
+        }
+    }
+
+    [CustomPropertyDrawer(typeof(Traffic))]
+    public class TrafficDrawer : MyPropertyDrawer
+    {
+        LabelAndproperty active = new LabelAndproperty(nameof(active));
+        protected override void Update(Rect pos, SerializedProperty prop, GUIContent label)
+        {
+            List<LabelAndproperty> list = new List<LabelAndproperty> { active };
+            verticalProps = new List<List<LabelAndproperty>> { list };
+            SetElements();
+            SetPropsList(verticalProps);
+
+            active.edit = EditType.NonEditable;
+            active.labelRect.Width = 40;
+
+
+            DrawPropsList();
+        }
+    }
+
+    //[CustomPropertyDrawer(typeof(VecT<object>))]
+    //public class VecTDrawer : MyPropertyDrawer
+    //{
+    //    LabelAndproperty entity = new LabelAndproperty(nameof(entity));
+    //    LabelAndproperty plan  = new LabelAndproperty(nameof(plan));
+    //    protected override void Update(Rect pos, SerializedProperty prop, GUIContent label)
+    //    {
+    //        List<LabelAndproperty> list = new List<LabelAndproperty> { entity, plan };
+    //        entity.Draw();
+    //    }
+    //}
 
     //[CustomPropertyDrawer(typeof(Vec3Curve))]
     //public class Vec3CurveDrawer : MyPropertyDrawer

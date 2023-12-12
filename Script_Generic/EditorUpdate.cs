@@ -34,7 +34,7 @@ public class EditorUpdate : MonoBehaviour
     }
     private void ExeEditorUpdate()
     {
-        Debug.Log("Update");
+        //Debug.Log("Update");
         if (EditorApplication.isPlaying == true) { return; }    // Play’†‚Íd•¡‚·‚é‹°‚ê‚ª‚ ‚é‚½‚ßUpdate‚µ‚È‚¢
 
         if (updateOnSelect == true)

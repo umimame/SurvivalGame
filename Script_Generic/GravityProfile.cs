@@ -13,8 +13,16 @@ using UnityEngine;
 
 [Serializable] public class GravityOperator
 {
-    [field: SerializeField] public Traffic traffic { get; set; }
     [field: SerializeField] public GravityProfile gravityProfile { get; set; }
+    [field: SerializeField] public Traffic traffic { get; set; }
+    public bool active
+    {
+        get { return traffic.active; }
+        set { traffic.active = value; }
+    }
+
+
+    [field: SerializeField] public bool reversal;
     [field: SerializeField] public VariedTime time { get; private set; } = new VariedTime();
     [field: SerializeField, NonEditable] public EntityAndPlan<Vector3> currentGravity; 
 
@@ -40,6 +48,16 @@ using UnityEngine;
         currentGravity.entity = Eva(time.value);
         traffic.Update();
     }
+    public Vector3 Eva(float time)
+    {
+        Vector3 returnVec = Vector3.zero;
+        returnVec.x = gravityProfile.gravityScale.x * gravityProfile.easing.Evaluate(time);
+        returnVec.y = gravityProfile.gravityScale.y * gravityProfile.easing.Evaluate(time);
+        returnVec.z = gravityProfile.gravityScale.z * gravityProfile.easing.Evaluate(time);
+
+
+        return returnVec;
+    }
 
     private void ActiveAction()
     {
@@ -50,20 +68,6 @@ using UnityEngine;
         currentGravity.plan = Vector3.zero;
     }
 
-    public Vector3 Eva(float time)
-    {
-        Vector3 returnVec = Vector3.zero;
-        returnVec.x = gravityProfile.gravityScale.x * gravityProfile.easing.Evaluate(time);
-        returnVec.y = gravityProfile.gravityScale.y * gravityProfile.easing.Evaluate(time);
-        returnVec.z = gravityProfile.gravityScale.z * gravityProfile.easing.Evaluate(time);
-
-        return returnVec;
-    }
 
 
-    public bool active
-    {
-        get { return traffic.active; }
-        set { traffic.active = value; }
-    }
 }
