@@ -7,7 +7,7 @@ using TMPro;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor.Build;
-using static Chara_Player;
+//using static Chara_Player;
 
 public class ResultSC : MonoBehaviour
 {
