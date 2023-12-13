@@ -24,8 +24,6 @@ public class Item : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-
-
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
