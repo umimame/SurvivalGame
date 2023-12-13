@@ -7,26 +7,22 @@ using System;
 public class MotionCollider : MonoBehaviour
 {
     [field: SerializeField] public Chara parent { get; set; }
-    [field: SerializeField, NonEditable] public bool enable { get; private set; }
+    [field: SerializeField, NonEditable] public bool enable { get; private set; } = false;
     [SerializeField] private Collider thisCollider;
     [field: SerializeField, NonEditable] public int hitCount { get; private set; }
     [SerializeField, NonEditable] private float damage;
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
     [SerializeField] private List<Chara> targets = new List<Chara>();
 
+    public Action hitAction { get; set; }
     public Func<bool, Collider, bool> passJudgeFunc { get; set; }
-    private void Start()
-    {
-        Initialize();
-    }
     public void Initialize()
     {
         if (thisCollider == null) { thisCollider = GetComponent<Collider>(); }
-        Reset();
+        Spawn();
     }
-    public void Reset()
+    public void Spawn()
     {
-        enable = false;
         hitCount = 0;
         damage = 0.0f;
         hitCountEntitys.Clear();
@@ -47,16 +43,21 @@ public class MotionCollider : MonoBehaviour
 
     private void OnTriggerStay(Collider you)
     {
+        OnTriggerAction(you);
+
+    }
+
+    public void OnTriggerAction(Collider you)
+    {
         bool passing = true;
-        if(enable == false) { passing = false; }
+        if (enable == false) { passing = false; }
         if (passJudgeFunc != null) { passing = passJudgeFunc.Invoke(passing, you); }
-        //if(!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { passing = false; }
         if (passing == false) { return; }
 
 
         bool firstTime = false;
         bool attacked = false;
-        if(targets.Count == 0 ) 
+        if (targets.Count == 0)
         {
             firstTime = true;
         }
@@ -78,20 +79,22 @@ public class MotionCollider : MonoBehaviour
             hitCountEntitys.Add(0);
         }
 
-        for(int i = 0; i < targets.Count; ++i)
+        for (int i = 0; i < targets.Count; ++i)
         {
-            if (hitCountEntitys[i] != hitCount)
+            if (hitCountEntitys[i] != hitCount)     // ‘ÎÛ‚ªUŒ‚‰ñ”•ªUŒ‚‚³‚ê‚Ä‚¢‚È‚¢‚È‚ç
             {
                 attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
-                if(attacked == true) { 
-                    if(hitCount >= 1)
+                if (attacked == true)
+                {
+                    if (hitCount >= 1)
                     {
+                        Debug.Log("Hit");
                         hitCountEntitys[i]++;   // ƒqƒbƒg‚³‚¹‚é
-                    }      
+                        hitAction?.Invoke();
+                    }
                 }
             }
         }
-
 
     }
 }

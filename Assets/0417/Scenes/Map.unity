@@ -1398,8 +1398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21b7a4d69e7a88c4cb6f30f2acc98636, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createPlayer:
-  - {fileID: 2240366760015347928, guid: 8333cfc7f64419648a9690afd2012d5a, type: 3}
   RespawnPos:
   - {fileID: 1294402385}
   - {fileID: 429492662}
