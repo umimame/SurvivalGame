@@ -44,9 +44,12 @@ using UnityEngine;
 
     public void Update()
     {
-        if (gravityProfile == null) { return; }
+        if (gravityProfile == null) {
+            Debug.Log("Gravity");
+            return; }
         currentGravity.entity = Eva(time.value);
         traffic.Update();
+        time.Update();
     }
     public Vector3 Eva(float time)
     {

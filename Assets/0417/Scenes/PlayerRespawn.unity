@@ -324,8 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createPlayer:
-  - {fileID: 2240366760015347928, guid: 8333cfc7f64419648a9690afd2012d5a, type: 3}
-  - {fileID: 5983692764015992410, guid: 22671a22bf6a06048904d1a973cfc8d2, type: 3}
+  - {fileID: 4064012993855557387, guid: 817704fe7d160414f9e0a4bb395f4b9e, type: 3}
   RespawnPos:
   - {fileID: 1958153124}
   - {fileID: 397043852}

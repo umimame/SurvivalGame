@@ -14,7 +14,7 @@ public class MotionCollider : MonoBehaviour
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
     [SerializeField] private List<Chara> targets = new List<Chara>();
 
-    public Func<bool, Collider, bool> passJudgeFunc;
+    public Func<bool, Collider, bool> passJudgeFunc { get; set; }
     private void Start()
     {
         Initialize();
@@ -49,9 +49,11 @@ public class MotionCollider : MonoBehaviour
     {
         bool passing = true;
         if(enable == false) { passing = false; }
-        passing = passJudgeFunc.Invoke(passing, you);
+        if (passJudgeFunc != null) { passing = passJudgeFunc.Invoke(passing, you); }
         //if(!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { passing = false; }
         if (passing == false) { return; }
+
+
         bool firstTime = false;
         bool attacked = false;
         if(targets.Count == 0 ) 

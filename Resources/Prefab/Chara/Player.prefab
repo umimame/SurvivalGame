@@ -694,7 +694,7 @@ GameObject:
   - component: {fileID: 487967631788725322}
   m_Layer: 0
   m_Name: PlayerCamera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -965,7 +965,7 @@ MonoBehaviour:
   <charaState>k__BackingField: 0
   hp:
     entity: 0
-    max: 250
+    max: 500
     autoRecoverValue: 0
   speed:
     entity: 0
@@ -1002,7 +1002,8 @@ MonoBehaviour:
       reversalIncrese: 0
   <lastAttacker>k__BackingField: {fileID: 0}
   input: {fileID: 4064012994823538045}
-  <score>k__BackingField: 1000
+  <sceneOperator>k__BackingField: {fileID: 0}
+  <score>k__BackingField: 0
   <bmi>k__BackingField: 0
   <stamina>k__BackingField:
     entity: 0
@@ -1042,7 +1043,12 @@ MonoBehaviour:
       increseType: 0
       reversalIncrese: 0
     <currentValue>k__BackingField: 0
-  <dashCost>k__BackingField: 2
+  <dashCost>k__BackingField:
+    <entity>k__BackingField: 3
+    <plan>k__BackingField: 0
+  power:
+    <entity>k__BackingField: 1
+    <plan>k__BackingField: 0
   <overStamina>k__BackingField:
     <active>k__BackingField: 0
     <interval>k__BackingField: 1.5
@@ -1334,8 +1340,8 @@ MonoBehaviour:
       x:
         minThan: 0
         range:
-          min: 0
-          max: 0
+          min: -55
+          max: 55
         maxThan: 3
         minExcess: 0
         maxExcess: 0
@@ -1377,7 +1383,7 @@ MonoBehaviour:
   rb: {fileID: 4064012994823538042}
   <img>k__BackingField: {fileID: 0}
   gravityOperator:
-    <gravityProfile>k__BackingField: {fileID: 0}
+    <gravityProfile>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
     <traffic>k__BackingField:
       active: 0
     reversal: 0
@@ -2523,7 +2529,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1268432915275894213, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1491276426846557168, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_LocalScale.z
@@ -2535,15 +2541,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5675594128508132931, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7016136630643820008, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7064395226074625945, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8339625964193907635, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_RootOrder

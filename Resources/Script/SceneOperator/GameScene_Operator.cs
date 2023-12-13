@@ -1,3 +1,4 @@
+using AddClass;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +10,9 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
     [SerializeField] private Transform[] respownPos;
+
+    [SerializeField] private int initialScore;
+    [SerializeField] private List<float> scoreList = new List<float>();
     [field: SerializeField] public GravityProfile gravity { get; set; }
     protected override void Start()
     {
@@ -18,7 +22,10 @@ public class GameScene_Operator : SceneOperator
         {
             playerInstancer.Instance(); 
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
+            
             players.Add(playerInstancer.lastObj.GetComponentInChildren<Chara_Player>());
+            players[i].AddScore(initialScore);
+            players[i].sceneOperator = this;
 
             Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
             playerEngine.SetGravity(gravity);
@@ -31,7 +38,7 @@ public class GameScene_Operator : SceneOperator
             }
             playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
-
+            scoreList.Add(players[i].score);
         }
     }
 
@@ -39,13 +46,23 @@ public class GameScene_Operator : SceneOperator
     {
         base.Update();
 
-        for(int i = 0; i < players.Count; i++)
+
+        for (int i = 0; i < players.Count; i++)
         {
+            scoreList[i] = players[i].score;
+
             if (players[i].motionState == Chara_Player.MotionState.Death)
             {
-                Debug.Log("Ž€");
+                Debug.Log(players[i] + "Ž€");
             }
+
         }
+        scoreList = AddFunction.SortInDescending(scoreList);
+    }
+
+    public float DifferenceOfTopScore(float currentScore)
+    {
+        return scoreList[0] - currentScore;
     }
 
 }
