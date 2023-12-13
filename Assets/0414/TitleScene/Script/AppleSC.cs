@@ -36,7 +36,7 @@ public class AppleSC : MonoBehaviour
 
         pos.y -= speed;    // yÀ•W‚ğspeed•ªˆÚ“®
         myTransform.position = pos;  // À•W‚ğİ’è
-        Debug.Log("posY:" + pos.y);
+        //Debug.Log("posY:" + pos.y);
         if (pos.y <= 100)//ƒŠƒ“ƒS‚ª’n–Ê‚É‚Â‚¢‚½‚ç
         {
             speed = 0f;
