@@ -7,7 +7,7 @@ using TMPro;
 using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor.Build;
-using static Chara_Player;
+//using static Chara_Player;
 
 public class ResultSC : MonoBehaviour
 {
@@ -74,13 +74,15 @@ public class ResultSC : MonoBehaviour
             if (Input.GetKey(KeyCode.Escape))//Escapeが押されたら
             {
                 //Escapeが押されたときだけ何もしない
+                Debug.Log("Escape押しても何もないわよ～～～");
             }
             else
             {
                 if (Input.anyKey)//一部反応しないキーがある
                 {
-                    charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
-
+                    //charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
+                    charaPlayer.ReleaseSingleton();
+                    Debug.Log("ResultSCでシングルトン破棄");
                     SceneManager.LoadScene("TitleScene");
                 }
             }
@@ -102,8 +104,8 @@ public class ResultSC : MonoBehaviour
         GrapeImage.color = new Color(1f, 1f, 1f, 0f);
         //PushAnyKeyの初期化
         Alpha = 0f;
-        r = 1f;
-        g = 0.5f;
+        r = 0f;
+        g = 0f;
         b = 0f;
         PushAnyKey.color = new Color(r, g, b, Alpha);//最初は透明
         //RGBに加算する値をランダムで取得
@@ -221,40 +223,31 @@ public class ResultSC : MonoBehaviour
         if (charaPlayer != null)
         {
             Debug.Log("Chara_Playerが見つかりましたわよ～～お～～ほっほっほ～～～");
-            //Chara_PlayerのGet~を呼び出す
-            playerScore = charaPlayer.GetScore();
-            playerKill = charaPlayer.GetKill();
-            playerApple = charaPlayer.GetApple();
-            playerOrange = charaPlayer.GetOrange();
-            playerGrape = charaPlayer.GetGrape();
+            ////Chara_PlayerのGet~を呼び出す
+            //playerScore = charaPlayer.GetScore();
+            //playerKill = charaPlayer.GetKill();
+            //playerApple = charaPlayer.GetApple();
+            //playerOrange = charaPlayer.GetOrange();
+            //playerGrape = charaPlayer.GetGrape();
             //スコアを文字に変換
             ScoreAmounts.text = playerScore.ToString();
             KillAmounts.text = playerKill.ToString();
             AppleAmounts.text = playerApple.ToString();
             OrangeAmounts.text = playerOrange.ToString();
             GrapeAmounts.text = playerGrape.ToString();
-            //ScoreやKill等を0にする(SceneChange前に実装済み)
-            //charaPlayer.SetScore();
         }
         else
         {
             Debug.Log("Chara_Playerが見つからないよ");
         }
-    }    
-//会
-//い
-//た
-//く
-//て
-//「
-//I
-//M
-//i
-//S
-//S
-//Y
-//o
-//u
-//」
-//
+    }
+    //プレイヤーが呼ぶ用の関数
+    public void SetResult(int score, int kill, int apple, int orange, int grape)
+    {
+        playerScore = score;
+        playerKill = kill;
+        playerApple = apple;
+        playerOrange = orange;
+        playerGrape = grape;
+    }
 }

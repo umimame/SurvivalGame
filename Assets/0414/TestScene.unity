@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 2146652197}
   - component: {fileID: 2146652196}
   - component: {fileID: 2146652195}
-  - component: {fileID: 2146652194}
+  - component: {fileID: 2146652199}
   m_Layer: 0
   m_Name: playerTest
   m_TagString: Untagged
@@ -623,23 +623,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2146652194
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2146652193}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9bde4c4ac001e9040a20221127c55b26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  kill: 0
-  score: 0
-  apple: 0
-  orange: 0
-  grape: 0
 --- !u!135 &2146652195
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -726,3 +709,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2146652199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2146652193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a03f628c128ecc4da7c2abda2b2f272, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kill: 0
+  score: 0
+  apple: 0
+  orange: 0
+  grape: 0
