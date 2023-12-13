@@ -8,7 +8,7 @@ public class AdulationTarget : MonoBehaviour
     private void OnEnable()
     {
         editorUpdate = gameObject.AddComponent<EditorUpdate>();
-        Debug.Log("Add");
+        //Debug.Log("Add");
         
         editorUpdate.EnableAction(PosAdulation);
     }

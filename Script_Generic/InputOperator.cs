@@ -85,7 +85,7 @@ public class Inputting
 [Serializable] public class InputVecOrFloat<T> : Inputting where T : struct
 {
     [field: SerializeField, NonEditable] public EntityAndPlan<T> input { get; set; } = new EntityAndPlan<T>();
-    [field: SerializeField] public AddClass.Range floatRange = new AddClass.Range();
+    [field: SerializeField] public ValueInRange floatRange = new ValueInRange();
     [SerializeField, NonEditable] private InputType thisType;
 
     public override void Initialize()

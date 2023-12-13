@@ -416,7 +416,6 @@ MonoBehaviour:
   damage: 0
   hitCountEntitys: 
   targets: []
-  mesh: {fileID: 0}
 --- !u!1 &1781786014830692569
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,7 +919,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4064012994823538041}
   - component: {fileID: 4064012994823538044}
-  - component: {fileID: 8138028333509969422}
   - component: {fileID: 8233601816810178801}
   - component: {fileID: 4064012994823538040}
   - component: {fileID: 4064012994823538042}
@@ -1118,7 +1116,7 @@ MonoBehaviour:
         <oneShot>k__BackingField: 0
       <easAnim>k__BackingField:
         traffic:
-          <active>k__BackingField: 0
+          active: 0
         <nowRatio>k__BackingField: 0
         <maxTime>k__BackingField: 0
         curve:
@@ -1170,7 +1168,7 @@ MonoBehaviour:
         <oneShot>k__BackingField: 0
       <easAnim>k__BackingField:
         traffic:
-          <active>k__BackingField: 0
+          active: 0
         <nowRatio>k__BackingField: 0
         <maxTime>k__BackingField: 0
         curve:
@@ -1220,7 +1218,7 @@ MonoBehaviour:
       <oneShot>k__BackingField: 0
     <easAnim>k__BackingField:
       traffic:
-        <active>k__BackingField: 0
+        active: 0
       <nowRatio>k__BackingField: 0
       <maxTime>k__BackingField: 0
       curve:
@@ -1277,7 +1275,7 @@ MonoBehaviour:
       <oneShot>k__BackingField: 0
     <easAnim>k__BackingField:
       traffic:
-        <active>k__BackingField: 0
+        active: 0
       <nowRatio>k__BackingField: 0
       <maxTime>k__BackingField: 0
       curve:
@@ -1304,59 +1302,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
---- !u!114 &8138028333509969422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4064012994823538021}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 831fcdeee4480d24097e9198be3b60c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 4064012993921943242}
-  engine: {fileID: 0}
-  sensitivity: 5
-  <inputViewPoint>k__BackingField:
-    <entity>k__BackingField: {x: 0, y: 0}
-    <plan>k__BackingField: {x: 0, y: 0}
-  <viewPointPosPlan>k__BackingField: {x: 0, y: 0, z: 0}
-  beforePlan: {x: 0, y: 0, z: 0}
-  viewPointObject: {fileID: 0}
-  viewCircleHorizontal:
-    <centerPos>k__BackingField: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 1, z: 0}
-    distanceFromCenter: 0
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  viewCircleVertical:
-    <centerPos>k__BackingField: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <lookAtCenter>k__BackingField: 0
-    <axis>k__BackingField: {x: 0, y: 0, z: 0}
-    distanceFromCenter: 0
-    norAxis: {x: 0, y: 0, z: 0}
-    angleAxis: {x: 0, y: 0, z: 0, w: 0}
-    speed: 0
-    <angleFromCenter>k__BackingField: {x: 0, y: 0, z: 0}
-  verticalLimitter:
-    <reaching>k__BackingField: 0
-    <beforeBool>k__BackingField: 0
-    thresholdRange: {x: 50, y: 310}
-    currentValue: 0
-    beforeRange: {x: 0, y: 0}
-  norHorizontalCircle:
-    center: {fileID: 0}
-    <moveObject>k__BackingField: {fileID: 0}
-    <radius>k__BackingField: 5
-    <currentDistance>k__BackingField: 0
-  centerPos: {fileID: 0}
 --- !u!114 &8233601816810178801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1380,6 +1325,7 @@ MonoBehaviour:
   beforePlan: {x: 0, y: 0, z: 0}
   viewPointObject: {fileID: 3869163032030597756}
   vertical:
+    <profile>k__BackingField: {fileID: 0}
     <enableAxis>k__BackingField:
       x: 1
       y: 0
@@ -1387,27 +1333,30 @@ MonoBehaviour:
     <valueInRange>k__BackingField:
       x:
         minThan: 0
-        min: -55
+        range:
+          min: 0
+          max: 0
         maxThan: 3
-        max: 55
         minExcess: 0
         maxExcess: 0
         inRange: 0
         currentValue: 0
       y:
         minThan: 0
-        min: 0
+        range:
+          min: 0
+          max: 0
         maxThan: 0
-        max: 0
         minExcess: 0
         maxExcess: 0
         inRange: 0
         currentValue: 0
       z:
         minThan: 0
-        min: 0
+        range:
+          min: 0
+          max: 0
         maxThan: 0
-        max: 0
         minExcess: 0
         maxExcess: 0
         inRange: 0
@@ -1426,12 +1375,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 4064012994823538042}
-  co: {fileID: 5998442545676976757}
   <img>k__BackingField: {fileID: 0}
   gravityOperator:
-    <traffic>k__BackingField:
-      <active>k__BackingField: 0
     <gravityProfile>k__BackingField: {fileID: 0}
+    <traffic>k__BackingField:
+      active: 0
+    reversal: 0
     <time>k__BackingField:
       <value>k__BackingField: 0
       increseType: 0
@@ -2574,7 +2523,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1268432915275894213, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1491276426846557168, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_LocalScale.z
@@ -2586,11 +2535,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5675594128508132931, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7016136630643820008, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7064395226074625945, guid: 090bbf403dcf43b4ca13938a0c312342, type: 3}
       propertyPath: m_Enabled

@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using AddClass;
 using GenericChara;
+using System;
+
 public class MotionCollider : MonoBehaviour
 {
     [field: SerializeField] public Chara parent { get; set; }
@@ -12,7 +14,7 @@ public class MotionCollider : MonoBehaviour
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
     [SerializeField] private List<Chara> targets = new List<Chara>();
 
-    [field: SerializeField] public MeshRenderer mesh;
+    public Func<bool, Collider, bool> passJudgeFunc;
     private void Start()
     {
         Initialize();
@@ -20,16 +22,7 @@ public class MotionCollider : MonoBehaviour
     public void Initialize()
     {
         if (thisCollider == null) { thisCollider = GetComponent<Collider>(); }
-        mesh = GetComponent<MeshRenderer>();
         Reset();
-    }
-    private void Update()
-    {
-        if(FrontCanvas.instance.debugMode == true)
-        {
-
-            mesh.enabled = enable;
-        }
     }
     public void Reset()
     {
@@ -54,9 +47,11 @@ public class MotionCollider : MonoBehaviour
 
     private void OnTriggerStay(Collider you)
     {
-        if(enable == false) { return; }
-        if(!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { return; }
-
+        bool passing = true;
+        if(enable == false) { passing = false; }
+        passing = passJudgeFunc.Invoke(passing, you);
+        //if(!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { passing = false; }
+        if (passing == false) { return; }
         bool firstTime = false;
         bool attacked = false;
         if(targets.Count == 0 ) 
@@ -87,8 +82,11 @@ public class MotionCollider : MonoBehaviour
             {
                 attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
                 if(attacked == true) { 
-                    hitCountEntitys[i]++;
-                }      // ƒqƒbƒg‚³‚¹‚é
+                    if(hitCount >= 1)
+                    {
+                        hitCountEntitys[i]++;   // ƒqƒbƒg‚³‚¹‚é
+                    }      
+                }
             }
         }
 
