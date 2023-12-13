@@ -17,11 +17,12 @@ public class PlayerRespawnPos : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Zキーでリスポーン
+        //ZキーPlayer1でリスポーン
         if (Input.GetKeyDown(KeyCode.Z))
         {
             PlayerRespawn(0);
         }
+        //XキーでPlayer2をリスポーン
         if(Input.GetKeyDown(KeyCode.X))
         {
             PlayerRespawn(1);
