@@ -9,13 +9,17 @@ public class Item : MonoBehaviour
     public int Score { get { return score; } }
 
     public Action<Chara_Player> onHitPlayer;
+
+    [SerializeField]
+    [Tooltip("発生させるエフェクト(パーティクル)")]
+    private ParticleSystem particle;
     // Start is called before the first frame update
 
     
 
     void OnTriggerStay(Collider other)
     {
-
+       
         if (other.tag == Tags.Player01 || other.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
@@ -27,7 +31,11 @@ public class Item : MonoBehaviour
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
-            GetComponent<ParticleSystem>().Play();
+
+            ParticleSystem newParticle = Instantiate(particle);
+            newParticle.transform.position = this.transform.position;
+            newParticle.Play();
+            Destroy(newParticle.gameObject, 1.0f);
         }
     }
     public virtual void HitThePlayer(GameObject other)
