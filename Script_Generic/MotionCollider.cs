@@ -13,20 +13,24 @@ public class MotionCollider : MonoBehaviour
     [SerializeField, NonEditable] private float damage;
     [SerializeField] private List<int> hitCountEntitys = new List<int>();
     [SerializeField] private List<Chara> targets = new List<Chara>();
-
+    [SerializeField] private TargetColliders<Chara> targetColliders = new TargetColliders<Chara>();
     public Action hitAction { get; set; }
     public Func<bool, Collider, bool> passJudgeFunc { get; set; }
     public void Initialize()
     {
         if (thisCollider == null) { thisCollider = GetComponent<Collider>(); }
         Spawn();
+        targetColliders.firstTimeAction = null;
+        targetColliders.firstTimeAction += () => hitCountEntitys.Add(0);
+        targetColliders.firstTimeAction += () => Debug.Log(hitCountEntitys[0]);
     }
     public void Spawn()
     {
         hitCount = 0;
         damage = 0.0f;
         hitCountEntitys.Clear();
-        targets.Clear();
+        targetColliders.Clear();
+        enable = false;
     }
 
     /// <summary>
@@ -54,36 +58,15 @@ public class MotionCollider : MonoBehaviour
         if (passJudgeFunc != null) { passing = passJudgeFunc.Invoke(passing, you); }
         if (passing == false) { return; }
 
+        targetColliders.Update(you.transform.root.GetChild(0).GetComponent<Chara>());
 
-        bool firstTime = false;
         bool attacked = false;
-        if (targets.Count == 0)
-        {
-            firstTime = true;
-        }
-        else
-        {
-            foreach (Chara c in targets)  // targets‚ğƒ‹[ƒv‚µ‚Ä
-            {
-                if (c == you)
-                {
-                    firstTime = false;
-                }
-            }
 
-        }
-
-        if (firstTime == true)          // “¯ˆêŒÂ‘Ì‚Å‚È‚¯‚ê‚Î
-        {                               // targets‚É’Ç‰Á‚·‚é
-            targets.Add(you.transform.root.GetChild(0).GetComponent<Chara>());
-            hitCountEntitys.Add(0);
-        }
-
-        for (int i = 0; i < targets.Count; ++i)
+        for (int i = 0; i < targetColliders.targets.Count; ++i)
         {
             if (hitCountEntitys[i] != hitCount)     // ‘ÎÛ‚ªUŒ‚‰ñ”•ªUŒ‚‚³‚ê‚Ä‚¢‚È‚¢‚È‚ç
             {
-                attacked = targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
+                attacked = targetColliders.targets[i].UnderAttack(damage, UnderAttackType.Normal, parent);    // UŒ‚o—ˆ‚½‚ç
                 if (attacked == true)
                 {
                     if (hitCount >= 1)

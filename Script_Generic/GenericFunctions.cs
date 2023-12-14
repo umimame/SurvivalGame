@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Assertions;
+using GenericChara;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -389,46 +390,7 @@ namespace AddClass
             }
         }
 
-        public enum AnchorPresets
-        {
-            TopLeft,
-            TopCenter,
-            TopRight,
-
-            MiddleLeft,
-            MiddleCenter,
-            MiddleRight,
-
-            BottomLeft,
-            BottonCenter,
-            BottomRight,
-            BottomStretch,
-
-            VertStretchLeft,
-            VertStretchRight,
-            VertStretchCenter,
-
-            HorStretchTop,
-            HorStretchMiddle,
-            HorStretchBottom,
-
-            StretchAll
-        }
-
-        public enum PivotPresets
-        {
-            TopLeft,
-            TopCenter,
-            TopRight,
-
-            MiddleLeft,
-            MiddleCenter,
-            MiddleRight,
-
-            BottomLeft,
-            BottomCenter,
-            BottomRight,
-        }
+        
         public static void SetAnchor(this RectTransform source, AnchorPresets allign, int offsetX = 0, int offsetY = 0)
         {
             source.anchoredPosition = new Vector3(offsetX, offsetY, 0);
@@ -989,7 +951,7 @@ namespace AddClass
         }
         [field: SerializeField, NonEditable] public bool active { get; private set; }
         [field: SerializeField] public float interval { get; private set; }
-        [field: SerializeField, NonEditable] public VariedTime time { get; private set; }
+        [field: SerializeField, NonEditable] public VariedTime time { get; private set; } = new VariedTime();
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
@@ -1019,6 +981,7 @@ namespace AddClass
             active = (time.value >= interval) ? true : false;
             reached = false;
         }
+
 
         public void Update(float manualValue = 0.0f)
         {
@@ -1050,6 +1013,11 @@ namespace AddClass
         {
             reached = false;
             time.Initialize();
+        }
+
+        public float ratio
+        {
+            get { return time.value / interval; }
         }
     }
 
@@ -1410,9 +1378,10 @@ namespace AddClass
         [field: SerializeField, NonEditable] public float value { get; private set; }
         [SerializeField] private IncreseType increseType;
         [SerializeField] private bool reversalIncrese;
-        public void Initialize(float startTime = 0.0f)
+        public void Initialize(float startTime = 0.0f, IncreseType type = default)
         {
             value = startTime;
+            if (type != default) { increseType = type; }
         }
         public void Update(float value = 0.0f)
         {
@@ -1597,6 +1566,68 @@ namespace AddClass
                     Debug.LogError("SpriteRendererまたはImageをアタッチしてください");
                 }
             }
+        }
+
+    }
+
+    [Serializable] public  class TargetColliders<T> where T : class
+    {
+        [field: SerializeField] public List<T> targets { get; set; } = new List<T>();
+        public Action firstTimeAction { get; set; }
+        public TargetColliders()
+        {
+            Clear();
+        }
+
+        public void Clear()
+        {
+            targets.Clear();
+        }
+
+        public void Update(T you)
+        {
+            bool firstTime = true;
+
+            foreach (T t in targets)  // targetsをループして
+            {
+                if (t == you)
+                {
+                    firstTime = false;
+                }
+            }
+
+            
+
+            if (firstTime == true)          // 同一個体でなければ
+            {                               // targetsに追加する
+                targets.Add(you);
+                firstTimeAction?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// 引数に対応する配列Indexを返す
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public int GetIndex(T t)
+        {
+            for (int i = 0; i < targets.Count; ++i)
+            {
+                if (targets[i] == t) { return i; }
+
+            }
+
+            return -1;
+        }
+        public int Count
+        {
+            get { return targets.Count; }
+        }
+
+        public List<T> List
+        {
+            get { return targets; }
         }
 
     }
@@ -2605,4 +2636,44 @@ namespace AddClass
 #endif
 
     #endregion
+}
+public enum AnchorPresets
+{
+    TopLeft,
+    TopCenter,
+    TopRight,
+
+    MiddleLeft,
+    MiddleCenter,
+    MiddleRight,
+
+    BottomLeft,
+    BottonCenter,
+    BottomRight,
+    BottomStretch,
+
+    VertStretchLeft,
+    VertStretchRight,
+    VertStretchCenter,
+
+    HorStretchTop,
+    HorStretchMiddle,
+    HorStretchBottom,
+
+    StretchAll
+}
+
+public enum PivotPresets
+{
+    TopLeft,
+    TopCenter,
+    TopRight,
+
+    MiddleLeft,
+    MiddleCenter,
+    MiddleRight,
+
+    BottomLeft,
+    BottomCenter,
+    BottomRight,
 }

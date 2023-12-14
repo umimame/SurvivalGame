@@ -16,12 +16,14 @@ namespace GenericChara
             Spawn,
             Alive,
             Death,
+            ReSpawn,
             None,
         }
         [field: SerializeField, NonEditable] public CharaState charaState { get; private set; }
         protected Action spawnAction;
         protected Action aliveAction;
         protected Action deathAction;
+        protected Action reSpawnAction;
         [field: SerializeField] public Parameter hp;
         [field: SerializeField] public Parameter speed;
         protected float assignSpeed;
@@ -43,7 +45,7 @@ namespace GenericChara
             spawnAction += Spawn;
 
             deathAction += () => respawnInterval.Update();
-            respawnInterval.reachAction += () => StateChange(CharaState.Spawn);
+            respawnInterval.reachAction += () => StateChange(CharaState.ReSpawn);
         }
 
         /// <summary>
@@ -82,6 +84,12 @@ namespace GenericChara
 
                 case CharaState.Death:
                     deathAction?.Invoke();
+                    break;
+                case CharaState.ReSpawn:
+                    reSpawnAction?.Invoke();
+                    respawnInterval.Initialize(false);
+                    spawnInvincible.Reset();
+                    StateChange(CharaState.Alive);
                     break;
             }
         }

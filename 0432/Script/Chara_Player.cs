@@ -36,7 +36,9 @@ public class Chara_Player : Chara
     }
 
     [SerializeField] private PlayerInput input;
-    [field: SerializeField] public GameScene_Operator sceneOperator { get; set; }
+    [field: SerializeField] public PlayerUI UI { get; private set; }
+    public PlayerRespawnPos playerRespawnPos { get; set; }
+    public GameScene_Operator sceneOperator { get; set; }
     [field: SerializeField, NonEditable] public int score { get; private set; } = 0;
     [field: SerializeField, NonEditable] public BMI bmi { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
@@ -53,6 +55,7 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool moveInputting;       // à⁄ìÆÇÃì¸óÕ
     [SerializeField, NonEditable] private bool run;                 // ëñÇËì¸óÕ
     [SerializeField, NonEditable] private bool rigor;               // çdíºèÛë‘Åiì¸óÕÇéÛÇØïtÇØÇ»Ç¢Åj
+    [field: SerializeField, NonEditable] public EntityAndPlan<float> leaveButton { get; private set; }  // ëÉÇ…ÉXÉRÉAÇóaÇØÇÈì¸óÕ
     [SerializeField, NonEditable] private Vector3 dirrection;
 
     [SerializeField] private Animator animator;
@@ -91,8 +94,29 @@ public class Chara_Player : Chara
         alive = true;
     }
 
+    private void RespawnAction()
+    {
+        base.Spawn();
+
+        hp.Initialize();
+        speed.Initialize();
+        pow.Initialize();
+        dashSpeed.Initialize();
+        stamina.Initialize();
+        overStamina.Initialize(true, false);
+
+        death.exist.OneShotReset();
+
+        StateChange(MotionState.Idle);
+        alive = true;
+        transform.position = playerRespawnPos.PlayerRespawn();
+
+    }
+
     protected override void Start()
     {
+        reSpawnAction += RespawnAction;
+
         stamina.Initialize();
         overStamina.Initialize(true, false);
         overStamina.activeAction += stamina.Update;
@@ -378,12 +402,13 @@ public class Chara_Player : Chara
         {
             inputMoveVelocity.PlanDefault();
             viewPointManager.InputZeroAssign();
+            leaveButton.PlanDefault();
         }
         else
         {
             inputMoveVelocity.Assign();  
-           viewPointManager.inputViewPoint.Assign();
-
+            viewPointManager.inputViewPoint.Assign();
+            leaveButton.Assign();
         }
     }
 
@@ -463,6 +488,23 @@ public class Chara_Player : Chara
         }
     }
 
+    public float ChangeScoreByLeave()
+    {
+        float returnScore = score / 2;
+        score /= 2;
+
+        return returnScore;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.CompareTag(SurvivalGameTags.Nest) == true)
+        {
+            NestManager newNest = other.GetComponent<NestManager>();
+            newNest.ControleNest(this, Convert.ToBoolean(leaveButton.plan));
+        }
+    }
+
     #region PlayerInputÇ…é©ìÆÇ≈ìoò^Ç≥ÇÍÇÈEvent
 
     public void OnMove(InputValue value)
@@ -495,6 +537,11 @@ public class Chara_Player : Chara
         attack2.Launch(power.plan * 100, 1);
     }
 
+    public void OnLeave(InputValue value)
+    {
+        leaveButton.entity = value.Get<float>();
+    }
+
 
     public void OnDamage(InputValue value)
     {
@@ -506,3 +553,7 @@ public class Chara_Player : Chara
 
 }
 
+public static class SurvivalGameTags
+{
+    public static string Nest = nameof(Nest);
+}

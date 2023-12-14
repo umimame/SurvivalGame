@@ -1,5 +1,6 @@
 using AddClass;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,7 +10,7 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private List<Chara_Player> players = new List<Chara_Player>();
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
-    [SerializeField] private Transform[] respownPos;
+    [SerializeField] private PlayerRespawnPos respownPos;
 
     [SerializeField] private int initialScore;
     [SerializeField] private List<float> scoreList = new List<float>();
@@ -26,6 +27,8 @@ public class GameScene_Operator : SceneOperator
             players.Add(playerInstancer.lastObj.GetComponentInChildren<Chara_Player>());
             players[i].AddScore(initialScore);
             players[i].sceneOperator = this;
+            players[i].playerRespawnPos = respownPos;
+
 
             Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
             playerEngine.SetGravity(gravity);
@@ -51,10 +54,6 @@ public class GameScene_Operator : SceneOperator
         {
             scoreList[i] = players[i].score;
 
-            if (players[i].motionState == Chara_Player.MotionState.Death)
-            {
-                Debug.Log(players[i] + "Ž€");
-            }
 
         }
         scoreList = AddFunction.SortInDescending(scoreList);

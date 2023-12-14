@@ -18,10 +18,10 @@ using GenericChara;
     public void Initialize(Animator animator, string clipName, Chara parent)
     {
         motion.Initialize(animator, clipName);
-        // motinoCol.Initialize()はアタッチ先のStart関数で実行される
 
         Reset();
 
+        motionCol.Initialize();
         motionCol.parent = parent;
         motionCol.passJudgeFunc = null;
         motionCol.passJudgeFunc += MotionColPassingFunc;
