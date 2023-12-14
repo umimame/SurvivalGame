@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerPos : MonoBehaviour
+public class PlayerManager : MonoBehaviour
 {
     //ÉvÉåÉCÉÑÅ[Object
     [SerializeField] private GameObject[] PlayerObject;
