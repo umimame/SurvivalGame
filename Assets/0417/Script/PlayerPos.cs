@@ -8,6 +8,7 @@ public class PlayerPos : MonoBehaviour
     [SerializeField] private GameObject[] PlayerObject;
     //PlayerRespawnPosにアクセス
     public PlayerRespawnPos playerRespawnPos;
+    Vector3 pos;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,13 +21,16 @@ public class PlayerPos : MonoBehaviour
         //Zキーでプレイヤーの位置にPlayerRespawnを代入
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            PlayerObject[0].transform.position = playerRespawnPos.PlayerRespawn();
-            Debug.Log("Z");
+            pos = playerRespawnPos.PlayerRespawn();
+            PlayerObject[0].transform.position = pos;
+            Debug.Log(pos);
         }
+       
         if (Input.GetKeyDown(KeyCode.X))
         {
-            PlayerObject[1].transform.position = playerRespawnPos.PlayerRespawn();
-            Debug.Log("X");
+            pos = playerRespawnPos.PlayerRespawn();
+            PlayerObject[1].transform.position = pos;
+            Debug.Log(pos);
         }
     }
 }
