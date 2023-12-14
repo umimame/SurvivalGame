@@ -47,7 +47,7 @@ public class ImageSC : MonoBehaviour
             //Debug.Log("Move”½“]");
         }
 
-        GenerateApple();
+        //GenerateApple();
     }
     void MoveAnimalImage()
     {
@@ -74,7 +74,6 @@ public class ImageSC : MonoBehaviour
             time = 0f;
         }
     }
-
     void SetRandomApplePosition()
     {
         // Canvas‹«ŠE“à‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğİ’è
