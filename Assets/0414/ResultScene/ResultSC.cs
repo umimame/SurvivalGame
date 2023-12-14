@@ -35,11 +35,12 @@ public class ResultSC : MonoBehaviour
     int playerScore, playerKill, playerApple, playerOrange, playerGrape;
     //Chara_Playerオブジェクトを取得
     ResultPlayer charaPlayer;
+    SceneBlackOut SceneBlackOut;
     // Start is called before the first frame update
     void Start()
     {
         charaPlayer = FindObjectOfType<ResultPlayer>();
-
+        SceneBlackOut = FindObjectOfType<SceneBlackOut>();
         //色々な物の初期化
         TMProTransparent();
         //時間でテキスト等の透明解除
@@ -83,7 +84,8 @@ public class ResultSC : MonoBehaviour
                     //charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
                     charaPlayer.ReleaseSingleton();
                     Debug.Log("ResultSCでシングルトン破棄");
-                    SceneManager.LoadScene("TitleScene");
+                    SceneBlackOut.BlackOutSceneChangeForResult();
+                    //SceneManager.LoadScene("TitleScene");
                 }
             }
         }
