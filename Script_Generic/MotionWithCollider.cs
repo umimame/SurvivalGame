@@ -5,6 +5,11 @@ using GenericChara;
 [Serializable] public class MotionWithCollider
 {
     [SerializeField] MotionCollider motionCol;
+    private bool MotionColPassingFunc(bool passing, Collider you)
+    {
+        if (!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { passing = false; }
+        return passing;
+    }
     [field: SerializeField] public Motion motion { get; set; }
 
     [SerializeField, NonEditable] private float damage;
@@ -18,9 +23,12 @@ using GenericChara;
         Reset();
 
         motionCol.parent = parent;
+        motionCol.passJudgeFunc = null;
+        motionCol.passJudgeFunc += MotionColPassingFunc;
+
         withinThreshold += () => motionCol.Launch(damage, hitCount);
-        endAction += motionCol.Reset;
-        cutIn += motionCol.Reset;
+        endAction += motionCol.Spawn;
+        cutIn += motionCol.Spawn;
     }
 
     /// <summary>
@@ -43,7 +51,7 @@ using GenericChara;
     public void Reset()
     {
         motion.Reset();
-        motionCol.Reset();
+        motionCol.Spawn();
 
         damage = 0.0f;
         hitCount = 0;

@@ -6,9 +6,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Assertions;
-using System.Collections;
-using Unity.VisualScripting;
-using static UnityEngine.EventSystems.EventTrigger;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -94,6 +91,31 @@ namespace AddClass
 
     public static class AddFunction
     {
+        public static void ChangeDoubleNumber(ref float v1, ref float v2)
+        {
+            float tmp = v1;
+            v1 = v2;
+            v2 = tmp;
+        }
+        public static List<float> SortInDescending(List<float> list)
+        {
+            for(int i = 0; i < list.Count; ++i)
+            {
+                for(int j = i + 1; j < list.Count; ++j)
+                {
+                    if (list[i] < list[j])
+                    {
+                        (list[i], list[j]) = (list[j], list[i]);    // Turple‚Å’l‚ð“ü‚ê‘Ö‚¦‚é
+                    }
+                }
+            }
+
+            return list;
+        }
+
+
+
+
         /// <summary>
         /// angle‚ðŽw’è‚µ‚½Šp“x‚ÉŠÛ‚ß‚é
         /// </summary>
