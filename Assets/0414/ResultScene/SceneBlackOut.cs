@@ -19,13 +19,13 @@ public class SceneBlackOut : MonoBehaviour
     {
         isSceneChange = false;
         PanelColor = _PanelImage.color;
+        Debug.Log("PanelColorInAwake" + PanelColor);
         rectTransform = _PanelImage.rectTransform;
         width = 300;
         height = 300;
         ScaleX = 0f;
         ScaleY = 0f;
         Debug.Log("リザルト画面の暗転用画像のSpeed" + _speed);
-
     }
     public void BlackOutSceneChangeForResult()
     {
@@ -81,12 +81,12 @@ public class SceneBlackOut : MonoBehaviour
             PanelColor.a += 0.0007f;
             _PanelImage.color = PanelColor;
             //Debug.Log("Speed" + _speed);
-            if (rectTransform.localScale.x >= 3f&& PanelColor.a >= 1)
+            if (rectTransform.localScale.x >= 3f && PanelColor.a >= 1)
                 isSceneChange = true;
             yield return new WaitForSeconds(_speed);
         }
         Debug.Log("リザルト画面の暗転用画像のSpeed2  " + _speed);
-
         SceneManager.LoadScene("TitleScene");
     }
+
 }
