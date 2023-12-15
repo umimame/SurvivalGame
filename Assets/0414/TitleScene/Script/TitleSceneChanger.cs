@@ -7,13 +7,11 @@ public class TitleSceneChanger : MonoBehaviour
 {
     [SerializeField] private string changeScene;
     SceneBlackOut SceneBlackOut;
-
     // Start is called before the first frame update
     void Start()
     {
         SceneBlackOut = FindObjectOfType<SceneBlackOut>();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -30,7 +28,6 @@ public class TitleSceneChanger : MonoBehaviour
                 //SceneManager.LoadScene("TestScene");
             }
         }
-
         //if (Input.GetKey(KeyCode.Escape))
         //{
         //    //‰½‚à‚µ‚È‚¢

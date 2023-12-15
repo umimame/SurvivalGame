@@ -34,9 +34,13 @@ public class ResultPlayer : MonoBehaviour
             orange += 2;
             grape += 3;
         }
-        if(Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             ResetScore();
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log("Apple" + apple);
         }
     }
     //public int GetScore() { return score; }
@@ -60,5 +64,5 @@ public class ResultPlayer : MonoBehaviour
             Destroy(instance.gameObject);
             instance = null;
         }
-    }      
+    }
 }

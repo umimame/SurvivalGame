@@ -10,7 +10,6 @@ public class TestSC : MonoBehaviour
     {
 
     }
-
     // Update is called once per frame
     void Update()
     {
