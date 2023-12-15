@@ -13,15 +13,20 @@ public class Item : MonoBehaviour
     [SerializeField]
     [Tooltip("発生させるエフェクト(パーティクル)")]
     private ParticleSystem particle;
-    // Start is called before the first frame update
-
     
+    public AudioClip ItemSE;
+    // Start is called before the first frame update
 
     void OnTriggerStay(Collider other)
     {
        
         if (other.tag == Tags.Player01 || other.tag == Tags.Player02)
         {
+            ParticleSystem newParticle = Instantiate(particle);
+            newParticle.transform.position = this.transform.position;
+            newParticle.Play();
+            Destroy(newParticle.gameObject, 0.5f);
+            AudioSource.PlayClipAtPoint(ItemSE, transform.position);
             HitThePlayer(other.gameObject);
         }
     }
@@ -31,11 +36,6 @@ public class Item : MonoBehaviour
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
         {
             HitThePlayer(other.gameObject);
-
-            ParticleSystem newParticle = Instantiate(particle);
-            newParticle.transform.position = this.transform.position;
-            newParticle.Play();
-            Destroy(newParticle.gameObject, 1.0f);
         }
     }
     public virtual void HitThePlayer(GameObject other)
