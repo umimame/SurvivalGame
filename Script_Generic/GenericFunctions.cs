@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.Assertions;
 using GenericChara;
+using Unity.VisualScripting;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -950,8 +951,9 @@ namespace AddClass
             Manual,
         }
         [field: SerializeField, NonEditable] public bool active { get; private set; }
-        [field: SerializeField] public float interval { get; private set; }
+        [field: SerializeField] public float interval { get; private set; } 
         [field: SerializeField, NonEditable] public VariedTime time { get; private set; } = new VariedTime();
+        [field: SerializeField, NonEditable] public float ratio { get; private set; }
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
@@ -980,6 +982,7 @@ namespace AddClass
 
             active = (time.value >= interval) ? true : false;
             reached = false;
+            ratio = time.value / interval;
         }
 
 
@@ -1004,6 +1007,7 @@ namespace AddClass
                 active = false;
                 lowAction?.Invoke();
             }
+            ratio = time.value / interval;
         }
 
         /// <summary>
@@ -1015,10 +1019,6 @@ namespace AddClass
             time.Initialize();
         }
 
-        public float ratio
-        {
-            get { return time.value / interval; }
-        }
     }
 
     /// <summary>
@@ -1445,6 +1445,7 @@ namespace AddClass
     [Serializable]
     public class SpriteOrImage
     {
+        [field: SerializeField] public GameObject target { get; set; }
         [field: SerializeField] public SpriteRenderer[] sprites { get; set; }
         [field: SerializeField] public Image[] images { get; set; }
         [field: SerializeField] public TextMeshProUGUI[] texts { get; set; }
@@ -1453,11 +1454,21 @@ namespace AddClass
         /// 引数はSpriteRendererまたはImageがアタッチされたGameObject
         /// </summary>
         /// <param name="obj"></param>
-        public virtual void Initialize(GameObject obj)
+        public void Initialize(GameObject obj = null)
         {
-            sprites = obj.GetComponentsInChildren<SpriteRenderer>();
-            images = obj.GetComponentsInChildren<Image>();
-            texts = obj.GetComponentsInChildren<TextMeshProUGUI>();
+            if(obj != null)
+            {
+                sprites = obj.GetComponentsInChildren<SpriteRenderer>();
+                images = obj.GetComponentsInChildren<Image>();
+                texts = obj.GetComponentsInChildren<TextMeshProUGUI>();
+            }
+            else
+            {
+                sprites = target.GetComponentsInChildren<SpriteRenderer>();
+                images = target.GetComponentsInChildren<Image>();
+                texts = target.GetComponentsInChildren<TextMeshProUGUI>();
+
+            }
             if (sprites.Length == 0 && images.Length == 0 && texts.Length == 0)
             {
                 Debug.LogError("いずれもアタッチされていません");
@@ -1481,7 +1492,10 @@ namespace AddClass
                 {
                     return images[0].color;
                 }
-
+                else if (texts.Length != 0)
+                {
+                    return texts[0].color;
+                }
                 Debug.LogError("SpriteRendererまたはImageをアタッチしてください");
                 return Color.white;
             }
@@ -1531,6 +1545,10 @@ namespace AddClass
                 {
                     return images[0].color.a;
                 }
+                else if (texts.Length != 0)
+                {
+                    return texts[0].color.a;
+                }
 
                 Debug.LogError("SpriteRendererまたはImageをアタッチしてください");
                 return 0.0f;
@@ -1567,8 +1585,56 @@ namespace AddClass
                 }
             }
         }
-
     }
+    [Serializable] public class EnableAndFadeAlpha
+    {
+        
+        [field: SerializeField] public SpriteOrImage img { get; set; } = new SpriteOrImage();
+        [SerializeField] private Interval displayInterval = new Interval(); // 消え始めるまでの時間
+        [SerializeField] private Interval intervalToFade = new Interval();  // 完全に消えるまでの時間
+        public EnableAndFadeAlpha()
+        {
+        }
+        public void Initialize()
+        {
+            img.Initialize();
+            displayInterval.Initialize(false, false);
+            intervalToFade.Initialize(false, false);
+            displayInterval.lowAction += intervalToFade.Reset;
+            intervalToFade.lowAction += Fade;
+            Reset();
+        }
+
+        public void Update()
+        {
+            displayInterval.Update();
+            intervalToFade.Update();
+        }
+
+        public void Launch()
+        {
+            displayInterval.Reset();
+            intervalToFade.Reset();
+            img.Alpha = 1.0f;
+        }
+
+        public void Reset()
+        {
+            img.Alpha = 0.0f;
+        }
+
+        public void Fade()
+        {
+            img.Alpha = 1.0f - intervalToFade.ratio;
+            Debug.Log(intervalToFade.ratio);
+        }
+
+        public GameObject obj
+        {
+            get { return img.target; }
+        }
+    }
+
 
     [Serializable] public  class TargetColliders<T> where T : class
     {

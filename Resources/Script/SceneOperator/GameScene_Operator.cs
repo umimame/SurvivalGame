@@ -41,7 +41,7 @@ public class GameScene_Operator : SceneOperator
             }
             playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
-            scoreList.Add(players[i].score);
+            scoreList.Add(players[i].score.plan + players[i].score.entity);
         }
     }
 
@@ -52,13 +52,18 @@ public class GameScene_Operator : SceneOperator
 
         for (int i = 0; i < players.Count; i++)
         {
-            scoreList[i] = players[i].score;
+            scoreList[i] = players[i].score.plan + players[i].score.entity;
 
 
         }
         scoreList = AddFunction.SortInDescending(scoreList);
     }
 
+    /// <summary>
+    /// トッププレイヤーとのスコア差を返す
+    /// </summary>
+    /// <param name="currentScore"></param>
+    /// <returns></returns>
     public float DifferenceOfTopScore(float currentScore)
     {
         return scoreList[0] - currentScore;
