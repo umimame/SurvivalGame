@@ -5,6 +5,11 @@ using GenericChara;
 [Serializable] public class MotionWithCollider
 {
     [SerializeField] MotionCollider motionCol;
+    private bool MotionColPassingFunc(bool passing, Collider you)
+    {
+        if (!(you.tag == Tags.Player01 || you.tag == Tags.Player02)) { passing = false; }
+        return passing;
+    }
     [field: SerializeField] public Motion motion { get; set; }
 
     [SerializeField, NonEditable] private float damage;
@@ -13,14 +18,17 @@ using GenericChara;
     public void Initialize(Animator animator, string clipName, Chara parent)
     {
         motion.Initialize(animator, clipName);
-        // motinoCol.Initialize()はアタッチ先のStart関数で実行される
 
         Reset();
 
+        motionCol.Initialize();
         motionCol.parent = parent;
+        motionCol.passJudgeFunc = null;
+        motionCol.passJudgeFunc += MotionColPassingFunc;
+
         withinThreshold += () => motionCol.Launch(damage, hitCount);
-        endAction += motionCol.Reset;
-        cutIn += motionCol.Reset;
+        endAction += motionCol.Spawn;
+        cutIn += motionCol.Spawn;
     }
 
     /// <summary>
@@ -43,7 +51,7 @@ using GenericChara;
     public void Reset()
     {
         motion.Reset();
-        motionCol.Reset();
+        motionCol.Spawn();
 
         damage = 0.0f;
         hitCount = 0;
@@ -129,8 +137,8 @@ using GenericChara;
     [SerializeField] private float adjustMotionTime;
     [field: SerializeField] public Interval interval { get; set; }
     [field: SerializeField] public ThresholdRatio motionThreshold { get; set; }
-    [field: SerializeField] public Exist exist { get; set; }
-    [field: SerializeField] public EasingAnimator easAnim { get; private set; }
+    [field: SerializeField] public Exist exist { get; set; } = new Exist();
+    [field: SerializeField] public EasingAnimator easAnim { get; private set; } = new EasingAnimator();
     public void Initialize(Animator animator, string clipName)
     {
         motionTime = AddFunction.GetAnimationClipLength(animator, clipName);

@@ -24,7 +24,7 @@ public class CameraByPlayer : MonoBehaviour
             cam = GetComponent<Camera>();
             if (body.tag == Tags.Player01)
             {
-                gameObject.tag = "MainCamera";
+                //gameObject.tag = "MainCamera";
                 cam.rect = FrontCanvas.instance.presets.cameraRectPre[0];
 
 

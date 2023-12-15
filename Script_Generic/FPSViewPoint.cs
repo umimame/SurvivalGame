@@ -11,6 +11,7 @@ public class FPSViewPoint : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private Engine engine;
+    [SerializeField] private float sensitivity;
     [field: SerializeField, NonEditable] public EntityAndPlan<Vector2> inputViewPoint { get; set; }
     [field: SerializeField, NonEditable] public Vector3 viewPointPosPlan { get; set; }
     [SerializeField, NonEditable] private Vector3 beforePlan;
@@ -74,9 +75,6 @@ public class FPSViewPoint : MonoBehaviour
             viewPointPosPlan = Vector3.zero;
             VerticalOffset(centerPos);
 
-            //newPlan.x = centerPos.position.x;
-            //newPlan.z = centerPos.position.z;
-
             if(inputViewPoint.plan.x != 0.0f)
             {
                 newPlan.x += viewCircleHorizontal.NewPosUpdate(inputViewPoint.plan.x).x;
@@ -86,7 +84,6 @@ public class FPSViewPoint : MonoBehaviour
 
             viewCircleVertical.axis = transform.right;
             newPlan.y += viewCircleVertical.NewPosUpdate(-inputViewPoint.plan.y).y;
-            //viewCircleVertical.Update(-inputViewPoint.plan.y);
 
             
 
@@ -105,8 +102,8 @@ public class FPSViewPoint : MonoBehaviour
     {
         // CameraのRotationを変更
         Vector3 newCamEuler = cam.transform.eulerAngles;
-        newCamEuler.y += inputViewPoint.plan.x;
-        newCamEuler.x += -inputViewPoint.plan.y;
+        newCamEuler.y += inputViewPoint.plan.x * sensitivity;
+        newCamEuler.x += -inputViewPoint.plan.y * sensitivity;
         cam.transform.eulerAngles = newCamEuler;
 
         // Y軸の視点制限
@@ -115,7 +112,7 @@ public class FPSViewPoint : MonoBehaviour
             verticalLimitter.Update(cam.transform.eulerAngles.x);
             if (verticalLimitter.reaching == true)  // 視点の角度が範囲外なら
             {
-                newCamEuler.x -= -inputViewPoint.plan.y;    // なかったことにする
+                newCamEuler.x -= -inputViewPoint.plan.y * sensitivity;    // なかったことにする
             }
         }
         cam.transform.eulerAngles = newCamEuler;
@@ -129,6 +126,14 @@ public class FPSViewPoint : MonoBehaviour
 
         
 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void InputZeroAssign()
+    {
+        inputViewPoint.PlanDefault();
     }
 
     /// <summary>

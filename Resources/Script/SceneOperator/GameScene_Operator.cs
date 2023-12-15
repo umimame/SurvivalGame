@@ -1,4 +1,6 @@
+using AddClass;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,8 +10,11 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private List<Chara_Player> players = new List<Chara_Player>();
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
-    [SerializeField] private Transform[] respownPos;
-    [field: SerializeField] public GravityManager gravity { get; set; }
+    [SerializeField] private PlayerRespawnPos respownPos;
+
+    [SerializeField] private int initialScore;
+    [SerializeField] private List<float> scoreList = new List<float>();
+    [field: SerializeField] public GravityProfile gravity { get; set; }
     protected override void Start()
     {
         base.Start();
@@ -18,7 +23,12 @@ public class GameScene_Operator : SceneOperator
         {
             playerInstancer.Instance(); 
             playerInstancer.lastObj.tag = TagAndArray.ArrayToTag(i);
+            
             players.Add(playerInstancer.lastObj.GetComponentInChildren<Chara_Player>());
+            players[i].AddScore(initialScore);
+            players[i].sceneOperator = this;
+            players[i].playerRespawnPos = respownPos;
+
 
             Engine playerEngine = playerInstancer.lastObj.GetComponentInChildren<Engine>();
             playerEngine.SetGravity(gravity);
@@ -31,7 +41,7 @@ public class GameScene_Operator : SceneOperator
             }
             playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
-
+            scoreList.Add(players[i].score);
         }
     }
 
@@ -39,13 +49,19 @@ public class GameScene_Operator : SceneOperator
     {
         base.Update();
 
-        for(int i = 0; i < players.Count; i++)
+
+        for (int i = 0; i < players.Count; i++)
         {
-            if (players[i].motionState == Chara_Player.MotionState.Death)
-            {
-                Debug.Log("Ž€");
-            }
+            scoreList[i] = players[i].score;
+
+
         }
+        scoreList = AddFunction.SortInDescending(scoreList);
+    }
+
+    public float DifferenceOfTopScore(float currentScore)
+    {
+        return scoreList[0] - currentScore;
     }
 
 }

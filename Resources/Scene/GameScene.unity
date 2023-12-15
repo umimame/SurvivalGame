@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.09420606, g: 0.11945187, b: 0.15501773, a: 1}
+  m_IndirectSpecularColor: {r: 0.094288595, g: 0.1194504, b: 0.15523562, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1041,9 +1041,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createItem:
-  - {fileID: 5670634376248469262, guid: 44ccc562e31c0be4ba84e4ade6f0a1e9, type: 3}
-  - {fileID: 9084666085521601494, guid: 17e0c71c82e710b408312bbc59e6343f, type: 3}
-  - {fileID: 4545166431280258023, guid: 9de1b17fac4296548b437f9a3efbedc1, type: 3}
+  - {fileID: 1629775187986640667, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
+  - {fileID: 8757576603560997499, guid: 6733a6ca115a8014987f1289961868c8, type: 3}
+  - {fileID: 1955758425059793843, guid: a4b019ec1d3c8344a8d227dce355ea73, type: 3}
   ranges:
   - {fileID: 1266012691}
   - {fileID: 907363023}
@@ -1968,6 +1968,7 @@ MonoBehaviour:
   players: []
   NumberOfPlayer: 2
   nextScene: ResultScene
+  respownPos: []
   <gravity>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
 --- !u!4 &1291896755
 Transform:
