@@ -15,7 +15,6 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Color nestGuageColor2;
 
     [SerializeField] private EnableAndFadeAlpha leaveText;
-    [SerializeField] private EnableAndFadeAlpha stealText;
 
     private RectTransform rect;
     private void Start()
@@ -56,10 +55,6 @@ public class PlayerUI : MonoBehaviour
         {
             leaveText.Launch();
             Debug.Log(leaveText.img.Alpha);
-        }
-        else
-        {
-            stealText.Launch();
         }
     }
 

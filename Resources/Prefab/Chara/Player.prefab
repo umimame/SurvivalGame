@@ -553,7 +553,7 @@ MonoBehaviour:
       <interval>k__BackingField: 2
       <time>k__BackingField:
         <value>k__BackingField: 0
-        increseType: 0
+        <increseType>k__BackingField: 0
         reversalIncrese: 0
       <ratio>k__BackingField: 0
     intervalToFade:
@@ -561,29 +561,7 @@ MonoBehaviour:
       <interval>k__BackingField: 2
       <time>k__BackingField:
         <value>k__BackingField: 0
-        increseType: 0
-        reversalIncrese: 0
-      <ratio>k__BackingField: 0
-  stealText:
-    <img>k__BackingField:
-      <target>k__BackingField: {fileID: 6433216387694526661}
-      <sprites>k__BackingField: []
-      <images>k__BackingField: []
-      <texts>k__BackingField: []
-    displayInterval:
-      <active>k__BackingField: 0
-      <interval>k__BackingField: 0
-      <time>k__BackingField:
-        <value>k__BackingField: 0
-        increseType: 0
-        reversalIncrese: 0
-      <ratio>k__BackingField: 0
-    intervalToFade:
-      <active>k__BackingField: 0
-      <interval>k__BackingField: 0
-      <time>k__BackingField:
-        <value>k__BackingField: 0
-        increseType: 0
+        <increseType>k__BackingField: 0
         reversalIncrese: 0
       <ratio>k__BackingField: 0
 --- !u!1 &4064012993855557387
@@ -931,7 +909,7 @@ MonoBehaviour:
     <interval>k__BackingField: 3
     <time>k__BackingField:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <ratio>k__BackingField: 0
   moveVelocity:
@@ -942,7 +920,7 @@ MonoBehaviour:
     <interval>k__BackingField: 3
     <time>k__BackingField:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <ratio>k__BackingField: 0
   invincible:
@@ -950,7 +928,7 @@ MonoBehaviour:
     <interval>k__BackingField: 0.1
     <time>k__BackingField:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <ratio>k__BackingField: 0
   <lastAttacker>k__BackingField: {fileID: 0}
@@ -995,7 +973,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     time:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <currentValue>k__BackingField: 0
   <dashCost>k__BackingField:
@@ -1009,7 +987,7 @@ MonoBehaviour:
     <interval>k__BackingField: 1.5
     <time>k__BackingField:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <ratio>k__BackingField: 0
   cam: {fileID: 4064012993921943242}
@@ -1055,7 +1033,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     time:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     <currentValue>k__BackingField: 0
   attack1:
@@ -1068,7 +1046,7 @@ MonoBehaviour:
         <interval>k__BackingField: 0
         <time>k__BackingField:
           <value>k__BackingField: 0
-          increseType: 0
+          <increseType>k__BackingField: 0
           reversalIncrese: 0
         <ratio>k__BackingField: 0
       <motionThreshold>k__BackingField:
@@ -1121,7 +1099,7 @@ MonoBehaviour:
         <interval>k__BackingField: 0
         <time>k__BackingField:
           <value>k__BackingField: 0
-          increseType: 0
+          <increseType>k__BackingField: 0
           reversalIncrese: 0
         <ratio>k__BackingField: 0
       <motionThreshold>k__BackingField:
@@ -1172,7 +1150,7 @@ MonoBehaviour:
       <interval>k__BackingField: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
-        increseType: 0
+        <increseType>k__BackingField: 0
         reversalIncrese: 0
       <ratio>k__BackingField: 0
     <motionThreshold>k__BackingField:
@@ -1230,7 +1208,7 @@ MonoBehaviour:
       <interval>k__BackingField: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
-        increseType: 0
+        <increseType>k__BackingField: 0
         reversalIncrese: 0
       <ratio>k__BackingField: 0
     <motionThreshold>k__BackingField:
@@ -1352,7 +1330,7 @@ MonoBehaviour:
     reversal: 0
     <time>k__BackingField:
       <value>k__BackingField: 0
-      increseType: 0
+      <increseType>k__BackingField: 0
       reversalIncrese: 0
     currentGravity:
       <entity>k__BackingField: {x: 0, y: 0, z: 0}
@@ -1661,8 +1639,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 16777215
+  m_fontColor: {r: 1, g: 1, b: 1, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

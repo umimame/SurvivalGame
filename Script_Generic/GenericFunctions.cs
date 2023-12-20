@@ -1013,6 +1013,7 @@ namespace AddClass
         public void Update(float manualValue = 0.0f)
         {
             time.Update(manualValue);
+            ratio = time.value / interval;
 
             if (time.value >= interval)
             {
@@ -1031,7 +1032,6 @@ namespace AddClass
                 active = false;
                 lowAction?.Invoke();
             }
-            ratio = time.value / interval;
         }
 
         /// <summary>
@@ -1039,8 +1039,10 @@ namespace AddClass
         /// </summary>
         public void Reset()
         {
+            time.Initialize(); 
+            active = (time.value >= interval) ? true : false;
             reached = false;
-            time.Initialize();
+            ratio = time.value / interval;
         }
 
     }
@@ -1617,9 +1619,7 @@ namespace AddClass
         [field: SerializeField] public SpriteOrImage img { get; set; } = new SpriteOrImage();
         [SerializeField] private Interval displayInterval = new Interval(); // è¡Ç¶énÇﬂÇÈÇ‹Ç≈ÇÃéûä‘
         [SerializeField] private Interval intervalToFade = new Interval();  // äÆëSÇ…è¡Ç¶ÇÈÇ‹Ç≈ÇÃéûä‘
-        public EnableAndFadeAlpha()
-        {
-        }
+
         public void Initialize()
         {
             img.Initialize();
@@ -1641,17 +1641,18 @@ namespace AddClass
             displayInterval.Reset();
             intervalToFade.Reset();
             img.Alpha = 1.0f;
+            Debug.Log(img.Alpha);
         }
 
         public void Reset()
         {
             img.Alpha = 0.0f;
+            Debug.Log(img.Alpha);
         }
 
         public void Fade()
         {
             img.Alpha = 1.0f - intervalToFade.ratio;
-            Debug.Log(intervalToFade.ratio);
         }
 
         public GameObject obj
