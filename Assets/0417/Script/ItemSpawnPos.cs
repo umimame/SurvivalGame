@@ -14,7 +14,7 @@ public class ItemSpawnPos : MonoBehaviour
     private float RespawnTime = 1.0f;
     [SerializeField] private int ItemValue;
 
-    //マップに存在できるアイテムの個数を1000までにしたい
+    //マップに存在できるアイテムの個数を1000(仮)までにしたい
     //すでにマップに生成されているアイテムも考慮する
     //例　マップには1000個のアイテムがあったが10個プレイヤが取得し990個になった
     //この場合はアイテムを10個生成する

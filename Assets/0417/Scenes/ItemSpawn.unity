@@ -229,7 +229,6 @@ GameObject:
   - component: {fileID: 437492650}
   - component: {fileID: 437492649}
   - component: {fileID: 437492648}
-  - component: {fileID: 437492652}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -326,21 +325,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &437492652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 437492647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _data:
-    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
-    _objectReferences: []
 --- !u!1 &492649208
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,9 +432,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createItem:
-  - {fileID: 1629775187986640667, guid: 05a880d6e1fd96e4e99f974037c22f3d, type: 3}
-  - {fileID: 1955758425059793843, guid: a4b019ec1d3c8344a8d227dce355ea73, type: 3}
-  - {fileID: 8757576603560997499, guid: 6733a6ca115a8014987f1289961868c8, type: 3}
+  - {fileID: 7104513647526755138, guid: 11251117e0f8b204b9d17bb16c0a66ca, type: 3}
+  - {fileID: 8480716511039263713, guid: 6376876ae7ac14f46b02695d6ab65df9, type: 3}
+  - {fileID: 6959689696860600343, guid: d5d88dc18bfff994cb5cccbee098624b, type: 3}
   ranges:
   - {fileID: 634791390}
   - {fileID: 954573563}
