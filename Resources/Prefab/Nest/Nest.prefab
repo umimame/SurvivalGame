@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4280516227226451242}
   m_Layer: 0
   m_Name: Nest
-  m_TagString: Untagged
+  m_TagString: Nest
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,11 +58,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b709837d177f98469d3b08cb8e82041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <leaved>k__BackingField: 0
   leavedPlayer: {fileID: 0}
   targets:
     <targets>k__BackingField: []
-  intervals: []
+  leaveIntervals: []
+  stealIntervals: []
   leavedScore: 0
 --- !u!135 &4280516227226451242
 SphereCollider:
