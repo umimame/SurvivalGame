@@ -75,7 +75,7 @@ public class SceneOperator : MonoBehaviour
         }
     }
 
-    public T OperatorGet<T>()
+    public T OperatorGet<T>() where T : SceneOperator
     {
         return GameObject.FindWithTag(Tags.SceneOperator).GetComponent<T>();
     }

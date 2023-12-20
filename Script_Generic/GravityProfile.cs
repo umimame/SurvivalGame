@@ -31,8 +31,8 @@ using UnityEngine;
     {
         if (gravityProfile == null) { return; }
         traffic.Initialize();
-        traffic.activeAction += ActiveAction;
-        traffic.nonActiveAction += NonActiveAction;
+        traffic.enableAction += ActiveAction;
+        traffic.disableAction += NonActiveAction;
         Clear();
     }
 

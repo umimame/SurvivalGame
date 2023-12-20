@@ -129,6 +129,17 @@ namespace AddClass
         {
             return Mathf.Repeat(angle - min, max - min) + min;
         }
+
+        public static Vector3 GetNormalizedAngles(Vector3 angles, float min, float max)
+        {
+            Vector3 retVec3;
+            retVec3.x = GetNormalizedAngle(angles.x, min, max);
+            retVec3.y = GetNormalizedAngle(angles.y, min, max);
+            retVec3.z = GetNormalizedAngle(angles.z, min, max);
+
+            return retVec3;
+        }
+
         /// <summary>
         /// Vector2Çäpìx(360ìx)Ç…ïœçX
         /// </summary>
@@ -390,7 +401,6 @@ namespace AddClass
                         select animationClip.length).FirstOrDefault();
             }
         }
-
         
         public static void SetAnchor(this RectTransform source, AnchorPresets allign, int offsetX = 0, int offsetY = 0)
         {
@@ -917,25 +927,39 @@ namespace AddClass
     [Serializable] public class Traffic
     {
         public bool active;
-        public Action activeAction { get; set; }
-        public Action nonActiveAction { get; set; }
+        public Action launchAction { get; set; }
+        public Action enableAction { get; set; }
+        public Action disableAction { get; set; }
+        public Action closeAction { get; set; }
         public void Initialize()
         {
             active = false;
-            activeAction = null;
-            nonActiveAction = null;
+            enableAction = null;
+            disableAction = null;
         }
         public void Update()
         {
             if(active == true)
             {
-                activeAction?.Invoke();
+                enableAction?.Invoke();
             }
             else
             {
-                nonActiveAction?.Invoke();
+                disableAction?.Invoke();
             }
         }
+
+        public void Launch()
+        {
+            active = true;
+            launchAction?.Invoke();
+        }
+        public void Close()
+        {
+            active = false;
+            closeAction?.Invoke();
+        }
+
     }
 
     /// <summary>
@@ -1117,6 +1141,12 @@ namespace AddClass
             Quaternion you = Quaternion.LookRotation(direction);
             targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
         }
+        public void Update(Transform changeTra)
+        {
+            Quaternion me = changeTra.rotation;
+            Quaternion you = Quaternion.LookRotation(changeTra.position - targetObj.transform.position);
+            targetObj.transform.rotation = Quaternion.RotateTowards(me, you, speed * Time.deltaTime);
+        }
     }
 
     /// <summary>
@@ -1135,8 +1165,8 @@ namespace AddClass
             Reset();
 
             traffic.Initialize();
-            traffic.activeAction += Evalute;
-            traffic.nonActiveAction += Reset;
+            traffic.enableAction += Evalute;
+            traffic.disableAction += Reset;
         }
         public void Update()
         {
@@ -1181,8 +1211,8 @@ namespace AddClass
 
 
             traffic.Initialize();
-            traffic.activeAction += Evalute;
-            traffic.nonActiveAction += Reset;
+            traffic.enableAction += Evalute;
+            traffic.disableAction += Reset;
         }
         public void Update()
         {
@@ -1368,15 +1398,8 @@ namespace AddClass
 
     [Serializable] public class VariedTime
     {
-        public enum IncreseType
-        {
-            DeltaTime,
-            Frame,
-            Manual,
-        }
-
         [field: SerializeField, NonEditable] public float value { get; private set; }
-        [SerializeField] private IncreseType increseType;
+        [field: SerializeField] public IncreseType increseType { get; set; }
         [SerializeField] private bool reversalIncrese;
         public void Initialize(float startTime = 0.0f, IncreseType type = default)
         {
@@ -1408,7 +1431,7 @@ namespace AddClass
 
     
 
-    public class ValueChecker<T> where T : struct
+    [Serializable] public class ValueChecker<T> where T : struct
     {
         [SerializeField] private T value;
         [SerializeField] private T beforeValue;
@@ -1437,6 +1460,8 @@ namespace AddClass
             {
                 changedAction?.Invoke();
             }
+
+            beforeValue = value;
         }
     }
     /// <summary>
@@ -2643,7 +2668,7 @@ namespace AddClass
                 l.edit = EditType.None;
             }
 
-            min.labelRect.Width = max.labelRect.Width = 30f;
+            min.labelRect.Width = max.labelRect.Width = 25.0f;
 
             min.useRatioInRemainder = max.useRatioInRemainder = 0.5f;
 
@@ -2703,6 +2728,7 @@ namespace AddClass
 
     #endregion
 }
+
 public enum AnchorPresets
 {
     TopLeft,
@@ -2742,4 +2768,10 @@ public enum PivotPresets
     BottomLeft,
     BottomCenter,
     BottomRight,
+}
+public enum IncreseType
+{
+    DeltaTime,
+    Frame,
+    Manual,
 }
