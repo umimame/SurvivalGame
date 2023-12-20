@@ -49,6 +49,11 @@ public class InputOperator : MonoBehaviour
         Destroy(t);
     }
 
+    public EntityAndPlan<Vector3> MoveInput
+    {
+        get { return moveInput.input; }
+    }
+
     #region PlayerInputEvent
     public void OnMove(InputValue value)
     {

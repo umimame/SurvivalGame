@@ -48,7 +48,7 @@ using System;
 
         for(int i = clones.Count - 1; i >= 0; i--)
         {
-            if (clones[i] != null) { state = DisplayState.Displaying; }// ˆê‚Â‚Å‚à•\Ž¦’†‚È‚ç
+            if (clones[i] != null) { state = DisplayState.Displaying; } // ˆê‚Â‚Å‚à•\Ž¦’†‚È‚ç
             else { clones.RemoveAt(i); }
 
         }

@@ -1,6 +1,10 @@
 using UnityEngine;
 using UnityEngine.Events;
 
+
+/// <summary>
+/// 別のオブジェクトにアタッチされたコライダーで関数を実行できる
+/// </summary>
 public class ColliderChecker : MonoBehaviour
 {
     public enum OnColliderType
