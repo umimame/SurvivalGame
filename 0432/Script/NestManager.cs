@@ -59,7 +59,6 @@ public class NestManager : MonoBehaviour
     {
         float returnScore = leavedScore;
         leavedScore = 0.0f;
-        Debug.Log("Steal");
         return returnScore;
     }
 
@@ -91,45 +90,41 @@ public class NestManager : MonoBehaviour
 
         if (leavedPlayer == null)    // —a‚©‚Á‚Ä‚¢‚È‚¢ó‘Ô‚È‚ç
         {
-            stealIntervals[i].Reset();
             leaveIntervals[i].Update();
+            stealIntervals[i].Reset();
             player.UI.ControlNestGuage(leaveIntervals[i].ratio, true);
-            if (leaveIntervals[i].active == true)                 // ‘ÎÛ‚Ìinterval‚ªactive‚È‚ç
-            {
-                leavedScore = player.ChangeScoreByLeave();
-                player.leavedScore += (int)leavedScore;
-                leavedPlayer = player;
-                player.UI.NestTextLaunch(true);
-
-                Clear();
-
-                Debug.Log("Leave");
-                return true;
-            }
         }
         else if (leavedPlayer != player) // —a‚©‚Á‚Ä‚¢‚éó‘ÔŠ‚Â‘¼‚ÌƒvƒŒƒCƒ„[‚ªG‚Á‚Ä‚¢‚éó‘Ô‚È‚ç
         {
             leaveIntervals[i].Reset();
             stealIntervals[i].Update();
             player.UI.ControlNestGuage(stealIntervals[i].ratio, false);
-            if (stealIntervals[i].active == true)
-            {
-                Debug.Log(leavedPlayer.leavedScore);
-                leavedPlayer.leavedScore -= (int)leavedScore;
-                player.AddScore((int)StealLeavedScore());
-                Debug.Log(leavedPlayer.leavedScore);
-
-                Clear();
-                leavedPlayer = null;
-            }
-            return true;
         }
 
 
         return false;
     }
 
+    private void LeaveActiveAction(Chara_Player player)
+    {
+        leavedScore = player.ChangeScoreByLeave();
+        player.leavedScore += (int)leavedScore;
+        leavedPlayer = player;
+        player.UI.NestTextLaunch(true);
 
+        Clear();
+
+
+    }
+
+    private void SteakActiveAction(Chara_Player player)
+    {
+        leavedPlayer.leavedScore -= (int)leavedScore;
+        player.AddScore((int)StealLeavedScore());
+
+        Clear();
+        leavedPlayer = null;
+    }
 
 
     public void OnTriggerStay(Collider other)
@@ -138,6 +133,32 @@ public class NestManager : MonoBehaviour
         {
             targets.Update(other.transform.root.GetChild(0).GetComponent<Chara_Player>());  // G‚ê‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ“o˜^‚·‚é
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(Tags.Player01) || other.CompareTag(Tags.Player02))
+        {
+            Chara_Player player = other.transform.root.GetChild(0).GetComponent<Chara_Player>();
+            targets.Update(player);  // G‚ê‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ“o˜^‚·‚é
+            int i = targets.GetIndex(player);
+            Debug.Log(i);
+            leaveIntervals[i].activeAction += ()=> LeaveActiveAction(player);
+            stealIntervals[i].activeAction += () => SteakActiveAction(player);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(Tags.Player01) || other.CompareTag(Tags.Player02))
+        {
+            Chara_Player player = other.transform.root.GetChild(0).GetComponent<Chara_Player>();
+            int i = targets.GetIndex(player);
+
+            leaveIntervals[i].activeAction -= () => LeaveActiveAction(player);
+            stealIntervals[i].activeAction += () => SteakActiveAction(player);
+        }
+
     }
 
 }
