@@ -22,14 +22,14 @@ MonoBehaviour:
   <cameraRectPre>k__BackingField:
   - serializedVersion: 2
     x: 0
-    y: 0.505
+    y: 0.5
     width: 1
     height: 0.5
   - serializedVersion: 2
     x: 0
     y: 0
     width: 1
-    height: 0.495
+    height: 0.5
   <playerPos>k__BackingField:
   - {x: 190, y: 2, z: 70}
   - {x: 170, y: 2, z: 60}

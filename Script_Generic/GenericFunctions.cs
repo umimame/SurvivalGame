@@ -978,6 +978,7 @@ namespace AddClass
         [field: SerializeField] public float interval { get; private set; } 
         [field: SerializeField, NonEditable] public VariedTime time { get; private set; } = new VariedTime();
         [field: SerializeField, NonEditable] public float ratio { get; private set; }
+        [field: SerializeField, NonEditable] public float difference { get; private set; }
         private bool autoReset;
         private bool reached;
         public Action reachAction { get; set; }
@@ -997,16 +998,17 @@ namespace AddClass
             this.autoReset = autoReset;
             if (start == true)
             {
-                time.Initialize(interval);
+                time.Initialize(this.interval);
             }
             else
             {
                 time.Initialize();
             }
 
-            active = (time.value >= interval) ? true : false;
+            active = (time.value >= this.interval) ? true : false;
             reached = false;
-            ratio = time.value / interval;
+            ratio = time.value / this.interval;
+            difference = time.value - this.interval;
         }
 
 
@@ -1014,6 +1016,7 @@ namespace AddClass
         {
             time.Update(manualValue);
             ratio = time.value / interval;
+            difference = time.value - this.interval;
 
             if (time.value >= interval)
             {
@@ -1043,6 +1046,7 @@ namespace AddClass
             active = (time.value >= interval) ? true : false;
             reached = false;
             ratio = time.value / interval;
+            difference = time.value - this.interval;
         }
 
     }
@@ -1623,8 +1627,8 @@ namespace AddClass
         public void Initialize()
         {
             img.Initialize();
-            displayInterval.Initialize(false, false);
-            intervalToFade.Initialize(false, false);
+            displayInterval.Initialize(true, false);
+            intervalToFade.Initialize(true, false);
             displayInterval.lowAction += intervalToFade.Reset;
             intervalToFade.lowAction += Fade;
             Reset();
@@ -1641,18 +1645,18 @@ namespace AddClass
             displayInterval.Reset();
             intervalToFade.Reset();
             img.Alpha = 1.0f;
-            Debug.Log(img.Alpha);
+            Debug.Log("Launch");
         }
 
         public void Reset()
         {
             img.Alpha = 0.0f;
-            Debug.Log(img.Alpha);
         }
 
         public void Fade()
         {
             img.Alpha = 1.0f - intervalToFade.ratio;
+            Debug.Log(img.Alpha);
         }
 
         public GameObject obj

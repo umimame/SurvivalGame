@@ -1,5 +1,6 @@
 using AddClass;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,13 +11,18 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private List<Chara_Player> players = new List<Chara_Player>();
     [SerializeField] private int NumberOfPlayer;
     [SerializeField] private string nextScene;
+    [SerializeField] private ResultScene_Operator nextSceneOperator;
     [SerializeField] private PlayerRespawnPos respownPos;
 
+    [SerializeField] private Interval timeLimit;
+    [SerializeField] private TextMeshProUGUI timeLimitText;
     [SerializeField] private int initialScore;
     [SerializeField] private List<float> scoreList = new List<float>();
     [field: SerializeField] public GravityProfile gravity { get; set; }
     protected override void Start()
     {
+        SceneManager.sceneLoaded += GetResultSceneOperator;
+
         base.Start();
         PresetsByPlayerType preset = FrontCanvas.instance.presets;
         for(int i = 0; i < NumberOfPlayer; i++)
@@ -41,8 +47,11 @@ public class GameScene_Operator : SceneOperator
             }
             playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
-            scoreList.Add(players[i].score.plan + players[i].score.entity);
+            scoreList.Add(players[i].sumScore);
         }
+
+        timeLimit.Initialize(false, false);
+        timeLimit.reachAction += TimeOver;
     }
 
     protected override void Update()
@@ -57,6 +66,42 @@ public class GameScene_Operator : SceneOperator
 
         }
         scoreList = AddFunction.SortInDescending(scoreList);
+        timeLimit.Update();
+        TimeUpdate();
+    }
+
+    private void TimeOver()
+    {
+        GoToResultScene();
+    }
+
+    private void GoToResultScene()
+    {
+        SceneManager.LoadScene(nextScene);
+
+    }
+
+    private void GetResultSceneOperator(Scene scene, LoadSceneMode mode)
+    {
+        nextSceneOperator = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<ResultScene_Operator>();
+        Debug.Log(nextSceneOperator);
+    }
+
+    private void TimeUpdate()
+    {
+        float newTime = 0.0f;
+        if(timeLimit.active == true)
+        {
+            newTime = 0.000f;
+        }
+        else 
+        {
+            newTime = Mathf.Abs(timeLimit.difference);
+        }
+
+        
+        timeLimitText.SetText("Time:" + newTime.ToString("f3"));
+
     }
 
     /// <summary>
@@ -67,6 +112,11 @@ public class GameScene_Operator : SceneOperator
     public float DifferenceOfTopScore(float currentScore)
     {
         return scoreList[0] - currentScore;
+    }
+
+    public bool timeOver
+    {
+        get { return timeLimit.active; }
     }
 
 }

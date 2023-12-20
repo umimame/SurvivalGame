@@ -37,12 +37,4 @@ public class CameraByPlayer : MonoBehaviour
         }
         smooth.Initialize(gameObject);
     }
-    private void Update()
-    {
-
-        //world = camByTg.target.transform.TransformPoint(camByTg.target.transform.position);
-        //angle = AddFunction.GetAngleByVec3(camByTg.target.transform.TransformPoint(camByTg.target.transform.position), viewPoint.position);
-        //gameObject.transform.eulerAngles = new Vector3(gameObject.transform.eulerAngles.x, AddFunction.GetAngleByVec3(camByTg.target.transform.TransformPoint(camByTg.target.transform.position), viewPoint.position));
-        //transform.LookAt(viewPoint);
-    }
 }

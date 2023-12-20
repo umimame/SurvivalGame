@@ -190,40 +190,41 @@ public class Chara_Player : Chara
         rigor = false;                                                                  // 硬直boolのリセット
         if (motionState != MotionState.Run) { dashEasing.Clear(); }                     // Curveのリセット
 
-        if (alive == true)
-        {
-            if (rigor == false)
+            if (alive == true)
             {
-                if (moveInputting == false)
+                if (rigor == false)
                 {
-                    StateChange(MotionState.Idle);
-                }
-                else
-                {
-                    if (run == true && velocitySum >= 1)
+                    if (moveInputting == false)
                     {
-                        if (stamina.overZero == false) { StateChange(MotionState.Run); }
+                        StateChange(MotionState.Idle);
+                    }
+                    else
+                    {
+                        if (run == true && velocitySum >= 1)
+                        {
+                            if (stamina.overZero == false) { StateChange(MotionState.Run); }
 
+                            else
+                            {
+                                StateChange(MotionState.Walk);
+                            }
+                        }
                         else
                         {
                             StateChange(MotionState.Walk);
                         }
                     }
-                    else
-                    {
-                        StateChange(MotionState.Walk);
-                    }
-                }
 
+                }
             }
-        }
-        else
-        {
-            if (motionState != MotionState.Damage)
+            else
             {
-                death.LaunchOneShot();
+                if (motionState != MotionState.Damage)
+                {
+                    death.LaunchOneShot();
+                }
             }
-        }
+        
     }
 
     public void InputMoveUpdate()    // 動ける状態なら
@@ -297,7 +298,7 @@ public class Chara_Player : Chara
         animator.SetInteger(Anims.AnimIdx, (int)motionState);
 
 
-        RigorReset();
+        TimeOverOperator();
         InputStateUpdate();
     }
 
@@ -390,6 +391,26 @@ public class Chara_Player : Chara
         death.Update();
     }
 
+
+    /// <summary>
+    /// 時間切れなら入力をすべて打ち切る
+    /// </summary>
+    private void TimeOverOperator()
+    {
+        if(sceneOperator.timeOver == true)
+        {
+            inputMoveVelocity.Default();
+            viewPointManager.InputZeroAssign();
+            leaveButton.Default();
+            moveVelocity.Default();
+            run = false;
+        }
+        else
+        {
+            RigorReset();
+
+        }
+    }
 
     /// <summary>
     /// 硬直状態(rigor == true)の時に行われる<br/>
@@ -502,6 +523,12 @@ public class Chara_Player : Chara
         set {  score.entity = value; }
     }
 
+    public int sumScore
+    {
+        get { return score.entity + score.plan; }
+
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if(other.CompareTag(SurvivalGameTags.Nest) == true)
@@ -543,18 +570,21 @@ public class Chara_Player : Chara
 
     public void OnAttack1(InputValue value)
     {
-        if(rigor == true) { return; }
+        if (sceneOperator.timeOver == true) { return; }
+        if (rigor == true) { return; }
         attack1.Launch(power.plan * 50, 3);
     }
 
     public void OnAttack2(InputValue value)
     {
+        if (sceneOperator.timeOver == true) { return; }
         if (rigor == true) { return; }
         attack2.Launch(power.plan * 100, 1);
     }
 
     public void OnLeave(InputValue value)
     {
+        if(sceneOperator.timeOver == true) { return; }
         leaveButton.entity = value.Get<float>();
     }
 
