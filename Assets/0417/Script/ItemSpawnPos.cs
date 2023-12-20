@@ -5,9 +5,8 @@ public class ItemSpawnPos : MonoBehaviour
 {
     [SerializeField] private GameObject[] createItem;
     [SerializeField] private Transform[] ranges;
-    private GameObject[] Red;
-    private GameObject[] Yellow;
-    private GameObject[] Blue;
+    private GameObject[] Item;
+    
     // 経過時間
     private float time;
     //リスポーンのタイミング
@@ -34,7 +33,7 @@ public class ItemSpawnPos : MonoBehaviour
             //アイテムをランダムで選択
             int RandomItem = Random.Range(0, createItem.Length);
 
-            if (Check("Red","Yellow","Blue") < ItemValue)
+            if (Check("Item") < ItemValue)
             {
                 //ItemRespawn1に出現
                 if (RandomArea <= 6)
@@ -134,13 +133,11 @@ public class ItemSpawnPos : MonoBehaviour
     }
 
     //マップにあるオブジェクトの個数を数える
-    int Check(string red,string yellow,string blue)
+    int Check(string item)
     {
         int value = 0;
-        Red = GameObject.FindGameObjectsWithTag(red);
-        Yellow = GameObject.FindGameObjectsWithTag(red);
-        Blue = GameObject.FindGameObjectsWithTag(red);
-        value = Red.Length + Yellow.Length + Blue.Length;
+        Item = GameObject.FindGameObjectsWithTag(item);
+        value = Item.Length;
         Debug.Log(value);
         return value;
     }
