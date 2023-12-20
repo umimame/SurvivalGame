@@ -1112,6 +1112,7 @@ MonoBehaviour:
   - {fileID: 225738223}
   - {fileID: 946861047}
   RespawnTime: 1
+  ItemValue: 50
 --- !u!4 &823292430
 Transform:
   m_ObjectHideFlags: 0
