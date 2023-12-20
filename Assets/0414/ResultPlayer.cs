@@ -34,12 +34,28 @@ public class ResultPlayer : MonoBehaviour
             orange += 2;
             grape += 3;
         }
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            ResetScore();
+        }
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            Debug.Log("Apple" + apple);
+        }
     }
     //public int GetScore() { return score; }
     //public int GetApple() { return apple; }
     //public int GetOrange() { return orange; }
     //public int GetGrape() { return grape; }
-    //public int GetKill() { return kill; }    
+    //public int GetKill() { return kill; }
+    void ResetScore()
+    {
+        score = 0;
+        kill = 0;
+        apple = 0;
+        orange = 0;
+        grape = 0;
+    }
     // シングルトンの解除（破棄）メソッド
     public void ReleaseSingleton()
     {
@@ -48,5 +64,5 @@ public class ResultPlayer : MonoBehaviour
             Destroy(instance.gameObject);
             instance = null;
         }
-    }      
+    }
 }

@@ -71,7 +71,6 @@ public class MotionCollider : MonoBehaviour
                 {
                     if (hitCount >= 1)
                     {
-                        Debug.Log("Hit");
                         hitCountEntitys[i]++;   // ƒqƒbƒg‚³‚¹‚é
                         hitAction?.Invoke();
                     }

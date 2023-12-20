@@ -8,7 +8,6 @@ using System.ComponentModel;
 using Unity.VisualScripting;
 using UnityEditor.Build;
 //using static Chara_Player;
-
 public class ResultSC : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] AllText = new TextMeshProUGUI[12];
@@ -35,20 +34,21 @@ public class ResultSC : MonoBehaviour
     int playerScore, playerKill, playerApple, playerOrange, playerGrape;
     //Chara_Playerオブジェクトを取得
     ResultPlayer charaPlayer;
+    SceneBlackOut SceneBlackOut;
     // Start is called before the first frame update
     void Start()
     {
         charaPlayer = FindObjectOfType<ResultPlayer>();
-
+        SceneBlackOut = FindObjectOfType<SceneBlackOut>();
         //色々な物の初期化
         TMProTransparent();
         //時間でテキスト等の透明解除
         StartCoroutine(ShowTextByTime());
-
+        //PushKeyの透明操作
         StartCoroutine(PushKeyBlinking());
-
+        //シーン遷移をするかどうか
         SceneChangeFlag = false;
-
+        //Playerのスコア等をテキストに変換する
         GetPlayerScore();
     }
     // Update is called once per frame
@@ -83,7 +83,8 @@ public class ResultSC : MonoBehaviour
                     //charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
                     charaPlayer.ReleaseSingleton();
                     Debug.Log("ResultSCでシングルトン破棄");
-                    SceneManager.LoadScene("TitleScene");
+                    SceneBlackOut.BlackOutSceneChangeForResult();
+                    //SceneManager.LoadScene("TitleScene");
                 }
             }
         }
@@ -208,7 +209,7 @@ public class ResultSC : MonoBehaviour
             PushAnyKey.color = new Color(r, g, b, Alpha);
         }
     }
-    private IEnumerator PushKeyBlinking()
+    private IEnumerator PushKeyBlinking()//PushKeyの透明操作
     {
         while (true)
         {

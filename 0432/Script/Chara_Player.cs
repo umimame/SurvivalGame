@@ -39,14 +39,14 @@ public class Chara_Player : Chara
     [field: SerializeField] public PlayerUI UI { get; private set; }
     public PlayerRespawnPos playerRespawnPos { get; set; }
     public GameScene_Operator sceneOperator { get; set; }
-    [field: SerializeField, NonEditable] public int score { get; private set; } = 0;
+    [field: SerializeField, NonEditable] public EntityAndPlan<int> score { get; private set; }
     [field: SerializeField, NonEditable] public BMI bmi { get; private set; }
     [field: SerializeField] public Parameter stamina { get; private set; }
     [SerializeField] private Parameter dashSpeed;
     [SerializeField] private Curve dashEasing = new Curve();
     [field: SerializeField] public EntityAndPlan<float> dashCost { get; private set; }
     [SerializeField] private EntityAndPlan<float> power;
-    [field: SerializeField] public Interval overStamina {  get; private set; }
+    [field: SerializeField] public Interval overStamina { get; private set; }
 
     [SerializeField] private Camera cam;
     [SerializeField] private TPSViewPoint viewPointManager;
@@ -66,7 +66,7 @@ public class Chara_Player : Chara
     [SerializeField] private Vector3 savedVelocity;
     [SerializeField] private Curve inertia = new Curve();
 
-    
+
     [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
     [SerializeField] private MotionWithCollider attack2 = new MotionWithCollider();
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
@@ -75,7 +75,7 @@ public class Chara_Player : Chara
 
     [SerializeField] private Motion damage = new Motion();
     [SerializeField] private Motion death = new Motion();
-    
+
 
     protected override void Spawn()
     {
@@ -163,7 +163,7 @@ public class Chara_Player : Chara
         interruptMotionsSolution.Add(interruptByDamageMotions);
         interruptMotionsSolution.Add(interruptByDeathMotions);
 
-        invincible.Initialize(true,false);
+        invincible.Initialize(true, false);
 
 
     }
@@ -177,8 +177,8 @@ public class Chara_Player : Chara
         invincible.Update();
 
         stamina.ReturnRange();
-        if(stamina.overZero == true) {
-            if(overStamina.active == true)
+        if (stamina.overZero == true) {
+            if (overStamina.active == true)
             {
                 overStamina.Reset();
             }
@@ -202,14 +202,14 @@ public class Chara_Player : Chara
                 {
                     if (run == true && velocitySum >= 1)
                     {
-                        if(stamina.overZero == false) { StateChange(MotionState.Run); }
+                        if (stamina.overZero == false) { StateChange(MotionState.Run); }
 
                         else
                         {
                             StateChange(MotionState.Walk);
                         }
                     }
-                    else 
+                    else
                     {
                         StateChange(MotionState.Walk);
                     }
@@ -303,9 +303,9 @@ public class Chara_Player : Chara
 
     public void AssignBMI()
     {
-        float differentScore = sceneOperator.DifferenceOfTopScore(score);   // トッププレイヤーとのスコア差
+        float differentScore = sceneOperator.DifferenceOfTopScore(score.plan + score.entity);   // トッププレイヤーとのスコア差
 
-        if(differentScore == 0)
+        if (differentScore == 0)
         {
             bmi = BMI.Default;
         }
@@ -317,7 +317,7 @@ public class Chara_Player : Chara
         {
             bmi = BMI.Skinny;
         }
-        else if(differentScore >= 30)
+        else if (differentScore >= 30)
         {
             bmi = BMI.LightSkinny;
         }
@@ -406,7 +406,7 @@ public class Chara_Player : Chara
         }
         else
         {
-            inputMoveVelocity.Assign();  
+            inputMoveVelocity.Assign();
             viewPointManager.inputViewPoint.Assign();
             leaveButton.Assign();
         }
@@ -415,7 +415,7 @@ public class Chara_Player : Chara
 
     public void InputMotionReset()
     {
-        for(int i = 0; i < interruptMotionsSolution.Count; ++i)
+        for (int i = 0; i < interruptMotionsSolution.Count; ++i)
         {
             for (int j = 0; j < interruptMotionsSolution[i].Count; ++j)
             {
@@ -440,7 +440,7 @@ public class Chara_Player : Chara
         }
         else
         {
-            if(alive == true)
+            if (alive == true)
             {
                 motionState = m;
             }
@@ -449,7 +449,7 @@ public class Chara_Player : Chara
 
     public void Damage(UnderAttackType type)
     {
-        if(type == UnderAttackType.Normal)
+        if (type == UnderAttackType.Normal)
         {
             damage.Launch();
             invincible.Reset();
@@ -459,7 +459,7 @@ public class Chara_Player : Chara
 
     public void AddScore(int score)
     {
-        this.score += score;
+        this.score.plan += score;
     }
 
 
@@ -473,16 +473,16 @@ public class Chara_Player : Chara
     public void ChangeScoreByKill()
     {
         Debug.Log("Death");
-        if(lastAttacker == null)
+        if (lastAttacker == null)
         {
             Debug.Log("自滅");
         }
 
-        if(score > 0)
+        if (score.plan > 0)
         {
             Chara_Player _lastAttacker = (Chara_Player)lastAttacker;
-            _lastAttacker.AddScore(score / 2);
-            score /= 2;
+            _lastAttacker.AddScore(score.plan / 2);
+            score.plan /= 2;
             Debug.Log(this.score);
             Debug.Log(_lastAttacker.score);
         }
@@ -490,10 +490,16 @@ public class Chara_Player : Chara
 
     public float ChangeScoreByLeave()
     {
-        float returnScore = score / 2;
-        score /= 2;
+        float returnScore = score.plan / 2;
+        score.plan /= 2;
 
         return returnScore;
+    }
+
+    public int leavedScore
+    {
+        get { return score.entity; }
+        set {  score.entity = value; }
     }
 
     private void OnTriggerStay(Collider other)
@@ -504,6 +510,16 @@ public class Chara_Player : Chara
             newNest.ControleNest(this, Convert.ToBoolean(leaveButton.plan));
         }
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag(SurvivalGameTags.Nest) == true)
+        {
+            NestManager newNest = other.GetComponent<NestManager>();
+            newNest.ControleNest(this, false);
+        }
+    }
+
 
     #region PlayerInputに自動で登録されるEvent
 

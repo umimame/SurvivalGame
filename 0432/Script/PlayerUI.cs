@@ -10,33 +10,56 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private FillAmoutGuage hpGuageVariable;
     [SerializeField] private FillAmoutGuage stGuageVariable;
     [SerializeField] private FillAmoutGuage nestGuageVariable;
+    private Image nestImage;
+    [SerializeField] private Color nestGuageColor1;
+    [SerializeField] private Color nestGuageColor2;
+
+    [SerializeField] private EnableAndFadeAlpha leaveText;
+    [SerializeField] private EnableAndFadeAlpha stealText;
+
+    private RectTransform rect;
     private void Start()
     {
         scoreText.SetText(body.score.ToString());
         AnchorSet();
         nestGuageVariable.transform.parent.gameObject.SetActive(false);
+        nestImage = nestGuageVariable.GetComponent<Image>();
+        leaveText.Initialize();
     }
 
     private void Update()
     {
-        scoreText.SetText("Score:" + body.score.ToString("d6"));
+        scoreText.SetText("Score:" + body.score.plan.ToString("d4"));
         hpGuageVariable.OnChangeValue(body.hp.entity / body.hp.max);
         stGuageVariable.OnChangeValue(body.stamina.entity / body.stamina.max);
-
+        leaveText.Update();
     }
 
-    public void ControlNestGuage(float ratio)
+    public void ControlNestGuage(float ratio, bool leave)
     {
-        if(ratio <= 0)
+        nestGuageVariable.OnChangeValue((float)ratio);
+        if (ratio <= 0)
         {
             nestGuageVariable.transform.parent.gameObject.SetActive(false);
-            nestGuageVariable.OnChangeValue((float)ratio);
         }
         else
         {
+            if (leave == true) { nestImage.color = nestGuageColor1; }
+            else { nestImage.color = nestGuageColor2; }
             nestGuageVariable.transform.parent.gameObject.SetActive(true);
-            nestGuageVariable.OnChangeValue((float)ratio);
+        }
+    }
 
+    public void NestTextLaunch(bool leave)
+    {
+        if(leave == true)
+        {
+            leaveText.Launch();
+            Debug.Log(leaveText.img.Alpha);
+        }
+        else
+        {
+            stealText.Launch();
         }
     }
 
@@ -44,30 +67,42 @@ public class PlayerUI : MonoBehaviour
     {
         if(body.tag == Tags.Player01)
         {
-            Set(scoreText.rectTransform, AnchorPresets.TopLeft, PivotPresets.TopLeft);
+            rect = scoreText.rectTransform;
+            Set(AnchorPresets.TopLeft, PivotPresets.TopLeft);
             
-            RectTransform rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            Set(AnchorPresets.BottomLeft, PivotPresets.BottomLeft);
 
-            Set(rect, AnchorPresets.BottomLeft, PivotPresets.BottomLeft);
             rect = nestGuageVariable.transform.parent.GetComponent<RectTransform>();
-            Set(rect, AnchorPresets.TopCenter, PivotPresets.TopCenter);
+            Set(AnchorPresets.TopCenter, PivotPresets.TopCenter);
+
+            rect = leaveText.obj.GetComponent<TextMeshProUGUI>().rectTransform;
+            Set(AnchorPresets.TopCenter, PivotPresets.TopCenter);
 
         }
         else if(body.tag == Tags.Player02)
         {
-            Set(scoreText.rectTransform, AnchorPresets.BottomLeft, PivotPresets.BottomLeft);
+            rect = scoreText.rectTransform;
+            Set(AnchorPresets.BottomLeft, PivotPresets.BottomLeft);
 
-            RectTransform rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            rect = stGuageVariable.transform.parent.GetComponent<RectTransform>();
+            Set(AnchorPresets.TopLeft, PivotPresets.TopLeft);
 
-            Set(rect, AnchorPresets.TopLeft, PivotPresets.TopLeft);
             rect = nestGuageVariable.transform.parent.GetComponent<RectTransform>();
-            Set(rect, AnchorPresets.BottonCenter, PivotPresets.BottomCenter);
+            Set(AnchorPresets.BottonCenter, PivotPresets.BottomCenter);
+
+            rect = leaveText.obj.GetComponent<TextMeshProUGUI>().rectTransform;
+            Set(AnchorPresets.BottonCenter, PivotPresets.BottomCenter);
         }
 
-        void Set(RectTransform rect,AnchorPresets anchor, PivotPresets pivot)
+        void Set(AnchorPresets anchor, PivotPresets pivot, bool reverse = false)
         {
             AddFunction.SetAnchor(rect, anchor);
             AddFunction.SetPivot(rect, pivot);
+            if(reverse == true)
+            {
+                
+            }
         }
     }
 }

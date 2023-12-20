@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 public class TitleSceneChanger : MonoBehaviour
 {
     [SerializeField] private string changeScene;
+    SceneBlackOut SceneBlackOut;
     // Start is called before the first frame update
     void Start()
     {
-        
+        SceneBlackOut = FindObjectOfType<SceneBlackOut>();
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -24,10 +24,10 @@ public class TitleSceneChanger : MonoBehaviour
             if (Input.anyKey)
             {
                 Debug.Log("タイトル画面で何かキーが押されたよ");
-                SceneManager.LoadScene("TestScene");
+                SceneBlackOut.BlackOutSceneChangeForTitle();
+                //SceneManager.LoadScene("TestScene");
             }
         }
-
         //if (Input.GetKey(KeyCode.Escape))
         //{
         //    //何もしない
