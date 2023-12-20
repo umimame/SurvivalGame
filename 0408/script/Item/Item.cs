@@ -15,7 +15,15 @@ public class Item : MonoBehaviour
     private ParticleSystem particle;
     
     public AudioClip ItemSE;
-    // Start is called before the first frame update
+
+    // 畠山による追記
+    [SerializeField] protected ResultParamOperator resultParam;   // ResultSceneに渡すために必要
+    private void Start()
+    {
+        resultParam = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<ResultParamOperator>();
+    }
+    // 追記終了
+    // 継承先の関数でResultParamOperatorの関数を実行する処理を追記
 
     void OnTriggerStay(Collider other)
     {

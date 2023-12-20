@@ -15,5 +15,6 @@ public class Orange : Item
     public void OnHitOrange(Chara_Player player)
     {
         player.AddScore(score);
+        resultParam.AddOrange();
     }
 }
