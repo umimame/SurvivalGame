@@ -122,7 +122,6 @@ public class Chara_Player : Chara
         overStamina.activeAction += stamina.Update;
 
         gameObject.tag = gameObject.transform.parent.tag;
-        //viewCircle.Initialize(gameObject);
         input = GetComponent<PlayerInput>();
         base.Start();
 
@@ -153,7 +152,7 @@ public class Chara_Player : Chara
 
         death.Initialize(animator, Anims.die);
         death.startAction += () => StateChange(MotionState.Death);
-        death.startAction += () => StateChange(CharaState.Death);
+        death.startAction += sceneOperator.toResult.AddBlows;
         death.startAction += ChangeScoreByKill;
         death.enableAction += () => StateChange(MotionState.Death);
         death.startAction += () => StateChange(CharaState.Death);
@@ -422,7 +421,7 @@ public class Chara_Player : Chara
         if (rigor == true)
         {
             inputMoveVelocity.PlanDefault();
-            viewPointManager.InputZeroAssign();
+            viewPointManager.inputViewPoint.Assign();
             leaveButton.PlanDefault();
         }
         else
@@ -529,6 +528,7 @@ public class Chara_Player : Chara
 
     }
 
+
     private void OnTriggerStay(Collider other)
     {
         if(other.CompareTag(SurvivalGameTags.Nest) == true)
@@ -572,14 +572,14 @@ public class Chara_Player : Chara
     {
         if (sceneOperator.timeOver == true) { return; }
         if (rigor == true) { return; }
-        attack1.Launch(power.plan * 50, 3);
+        attack1.Launch(power.plan, 3);
     }
 
     public void OnAttack2(InputValue value)
     {
         if (sceneOperator.timeOver == true) { return; }
         if (rigor == true) { return; }
-        attack2.Launch(power.plan * 100, 1);
+        attack2.Launch(power.plan * 2, 1);
     }
 
     public void OnLeave(InputValue value)

@@ -5,15 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class ResultParamOperator : MonoBehaviour
 {
-    private static ResultSC resultSC;
-    private static Winner superiority;    // 優勢なプレイヤー
-    private static int maxScore;
-    private static int blows;
-    private static int orange;
-    private static int apple;
-    private static int grape;
+    [SerializeField] private Winner superiority;  // 優勢なプレイヤー
+    [SerializeField] private int maxScore;        // 優勢プレイヤーのスコア
+    [SerializeField] private int blows;           // 総合撃破数
+    [SerializeField] private int orange;          // 総合獲得数
+    [SerializeField] private int apple;
+    [SerializeField] private int grape;
 
-    [SerializeField] private string resultSceneName;
     private void Start()
     {
     }
@@ -23,11 +21,14 @@ public class ResultParamOperator : MonoBehaviour
         
     }
 
-
-    public static void SetResultSC(ResultSC _resultSC)
+    public void SetSuperiority(Winner _superiority)
     {
-        resultSC = _resultSC;
-        resultSC.SetResult(superiority, maxScore, blows, apple, orange, grape);
+        superiority = _superiority;
+    }
+
+    public void SetResultSC(ResultSC _resultSC)
+    {
+        _resultSC.SetResult(superiority, maxScore, blows, apple, orange, grape);
     }
 
     public void SetScore(int score)

@@ -1032,7 +1032,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 692fee677a57d104db46b7a945b2e6ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resultSceneName: ResultScene
+  superiority: 0
+  maxScore: 0
+  blows: 0
+  orange: 0
+  apple: 0
+  grape: 0
 --- !u!114 &526006642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1070,10 +1075,10 @@ MonoBehaviour:
   NumberOfPlayer: 2
   nextScene: ResultScene
   nextSceneOperator: {fileID: 0}
-  respownPos: {fileID: 0}
+  respownPos: {fileID: 526006638}
   timeLimit:
     <active>k__BackingField: 0
-    <interval>k__BackingField: 180
+    <interval>k__BackingField: 10
     <time>k__BackingField:
       <value>k__BackingField: 0
       <increseType>k__BackingField: 0
@@ -1081,9 +1086,9 @@ MonoBehaviour:
     <ratio>k__BackingField: 0
     <difference>k__BackingField: 0
   timeLimitText: {fileID: 1874755733}
-  initialScore: 0
+  initialScore: 100
   scoreList: []
-  toResult: {fileID: 526006641}
+  <toResult>k__BackingField: {fileID: 526006641}
   <gravity>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
 --- !u!1 &565385688
 GameObject:

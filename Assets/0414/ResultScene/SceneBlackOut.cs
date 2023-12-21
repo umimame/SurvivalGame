@@ -1,9 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro.EditorUtilities;
+using UnityEngine.UI;
 
 public class SceneBlackOut : MonoBehaviour
 {

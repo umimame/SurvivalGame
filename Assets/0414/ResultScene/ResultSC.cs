@@ -1,13 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using TMPro;
-using System.ComponentModel;
-using Unity.VisualScripting;
-using UnityEditor.Build;
-//using static Chara_Player;
+using UnityEngine;
+using UnityEngine.UI;
 public class ResultSC : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] AllText = new TextMeshProUGUI[12];
