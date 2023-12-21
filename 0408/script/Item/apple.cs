@@ -14,5 +14,6 @@ public class Apple: Item
     public void OnHitApple(Chara_Player player)
     {
         player.AddScore(score);
+        resultParam.AddApple();
     }
 }

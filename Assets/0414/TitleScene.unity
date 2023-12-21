@@ -1138,7 +1138,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1058140143}
   - component: {fileID: 1058140142}
-  - component: {fileID: 1058140144}
   - component: {fileID: 1058140145}
   m_Layer: 0
   m_Name: Main Camera
@@ -1213,14 +1212,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &1058140144
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1058140140}
-  m_Enabled: 1
 --- !u!114 &1058140145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1235,6 +1226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PanelImage: {fileID: 1099706343}
   _speed: 0.08
+  nextSceneName: GameScene
 --- !u!1 &1064346043
 GameObject:
   m_ObjectHideFlags: 0

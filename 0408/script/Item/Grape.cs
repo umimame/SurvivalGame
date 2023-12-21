@@ -14,5 +14,6 @@ public class Grape : Item
     public void OnHitGrape(Chara_Player player)
     {
         player.AddScore(score);
+        resultParam.AddGrape();
     }
 }
