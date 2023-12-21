@@ -729,6 +729,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 142ee44936482314b93881a4f03a7675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <debugMode>k__BackingField: 0
+  canvas:
+    <obj>k__BackingField: {fileID: 7474081723118478971, guid: 663c775d986e7d64ab1bd3135aca749f, type: 3}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+  fadeObj:
+    <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+    fadeUI: {fileID: 0}
+    scene: 
 --- !u!4 &623088760
 Transform:
   m_ObjectHideFlags: 0
@@ -756,6 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c09e243ce5be474491521036c3ad2d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  titleText: 
 --- !u!1 &684372921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1773,6 +1789,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: 0}
+  m_PointAction: {fileID: 0}
+  m_MoveAction: {fileID: 0}
+  m_SubmitAction: {fileID: 0}
+  m_CancelAction: {fileID: 0}
+  m_LeftClickAction: {fileID: 0}
+  m_MiddleClickAction: {fileID: 0}
+  m_RightClickAction: {fileID: 0}
+  m_ScrollWheelAction: {fileID: 0}
+  m_TrackedDevicePositionAction: {fileID: 0}
+  m_TrackedDeviceOrientationAction: {fileID: 0}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
 --- !u!1 &1987985956
 GameObject:
   m_ObjectHideFlags: 0

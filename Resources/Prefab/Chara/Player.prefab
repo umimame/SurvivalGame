@@ -696,12 +696,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4064012993921943240}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caa45c191e7e8db43b55fdcf0e06220d, type: 3}
+  m_Script: {fileID: 11500000, guid: 8cddaabd2d3cac54fbc64294a96a9bc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camByTg: {fileID: 4064012993921943244}
+  camByTg: {fileID: 0}
   body: {fileID: 4064012994823538021}
-  player: {fileID: 0}
+  player: {fileID: 4064012994823538044}
   viewPoint: {fileID: 0}
   smooth:
     speed: 0
@@ -797,7 +797,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4064012994823538021}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e20f4d49217334199ab3fd9b2ce914, type: 3}
+  m_Script: {fileID: 11500000, guid: b21b29381bdd9cd4185561c53d68f48d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <charaState>k__BackingField: 0
@@ -807,7 +807,7 @@ MonoBehaviour:
     autoRecoverValue: 0
   speed:
     entity: 0
-    max: 5
+    max: 10
     autoRecoverValue: 0
   pow:
     entity: 0
@@ -853,11 +853,11 @@ MonoBehaviour:
   <bmi>k__BackingField: 0
   <stamina>k__BackingField:
     entity: 0
-    max: 700
+    max: 500
     autoRecoverValue: 1
   dashSpeed:
     entity: 0
-    max: 15
+    max: 20
     autoRecoverValue: 0
   dashEasing:
     curve:
@@ -890,14 +890,14 @@ MonoBehaviour:
       reversalIncrese: 0
     <currentValue>k__BackingField: 0
   <dashCost>k__BackingField:
-    <entity>k__BackingField: 3
+    <entity>k__BackingField: 2
     <plan>k__BackingField: 0
   power:
-    <entity>k__BackingField: 1
+    <entity>k__BackingField: 10
     <plan>k__BackingField: 0
   <overStamina>k__BackingField:
     <active>k__BackingField: 0
-    <interval>k__BackingField: 1.5
+    <interval>k__BackingField: 2
     <time>k__BackingField:
       <value>k__BackingField: 0
       <increseType>k__BackingField: 0
@@ -927,20 +927,20 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
+        inSlope: -1
+        outSlope: -1
+        tangentMode: 34
         weightedMode: 0
         inWeight: 0
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.5
+        time: 1
         value: 0
-        inSlope: -5.9067073
-        outSlope: -5.9067073
-        tangentMode: 0
+        inSlope: -1
+        outSlope: -1
+        tangentMode: 34
         weightedMode: 0
-        inWeight: 0.0367347
+        inWeight: 0.33333334
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -954,7 +954,7 @@ MonoBehaviour:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
       motionTime: 0
-      adjustMotionTime: -0.3
+      adjustMotionTime: 0
       <interval>k__BackingField:
         <active>k__BackingField: 0
         <interval>k__BackingField: 0
@@ -967,7 +967,7 @@ MonoBehaviour:
       <motionThreshold>k__BackingField:
         <reaching>k__BackingField: 0
         <beforeBool>k__BackingField: 0
-        thresholdRange: {x: 0.5, y: 0.7}
+        thresholdRange: {x: 0.5, y: 0.8}
         currentValue: 0
         beforeRange: {x: 0, y: 0}
       <exist>k__BackingField:
@@ -1008,7 +1008,7 @@ MonoBehaviour:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
       motionTime: 0
-      adjustMotionTime: -0.5
+      adjustMotionTime: 0
       <interval>k__BackingField:
         <active>k__BackingField: 0
         <interval>k__BackingField: 0
@@ -1021,7 +1021,7 @@ MonoBehaviour:
       <motionThreshold>k__BackingField:
         <reaching>k__BackingField: 0
         <beforeBool>k__BackingField: 0
-        thresholdRange: {x: 0.5, y: 0.7}
+        thresholdRange: {x: 0, y: 0}
         currentValue: 0
         beforeRange: {x: 0, y: 0}
       <exist>k__BackingField:
@@ -1034,25 +1034,7 @@ MonoBehaviour:
         <maxTime>k__BackingField: 0
         curve:
           serializedVersion: 2
-          m_Curve:
-          - serializedVersion: 3
-            time: 0
-            value: 1.5
-            inSlope: 0
-            outSlope: 0
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 0
-            outWeight: 0.33333334
-          - serializedVersion: 3
-            time: 1
-            value: 1
-            inSlope: -0.5
-            outSlope: -0.5
-            tangentMode: 34
-            weightedMode: 0
-            inWeight: 0.33333334
-            outWeight: 0
+          m_Curve: []
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
@@ -1060,7 +1042,7 @@ MonoBehaviour:
     hitCount: 0
   damage:
     motionTime: 0
-    adjustMotionTime: -0.5
+    adjustMotionTime: 0
     <interval>k__BackingField:
       <active>k__BackingField: 0
       <interval>k__BackingField: 0
@@ -1073,7 +1055,7 @@ MonoBehaviour:
     <motionThreshold>k__BackingField:
       <reaching>k__BackingField: 0
       <beforeBool>k__BackingField: 0
-      thresholdRange: {x: 0, y: 0}
+      thresholdRange: {x: 0.3, y: 0.7}
       currentValue: 0
       beforeRange: {x: 0, y: 0}
     <exist>k__BackingField:
@@ -1089,37 +1071,28 @@ MonoBehaviour:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 2
-          inSlope: -1.4770216
-          outSlope: -1.4770216
+          value: 1
+          inSlope: 0
+          outSlope: 0
           tangentMode: 34
           weightedMode: 0
           inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 0.39954787
-          value: 1.4098592
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 0.33333334
+          outWeight: 0
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: -0.6825843
-          outSlope: -0.6825843
+          inSlope: 0
+          outSlope: 0
           tangentMode: 34
           weightedMode: 0
-          inWeight: 0.33333334
+          inWeight: 0
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
   death:
     motionTime: 0
-    adjustMotionTime: 1
+    adjustMotionTime: 0
     <interval>k__BackingField:
       <active>k__BackingField: 0
       <interval>k__BackingField: 0
@@ -1181,7 +1154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 4064012993921943242}
   camPos: {fileID: 257780550368154446}
-  engine: {fileID: 0}
+  engine: {fileID: 4064012994823538040}
   sensitivity: 3
   <inputViewPoint>k__BackingField:
     <entity>k__BackingField: {x: 0, y: 0}

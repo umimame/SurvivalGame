@@ -727,7 +727,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 206411587}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45fee81078ef9a84db69844514eba7bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 50ff4c35e6af033418c689fd9d9402eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <debugMode>k__BackingField: 0
@@ -746,18 +746,19 @@ MonoBehaviour:
     fadeUI: {fileID: 0}
     scene: 
   playerInstancer:
-    <obj>k__BackingField: {fileID: 4064012993855557387, guid: 817704fe7d160414f9e0a4bb395f4b9e, type: 3}
+    <obj>k__BackingField: {fileID: 4064012993855557387, guid: c04d5c433ab9ff94aab9d038a91bd799, type: 3}
     <clones>k__BackingField: []
     <state>k__BackingField: 0
     instanceSound: {fileID: 0}
     parent: {fileID: 0}
   players: []
-  NumberOfPlayer: 2
+  NumberOfPlayer: 0
   nextScene: ResultScene
-  respownPos: {fileID: 206411589}
+  nextSceneOperator: {fileID: 0}
+  respownPos: {fileID: 0}
   timeLimit:
     <active>k__BackingField: 0
-    <interval>k__BackingField: 180
+    <interval>k__BackingField: 0
     <time>k__BackingField:
       <value>k__BackingField: 0
       <increseType>k__BackingField: 0
@@ -765,9 +766,9 @@ MonoBehaviour:
     <ratio>k__BackingField: 0
     <difference>k__BackingField: 0
   timeLimitText: {fileID: 14005899}
-  initialScore: 100
+  initialScore: 0
   scoreList: []
-  <gravity>k__BackingField: {fileID: 11400000, guid: 688833ff5a8afbe45ac1f76ee74ec5b0, type: 2}
+  <gravity>k__BackingField: {fileID: 0}
 --- !u!4 &206411591
 Transform:
   m_ObjectHideFlags: 0

@@ -2282,6 +2282,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 142ee44936482314b93881a4f03a7675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <debugMode>k__BackingField: 0
+  canvas:
+    <obj>k__BackingField: {fileID: 7474081723118478971, guid: 663c775d986e7d64ab1bd3135aca749f, type: 3}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+  fadeObj:
+    <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+    fadeUI: {fileID: 0}
+    scene: 
 --- !u!4 &1715162989
 Transform:
   m_ObjectHideFlags: 0
