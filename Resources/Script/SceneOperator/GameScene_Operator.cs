@@ -18,6 +18,7 @@ public class GameScene_Operator : SceneOperator
     [SerializeField] private TextMeshProUGUI timeLimitText;
     [SerializeField] private int initialScore;
     [SerializeField] private List<float> scoreList = new List<float>();
+    [SerializeField] private ResultParamOperator toResult;
     [field: SerializeField] public GravityProfile gravity { get; set; }
     protected override void Start()
     {
@@ -83,8 +84,11 @@ public class GameScene_Operator : SceneOperator
 
     private void GetResultSceneOperator(Scene scene, LoadSceneMode mode)
     {
-        nextSceneOperator = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<ResultScene_Operator>();
-        Debug.Log(nextSceneOperator);
+        if(scene.name == "ResultScene")
+        {
+            nextSceneOperator = GameObject.FindWithTag(Tags.SceneOperator).GetComponent<ResultScene_Operator>();
+            ResultParamOperator.SetResultSC(nextSceneOperator.result);
+        }
     }
 
     private void TimeUpdate()

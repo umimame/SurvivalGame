@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class ResultScene_Operator : SceneOperator
 {
-    [SerializeField] private ResultSC result;
+    [field: SerializeField] public ResultSC result { get; set; }
 
     public void SetResultParam(int score, int kill, int apple, int orange, int grape)
     {
-        result.SetResult(score, kill, apple, orange, grape);
+        result.SetResult(Winner.Player1, score, kill, apple, orange, grape);
     }
 }
