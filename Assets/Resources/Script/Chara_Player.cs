@@ -54,7 +54,8 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
     [SerializeField, NonEditable] private bool run;                 // 走り入力
-    [SerializeField, NonEditable] private bool rigor;               // 硬直状態（入力を受け付けない）
+    [SerializeField, NonEditable] private bool moveRigor;           // 硬直状態（移動入力を受け付けない）
+    [SerializeField, NonEditable] private bool viewRigor;           // 硬直状態（移動入力を受け付けない）
     [field: SerializeField, NonEditable] public EntityAndPlan<float> leaveButton { get; private set; }  // 巣にスコアを預ける入力
     [SerializeField, NonEditable] private Vector3 dirrection;
 
@@ -73,6 +74,7 @@ public class Chara_Player : Chara
     private List<Motion> interruptByDeathMotions = new List<Motion>();  // 死亡モーションに割り込まれるモーションを登録
     private List<List<Motion>> interruptMotionsSolution = new List<List<Motion>>();
 
+    [SerializeField] private Motion step = new Motion();
     [SerializeField] private Motion damage = new Motion();
     [SerializeField] private Motion death = new Motion();
 
@@ -92,6 +94,8 @@ public class Chara_Player : Chara
 
         StateChange(MotionState.Idle);
         alive = true;
+        moveRigor = false;
+        viewRigor = false;
     }
 
     private void RespawnAction()
@@ -109,6 +113,8 @@ public class Chara_Player : Chara
 
         StateChange(MotionState.Idle);
         alive = true;
+        moveRigor = false;
+        viewRigor = false;
         transform.position = playerRespawnPos.PlayerRespawn();
 
     }
@@ -129,22 +135,34 @@ public class Chara_Player : Chara
 
         //  Motionの設定
         attack1.Initialize(animator, Anims.attack1, this);
+        attack1.startAction += () => moveRigor = true;
         attack1.enableAction += () => StateChange(MotionState.Attack1);
-        attack1.endAction += () => StateChange(MotionState.Idle);
-        attack1.endAction += () => rigor = false;
+        attack1.endAction += ThinkNextMotion;
+        attack1.endAction += () => moveRigor = false;
+        attack1.withinThreshold += () => viewRigor = true;
+        attack1.outThreshold += () => viewRigor = false;
+        attack1.motion.AssignCutInMotion();
 
         attack2.Initialize(animator, Anims.attack2, this);
+        attack2.startAction += () => moveRigor = true;
         attack2.enableAction += () => StateChange(MotionState.Attack2);
-        attack2.endAction += () => StateChange(MotionState.Idle);
-        attack2.endAction += () => rigor = false;
+        attack2.endAction += ThinkNextMotion;
+        attack2.endAction += () => moveRigor = false;
+        attack2.withinThreshold += () => viewRigor = true;
+        attack2.outThreshold += () => viewRigor = false;
+        attack2.motion.AssignCutInMotion();
+
+        step.Initialize(animator, Anims.attack2);
+
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += () => InputMotionReset();
         damage.startAction += () => StateChange(MotionState.Damage, true);
+        damage.startAction += () => moveRigor = true;
         damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
         damage.enableAction += () => StateChange(MotionState.Damage, true);
-        damage.endAction += () => StateChange(MotionState.Idle);
-        damage.endAction += () => rigor = false;
+        damage.endAction += ThinkNextMotion;
+        damage.endAction += () => moveRigor = false;
 
         interruptByDamageMotions.Add(attack1.motion);
         interruptByDamageMotions.Add(attack2.motion);
@@ -152,10 +170,10 @@ public class Chara_Player : Chara
 
         death.Initialize(animator, Anims.die);
         death.startAction += () => StateChange(MotionState.Death);
+        death.startAction += () => StateChange(CharaState.Death);
         death.startAction += sceneOperator.toResult.AddBlows;
         death.startAction += ChangeScoreByKill;
-        death.enableAction += () => StateChange(MotionState.Death);
-        death.startAction += () => StateChange(CharaState.Death);
+        death.startAction += () => moveRigor = true;
 
         interruptByDeathMotions.Add(damage);
 
@@ -186,44 +204,48 @@ public class Chara_Player : Chara
         animator.speed = 1;                                                             // アニメーションスピードのリセット
         if (hp.entity <= 0) { alive = false; }                                          // 生存boolのリセット
         moveInputting = (inputMoveVelocity.entity != Vector2.zero) ? true : false;      // 入力boolのリセット
-        rigor = false;                                                                  // 硬直boolのリセット
         if (motionState != MotionState.Run) { dashEasing.Clear(); }                     // Curveのリセット
 
-            if (alive == true)
+
+        ThinkNextMotion();
+    }
+
+    /// <summary>
+    /// 各モーション終了後に行われる
+    /// </summary>
+    private void ThinkNextMotion()
+    {
+        if (alive == true)
+        {
+            if (moveInputting == false)
             {
-                if (rigor == false)
-                {
-                    if (moveInputting == false)
-                    {
-                        StateChange(MotionState.Idle);
-                    }
-                    else
-                    {
-                        if (run == true && velocitySum >= 1)
-                        {
-                            if (stamina.overZero == false) { StateChange(MotionState.Run); }
-
-                            else
-                            {
-                                StateChange(MotionState.Walk);
-                            }
-                        }
-                        else
-                        {
-                            StateChange(MotionState.Walk);
-                        }
-                    }
-
-                }
+                StateChange(MotionState.Idle);
             }
             else
             {
-                if (motionState != MotionState.Damage)
+                if (run == true && velocitySum >= 1)
                 {
-                    death.LaunchOneShot();
+                    if (stamina.overZero == false) { StateChange(MotionState.Run); }
+
+                    else
+                    {
+                        StateChange(MotionState.Walk);
+                    }
+                }
+                else
+                {
+                    StateChange(MotionState.Walk);
                 }
             }
-        
+        }
+        else
+        {
+            if (motionState != MotionState.Damage)
+            {
+                death.LaunchOneShot();
+            }
+        }
+
     }
 
     public void InputMoveUpdate()    // 動ける状態なら
@@ -274,24 +296,16 @@ public class Chara_Player : Chara
                 break;
 
             case MotionState.Attack1:
-                inputState = InputState.Rigor;
-                rigor = true;
                 break;
 
             case MotionState.Attack2:
-                inputState = InputState.Rigor;
-                rigor = true;
                 break;
 
             case MotionState.Damage:
-                inputState = InputState.Rigor;
                 InputMoveUpdate();
-                rigor = true;
                 break;
 
             case MotionState.Death:
-                inputState = InputState.Rigor;
-                rigor = true;
                 break;
         }
         animator.SetInteger(Anims.AnimIdx, (int)motionState);
@@ -406,7 +420,7 @@ public class Chara_Player : Chara
         }
         else
         {
-            RigorReset();
+            RigorOperator();
 
         }
     }
@@ -415,20 +429,28 @@ public class Chara_Player : Chara
     /// 硬直状態(rigor == true)の時に行われる<br/>
     /// 入力の代入
     /// </summary>
-    public void RigorReset()
+    public void RigorOperator()
     {
 
-        if (rigor == true)
+        if (moveRigor == true)
         {
             inputMoveVelocity.PlanDefault();
-            viewPointManager.inputViewPoint.Assign();
             leaveButton.PlanDefault();
         }
         else
         {
             inputMoveVelocity.Assign();
-            viewPointManager.inputViewPoint.Assign();
             leaveButton.Assign();
+        }
+
+        if(viewRigor == true)
+        {
+            viewPointManager.inputViewPoint.PlanDefault();
+        }
+        else
+        {
+            viewPointManager.inputViewPoint.Assign();
+
         }
     }
 
@@ -571,14 +593,14 @@ public class Chara_Player : Chara
     public void OnAttack1(InputValue value)
     {
         if (sceneOperator.timeOver == true) { return; }
-        if (rigor == true) { return; }
+        if (moveRigor == true) { return; }
         attack1.Launch(power.plan, 3);
     }
 
     public void OnAttack2(InputValue value)
     {
         if (sceneOperator.timeOver == true) { return; }
-        if (rigor == true) { return; }
+        if (moveRigor == true) { return; }
         attack2.Launch(power.plan * 2, 1);
     }
 

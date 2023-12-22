@@ -911,7 +911,8 @@ MonoBehaviour:
     <plan>k__BackingField: {x: 0, y: 0}
   moveInputting: 0
   run: 0
-  rigor: 0
+  moveRigor: 0
+  viewRigor: 0
   <leaveButton>k__BackingField:
     <entity>k__BackingField: 0
     <plan>k__BackingField: 0
@@ -1008,7 +1009,7 @@ MonoBehaviour:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
       motionTime: 0
-      adjustMotionTime: 0
+      adjustMotionTime: -0.3
       <interval>k__BackingField:
         <active>k__BackingField: 0
         <interval>k__BackingField: 0
@@ -1045,8 +1046,17 @@ MonoBehaviour:
             inWeight: 0
             outWeight: 0.15101828
           - serializedVersion: 3
-            time: 0.5
-            value: 0.2
+            time: 0.3
+            value: 1.8
+            inSlope: -2.1837947
+            outSlope: -2.1837947
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.31360337
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.8346863
+            value: 0.08916016
             inSlope: 0
             outSlope: 0
             tangentMode: 0

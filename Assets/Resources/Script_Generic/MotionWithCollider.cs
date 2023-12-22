@@ -87,8 +87,8 @@ using GenericChara;
     }
     public Action endAction
     {
-        get { return interval.activeAction; }
-        set { interval.activeAction = value; }
+        get { return exist.toEnd; }
+        set { exist.toEnd = value; }
     }
     #endregion
 
@@ -159,6 +159,12 @@ using GenericChara;
 
         interval.activeAction += exist.Finish;
         interval.activeAction += exist.Reset;
+
+    }
+
+    public void AssignCutInMotion()
+    {
+        cutIn += motionThreshold.outOfRangeAction;
     }
 
 
@@ -217,8 +223,8 @@ using GenericChara;
     }
     public Action endAction
     {
-        get { return interval.activeAction; }
-        set { interval.activeAction = value; }
+        get { return exist.toEnd; }
+        set { exist.toEnd = value; }
     }
     #endregion
 

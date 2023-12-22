@@ -183,7 +183,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a050fd40-dc2e-4ade-9b1f-1197351afe99"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""GamePad"",
@@ -260,7 +260,7 @@ public partial class @KeyMap: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2f5b7b68-2522-4357-ae37-1322a39b563d"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""GamePad"",
