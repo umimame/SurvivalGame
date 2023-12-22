@@ -8,6 +8,10 @@ TagManager:
   - Yellow
   - Blue
   - Item
+  - SceneOperator
+  - Nest
+  - Player01
+  - Player02
   layers:
   - Default
   - TransparentFX
