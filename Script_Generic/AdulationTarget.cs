@@ -4,18 +4,6 @@ using UnityEngine;
 
 public class AdulationTarget : MonoBehaviour
 {
-    private EditorUpdate editorUpdate;
-    private void OnEnable()
-    {
-        editorUpdate = gameObject.AddComponent<EditorUpdate>();
-        //Debug.Log("Add");
-        
-        editorUpdate.EnableAction(PosAdulation);
-    }
-    private void OnDisable()
-    {
-        editorUpdate.DisableAction();
-    }
     enum AdulationType
     {
         World,
@@ -98,7 +86,6 @@ public class AdulationTarget : MonoBehaviour
                 break;
         }
 
-        SceneView.RepaintAll();
         
     }
 }

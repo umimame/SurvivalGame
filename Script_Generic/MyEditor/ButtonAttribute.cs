@@ -2,9 +2,7 @@ using System.Linq;
 using System;
 using System.Reflection;
 using UnityEditor;
-#if UNITY_EDITOR
 using UnityEngine;
-#endif
 
 [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
 public sealed class ButtonAttribute : PropertyAttribute

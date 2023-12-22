@@ -1,15 +1,13 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using TMPro.EditorUtilities;
+using UnityEngine.UI;
 
 public class SceneBlackOut : MonoBehaviour
 {
     [SerializeField] private Image _PanelImage;
     [SerializeField] private float _speed;
-
+    [SerializeField] private string nextSceneName;
     private bool isSceneChange;
     private Color PanelColor;
     RectTransform rectTransform;
@@ -47,7 +45,7 @@ public class SceneBlackOut : MonoBehaviour
                 isSceneChange = true;
             yield return new WaitForSeconds(_speed);
         }
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene(nextSceneName);
     }
     private IEnumerator BlackOutForTitleScene()
     {
@@ -59,7 +57,7 @@ public class SceneBlackOut : MonoBehaviour
                 isSceneChange = true;
             yield return new WaitForSeconds(_speed);
         }
-        SceneManager.LoadScene("TestScene");
+        SceneManager.LoadScene(nextSceneName);
     }
     private IEnumerator BigWolfSceneChange()
     {
@@ -71,7 +69,7 @@ public class SceneBlackOut : MonoBehaviour
             //isSceneChange = true;
             yield return new WaitForSeconds(_speed);
         }
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene(nextSceneName);
     }
     private IEnumerator BigPanelCircleSceneChange()
     {
@@ -86,7 +84,7 @@ public class SceneBlackOut : MonoBehaviour
             yield return new WaitForSeconds(_speed);
         }
         Debug.Log("ƒŠƒUƒ‹ƒg‰æ–Ê‚ÌˆÃ“]—p‰æ‘œ‚ÌSpeed2  " + _speed);
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene(nextSceneName);
     }
 
 }

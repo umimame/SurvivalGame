@@ -1,13 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using TMPro;
-using System.ComponentModel;
-using Unity.VisualScripting;
-using UnityEditor.Build;
-//using static Chara_Player;
+using UnityEngine;
+using UnityEngine.UI;
 public class ResultSC : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] AllText = new TextMeshProUGUI[12];
@@ -33,12 +27,10 @@ public class ResultSC : MonoBehaviour
     int NowIndex;
     int playerScore, playerKill, playerApple, playerOrange, playerGrape;
     //Chara_Playerオブジェクトを取得
-    ResultPlayer charaPlayer;
     SceneBlackOut SceneBlackOut;
     // Start is called before the first frame update
     void Start()
     {
-        charaPlayer = FindObjectOfType<ResultPlayer>();
         SceneBlackOut = FindObjectOfType<SceneBlackOut>();
         //色々な物の初期化
         TMProTransparent();
@@ -48,8 +40,6 @@ public class ResultSC : MonoBehaviour
         StartCoroutine(PushKeyBlinking());
         //シーン遷移をするかどうか
         SceneChangeFlag = false;
-        //Playerのスコア等をテキストに変換する
-        GetPlayerScore();
     }
     // Update is called once per frame
     void Update()
@@ -81,7 +71,6 @@ public class ResultSC : MonoBehaviour
                 if (Input.anyKey)//一部反応しないキーがある
                 {
                     //charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
-                    charaPlayer.ReleaseSingleton();
                     Debug.Log("ResultSCでシングルトン破棄");
                     SceneBlackOut.BlackOutSceneChangeForResult();
                     //SceneManager.LoadScene("TitleScene");
@@ -219,36 +208,32 @@ public class ResultSC : MonoBehaviour
             Alpha = 0f;//透明化
         }
     }
-    void GetPlayerScore()
-    {
-        if (charaPlayer != null)
-        {
-            Debug.Log("Chara_Playerが見つかりましたわよ～～お～～ほっほっほ～～～");
-            ////Chara_PlayerのGet~を呼び出す
-            //playerScore = charaPlayer.GetScore();
-            //playerKill = charaPlayer.GetKill();
-            //playerApple = charaPlayer.GetApple();
-            //playerOrange = charaPlayer.GetOrange();
-            //playerGrape = charaPlayer.GetGrape();
-            //スコアを文字に変換
-            ScoreAmounts.text = playerScore.ToString();
-            KillAmounts.text = playerKill.ToString();
-            AppleAmounts.text = playerApple.ToString();
-            OrangeAmounts.text = playerOrange.ToString();
-            GrapeAmounts.text = playerGrape.ToString();
-        }
-        else
-        {
-            Debug.Log("Chara_Playerが見つからないよ");
-        }
-    }
     //プレイヤーが呼ぶ用の関数
-    public void SetResult(int score, int kill, int apple, int orange, int grape)
+    // 畠山追記
+    // 引数に勝者を設定出来るよう追記
+    public void SetResult(Winner winner, int score, int kill, int apple, int orange, int grape)
     {
         playerScore = score;
         playerKill = kill;
         playerApple = apple;
         playerOrange = orange;
         playerGrape = grape;
+
+        // 上記に代入した変数が使用されていないため直接代入
+        PlayerName.text = winner.ToString();
+        ScoreAmounts.text = playerScore.ToString();
+        KillAmounts.text = playerKill.ToString();
+        AppleAmounts.text = playerApple.ToString();
+        OrangeAmounts.text = playerOrange.ToString();
+        GrapeAmounts.text = playerGrape.ToString();
     }
+}
+
+/// <summary>
+/// 勝者のenum
+/// </summary>
+public enum Winner
+{
+    Player1,
+    Player2,
 }
