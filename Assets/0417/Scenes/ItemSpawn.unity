@@ -444,8 +444,8 @@ MonoBehaviour:
   - {fileID: 1574939591}
   - {fileID: 1154818563}
   - {fileID: 1262358236}
-  RespawnTime: 0.01
-  ItemValue: 100
+  RespawnTime: 0.1
+  ItemValue: 1000
 --- !u!1 &954573562
 GameObject:
   m_ObjectHideFlags: 0
