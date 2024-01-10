@@ -26,6 +26,7 @@ public class Chara_Player : Chara
         Attack2,
         Damage,
         Death,
+        Step,
         None,
     }
     public enum InputState
@@ -67,14 +68,15 @@ public class Chara_Player : Chara
     [SerializeField] private Vector3 savedVelocity;
     [SerializeField] private Curve inertia = new Curve();
 
-
+    [SerializeField, NonEditable] private List<Motion> inputtingMotions = new List<Motion>();
     [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
     [SerializeField] private MotionWithCollider attack2 = new MotionWithCollider();
+    [SerializeField] private Motion step = new Motion();
+
     private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
     private List<Motion> interruptByDeathMotions = new List<Motion>();  // 死亡モーションに割り込まれるモーションを登録
     private List<List<Motion>> interruptMotionsSolution = new List<List<Motion>>();
 
-    [SerializeField] private Motion step = new Motion();
     [SerializeField] private Motion damage = new Motion();
     [SerializeField] private Motion death = new Motion();
 
@@ -134,6 +136,10 @@ public class Chara_Player : Chara
         underAttackAction += Damage;
 
         //  Motionの設定
+        inputtingMotions.Add(attack1.motion);
+        inputtingMotions.Add(attack2.motion);
+        inputtingMotions.Add(step);
+
         attack1.Initialize(animator, Anims.attack1, this);
         attack1.startAction += () => moveRigor = true;
         attack1.enableAction += () => StateChange(MotionState.Attack1);
@@ -170,7 +176,6 @@ public class Chara_Player : Chara
 
         death.Initialize(animator, Anims.die);
         death.startAction += () => StateChange(MotionState.Death);
-        death.startAction += () => StateChange(CharaState.Death);
         death.startAction += sceneOperator.toResult.AddBlows;
         death.startAction += ChangeScoreByKill;
         death.startAction += () => moveRigor = true;
@@ -240,12 +245,31 @@ public class Chara_Player : Chara
         }
         else
         {
-            if (motionState != MotionState.Damage)
-            {
                 death.LaunchOneShot();
+        }
+
+    }
+
+    private void PriorityManager()
+    {
+        if (alive == false) { return; }
+        
+        List<float> motionPriorities = new List<float>();
+        int smallestIndex;  // 最も割合が低い(最新の入力)MotionのIndex
+
+        for(int i = 0; i < inputtingMotions.Count; ++i)
+        {
+            if (inputtingMotions[i].durationActive == true) // 入力されているMotionのみ
+            {
+                motionPriorities.Add(inputtingMotions[i].activeDuration.ratio);
+                inputtingMotions[i].activeDuration.Reach(); // 入力を消費する
+
             }
         }
 
+        smallestIndex = AddFunction.GetSmallestIndexInList(motionPriorities); // 優先度をソート
+
+        inputtingMotions[smallestIndex].Launch();
     }
 
     public void InputMoveUpdate()    // 動ける状態なら
@@ -299,6 +323,9 @@ public class Chara_Player : Chara
                 break;
 
             case MotionState.Attack2:
+                break;
+
+            case MotionState.Step:
                 break;
 
             case MotionState.Damage:
@@ -400,6 +427,7 @@ public class Chara_Player : Chara
 
         attack1.Update();
         attack2.Update();
+        step.Update();
         damage.Update();
         death.Update();
     }
@@ -594,6 +622,7 @@ public class Chara_Player : Chara
     {
         if (sceneOperator.timeOver == true) { return; }
         if (moveRigor == true) { return; }
+        attack1.motion.DurationActive();
         attack1.Launch(power.plan, 3);
     }
 
@@ -601,6 +630,7 @@ public class Chara_Player : Chara
     {
         if (sceneOperator.timeOver == true) { return; }
         if (moveRigor == true) { return; }
+        attack2.motion.DurationActive();
         attack2.Launch(power.plan * 2, 1);
     }
 
@@ -611,9 +641,13 @@ public class Chara_Player : Chara
     }
 
 
-    public void OnDamage(InputValue value)
+    public void OnStep(InputValue value)
     {
-        //UnderAttack(50, UnderAttackType.Normal);
+
+        if (sceneOperator.timeOver == true) { return; }
+        if (moveRigor == true) { return; }
+        step.DurationActive();
+        
 
     }
     #endregion

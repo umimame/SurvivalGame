@@ -70,6 +70,8 @@ namespace GenericChara
             pow.Update();
             spawnInvincible.Update();
 
+
+
             moveVelocity.plan = Vector3.zero;
             switch (charaState)
             {
@@ -80,6 +82,10 @@ namespace GenericChara
                     break;
                 case CharaState.Alive:
                     aliveAction?.Invoke();
+                    if(hp.entity <= 0)
+                    {
+                        StateChange(CharaState.Death);
+                    }
                     break;
 
                 case CharaState.Death:

@@ -27,22 +27,19 @@ public class Item : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-       
-        if (other.tag == Tags.Player01 || other.tag == Tags.Player02)
-        {
-            ParticleSystem newParticle = Instantiate(particle);
-            newParticle.transform.position = this.transform.position;
-            newParticle.Play();
-            Destroy(newParticle.gameObject, 0.5f);
-            AudioSource.PlayClipAtPoint(ItemSE, transform.position);
-            HitThePlayer(other.gameObject);
-        }
+       // 畠山による変更
+       // Stayが実行される前にEnterによりオブジェクトが消滅するため、
+       // Stayに書かれた処理をすべてEnterに移した
     }
 
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)
         {
+            ParticleSystem newParticle = Instantiate(particle);
+            newParticle.transform.position = this.transform.position;
+            newParticle.Play();
+            AudioSource.PlayClipAtPoint(ItemSE, transform.position);
             HitThePlayer(other.gameObject);
         }
     }

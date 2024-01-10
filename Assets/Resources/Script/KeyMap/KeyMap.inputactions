@@ -51,7 +51,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Damage",
+                    "name": "Step",
                     "type": "Button",
                     "id": "6be77c0d-82f3-4e47-8ca4-4bec4f03d932",
                     "expectedControlType": "Button",
@@ -187,7 +187,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "GamePad",
-                    "action": "Damage",
+                    "action": "Step",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -198,7 +198,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keybord",
-                    "action": "Damage",
+                    "action": "Step",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

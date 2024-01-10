@@ -954,6 +954,15 @@ MonoBehaviour:
   attack1:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
+      <activeDuration>k__BackingField:
+        <active>k__BackingField: 0
+        <interval>k__BackingField: 0.1
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+        <difference>k__BackingField: 0
       motionTime: 0
       adjustMotionTime: 0
       <interval>k__BackingField:
@@ -1008,6 +1017,15 @@ MonoBehaviour:
   attack2:
     motionCol: {fileID: 8907209045035302119}
     <motion>k__BackingField:
+      <activeDuration>k__BackingField:
+        <active>k__BackingField: 0
+        <interval>k__BackingField: 0.1
+        <time>k__BackingField:
+          <value>k__BackingField: 0
+          <increseType>k__BackingField: 0
+          reversalIncrese: 0
+        <ratio>k__BackingField: 0
+        <difference>k__BackingField: 0
       motionTime: 0
       adjustMotionTime: -0.3
       <interval>k__BackingField:
@@ -1077,7 +1095,57 @@ MonoBehaviour:
           m_RotationOrder: 4
     damage: 0
     hitCount: 0
+  step:
+    <activeDuration>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0.1
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
+    motionTime: 0
+    adjustMotionTime: 0
+    <interval>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
+    <motionThreshold>k__BackingField:
+      <reaching>k__BackingField: 0
+      <beforeBool>k__BackingField: 0
+      thresholdRange: {x: 0, y: 0}
+      currentValue: 0
+      beforeRange: {x: 0, y: 0}
+    <exist>k__BackingField:
+      <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
+    <easAnim>k__BackingField:
+      traffic:
+        active: 0
+      <nowRatio>k__BackingField: 0
+      <maxTime>k__BackingField: 0
+      curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
   damage:
+    <activeDuration>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
     motionTime: 0
     adjustMotionTime: -0.5
     <interval>k__BackingField:
@@ -1128,6 +1196,15 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
   death:
+    <activeDuration>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
     motionTime: 0
     adjustMotionTime: 0
     <interval>k__BackingField:

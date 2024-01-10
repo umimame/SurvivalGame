@@ -132,6 +132,7 @@ using GenericChara;
 
 [Serializable]@public class Motion
 {
+    [field: SerializeField] public Interval activeDuration { get; private set; }
     public Action cutIn { get; set; }
     [SerializeField, NonEditable] private float motionTime;
     [SerializeField] private float adjustMotionTime;
@@ -141,10 +142,13 @@ using GenericChara;
     [field: SerializeField] public EasingAnimator easAnim { get; private set; } = new EasingAnimator();
     public void Initialize(Animator animator, string clipName)
     {
+        activeDuration.Initialize(false, false);
+
+
         motionTime = AddFunction.GetAnimationClipLength(animator, clipName);
         motionTime += adjustMotionTime;
 
-
+        exist.start += activeDuration.Reset;    // activeDuration‚ðÁ”ï‚·‚é
         exist.start += () => easAnim.Initialize(motionTime, animator);
         exist.start += easAnim.Reset;
         exist.start += () => interval.Initialize(false, true, motionTime);
@@ -179,6 +183,7 @@ using GenericChara;
 
     public void Update()
     {
+        activeDuration.Update();
         exist.Update();
         easAnim.active = true;
     }
@@ -192,11 +197,16 @@ using GenericChara;
         exist.StartOneShot();
     }
 
-    public bool active
+    public void DurationActive()
+    {
+        activeDuration.Reset();
+    }
+
+    public bool durationActive
     {
         get
         {
-            return !interval.active;
+            return !activeDuration.active;
         }
     }
     public float nowMotionRatio

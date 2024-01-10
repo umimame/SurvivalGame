@@ -116,7 +116,33 @@ namespace AddClass
         }
 
 
+        public static int GetBiggestIndexInList(List<float> list)
+        {
+            int biggerIndex = 0;
+            for (int i = 1; i < list.Count; ++i)
+            {
+                if (list[biggerIndex] < list[i])
+                {
+                    biggerIndex = i;
+                }
+            }
 
+            return biggerIndex;
+        }
+
+        public static int GetSmallestIndexInList(List<float> list)
+        {
+            int smallestIndex = 0;
+            for (int i = 1; i < list.Count; ++i)
+            {
+                if (list[smallestIndex] > list[i])
+                {
+                    smallestIndex = i;
+                }
+            }
+
+            return smallestIndex;
+        }
 
         /// <summary>
         /// angle‚ðŽw’è‚µ‚½Šp“x‚ÉŠÛ‚ß‚é
@@ -1049,6 +1075,16 @@ namespace AddClass
             difference = time.value - this.interval;
         }
 
+        /// <summary>
+        /// time‚ðinterval‚Æ“¯‚¶‚É‚·‚é
+        /// </summary>
+        public void Reach()
+        {
+            time.value = interval;
+            active = (time.value >= interval) ? true : false;
+            ratio = time.value / interval;
+            difference = time.value - this.interval;
+        }
     }
 
     /// <summary>
@@ -1404,7 +1440,7 @@ namespace AddClass
 
     [Serializable] public class VariedTime
     {
-        [field: SerializeField, NonEditable] public float value { get; private set; }
+        [field: SerializeField, NonEditable] public float value { get; set; }
         [field: SerializeField] public IncreseType increseType { get; set; }
         [SerializeField] private bool reversalIncrese;
         public void Initialize(float startTime = 0.0f, IncreseType type = default)
