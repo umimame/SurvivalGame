@@ -55,7 +55,37 @@ public class ResultSC : MonoBehaviour
         if (NowIndex == ShowText.Length)
         {
             SceneChangeFlag = true;
+        }        
+    }
+    bool GetButtonDown()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            Debug.Log("Fire0が押されたよ");
+            return true;
         }
+        if (Input.GetButtonDown("Fire1"))
+        {
+            Debug.Log("Fire1が押されたよ");
+            return true;
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Debug.Log("Fire2が押されたよ");
+            return true;
+        }
+        if (Input.GetButtonDown("Fire3"))
+        {
+            Debug.Log("Fire3が押されたよ");
+            return true;
+        }
+        //float horizontalInput = Input.GetAxis("Horizontal");
+        //if (horizontalInput>0)
+        //{
+        //    Debug.Log("右方向の入力あり申す");
+        //    return true;
+        //}
+        return false;
     }
     void SceneChange()//シーン遷移用
     {
@@ -110,7 +140,7 @@ public class ResultSC : MonoBehaviour
     }
     void PushtoBoolInversion()//Space押したらテキスト表示フラグをtrueに変更
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || GetButtonDown())
         {
             for (int i = 0; i < ShowText.Length; i++)
             {

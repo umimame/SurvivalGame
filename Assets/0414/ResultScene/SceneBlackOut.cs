@@ -86,5 +86,4 @@ public class SceneBlackOut : MonoBehaviour
         Debug.Log("ƒŠƒUƒ‹ƒg‰æ–Ê‚ÌˆÃ“]—p‰æ‘œ‚ÌSpeed2  " + _speed);
         SceneManager.LoadScene(nextSceneName);
     }
-
 }
