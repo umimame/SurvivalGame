@@ -31,6 +31,12 @@ using GenericChara;
         cutIn += motionCol.Spawn;
     }
 
+    public void SetParam(float damage, int hitCount = 1)
+    {
+        this.damage = damage;
+        this.hitCount = hitCount;
+    }
+
     /// <summary>
     /// 引数:<br/>
     /// ・ダメージ<br/>

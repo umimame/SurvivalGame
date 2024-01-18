@@ -55,8 +55,9 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private EntityAndPlan<Vector2> inputMoveVelocity;
     [SerializeField, NonEditable] private bool moveInputting;       // 移動の入力
     [SerializeField, NonEditable] private bool run;                 // 走り入力
-    [SerializeField, NonEditable] private bool moveRigor;           // 硬直状態（移動入力を受け付けない）
-    [SerializeField, NonEditable] private bool viewRigor;           // 硬直状態（移動入力を受け付けない）
+    [SerializeField, NonEditable] private bool moveRigor;           // 移動入力の受け付け
+    [SerializeField, NonEditable] private bool viewRigor;           // 視点入力の受け付け
+    [SerializeField, NonEditable] private bool damageRigor;         // ダメージによる硬直
     [field: SerializeField, NonEditable] public EntityAndPlan<float> leaveButton { get; private set; }  // 巣にスコアを預ける入力
     [SerializeField, NonEditable] private Vector3 dirrection;
 
@@ -68,13 +69,14 @@ public class Chara_Player : Chara
     [SerializeField] private Vector3 savedVelocity;
     [SerializeField] private Curve inertia = new Curve();
 
-    [SerializeField, NonEditable] private List<Motion> inputtingMotions = new List<Motion>();
+    [SerializeField, NonEditable] private List<Motion> motionsByButton = new List<Motion>();
     [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
     [SerializeField] private MotionWithCollider attack2 = new MotionWithCollider();
     [SerializeField] private Motion step = new Motion();
 
-    private List<Motion> interruptByDamageMotions = new List<Motion>(); // 被弾モーションに割り込まれるモーションを登録
-    private List<Motion> interruptByDeathMotions = new List<Motion>();  // 死亡モーションに割り込まれるモーションを登録
+    private List<Motion> interruptByStepMotion = new List<Motion>();    // ステップモーションに割り込まれるモーションを登録
+    private List<Motion> interruptByDamageMotion = new List<Motion>();  // 被弾モーションに割り込まれるモーションを登録
+    private List<Motion> interruptByDeathMotion = new List<Motion>();   // 死亡モーションに割り込まれるモーションを登録
     private List<List<Motion>> interruptMotionsSolution = new List<List<Motion>>();
 
     [SerializeField] private Motion damage = new Motion();
@@ -135,10 +137,8 @@ public class Chara_Player : Chara
 
         underAttackAction += Damage;
 
-        //  Motionの設定
-        inputtingMotions.Add(attack1.motion);
-        inputtingMotions.Add(attack2.motion);
-        inputtingMotions.Add(step);
+        // Motionの設定
+        motionsByButton = new List<Motion>() { attack1.motion, attack2.motion, step };
 
         attack1.Initialize(animator, Anims.attack1, this);
         attack1.startAction += () => moveRigor = true;
@@ -158,32 +158,39 @@ public class Chara_Player : Chara
         attack2.outThreshold += () => viewRigor = false;
         attack2.motion.AssignCutInMotion();
 
+        interruptByStepMotion = new List<Motion>() { attack1.motion, attack2.motion };
         step.Initialize(animator, Anims.attack2);
-
+        step.startAction += InputMotionReset;
+        step.enableAction += () => StateChange(MotionState.Step);
+        step.startAction += () => moveRigor = true;
+        step.startAction += () => animator.Play("Digs", 0, 0.0f);
+        step.endAction += ThinkNextMotion;
+        step.endAction += () => moveRigor = false;
 
         damage.Initialize(animator, Anims.damege);
-        damage.startAction += () => InputMotionReset();
+        damage.startAction += InputMotionReset;
         damage.startAction += () => StateChange(MotionState.Damage, true);
-        damage.startAction += () => moveRigor = true;
+        damage.startAction += () => moveRigor = damageRigor = true;
         damage.startAction += () => animator.Play(Anims.damege, 0, 0.0f);       // 連続で再生できる
         damage.enableAction += () => StateChange(MotionState.Damage, true);
         damage.endAction += ThinkNextMotion;
-        damage.endAction += () => moveRigor = false;
+        damage.endAction += () => moveRigor = damageRigor = false;
 
-        interruptByDamageMotions.Add(attack1.motion);
-        interruptByDamageMotions.Add(attack2.motion);
-        interruptByDamageMotions.Add(damage);
+        interruptByDamageMotion.Add(attack1.motion);
+        interruptByDamageMotion.Add(attack2.motion);
+        interruptByDamageMotion.Add(damage);
 
         death.Initialize(animator, Anims.die);
         death.startAction += () => StateChange(MotionState.Death);
         death.startAction += sceneOperator.toResult.AddBlows;
         death.startAction += ChangeScoreByKill;
-        death.startAction += () => moveRigor = true;
+        death.startAction += () => moveRigor = damageRigor = true;
 
-        interruptByDeathMotions.Add(damage);
+        interruptByDeathMotion.Add(damage);
 
-        interruptMotionsSolution.Add(interruptByDamageMotions);
-        interruptMotionsSolution.Add(interruptByDeathMotions);
+        interruptMotionsSolution.Add(interruptByStepMotion);
+        interruptMotionsSolution.Add(interruptByDamageMotion);
+        interruptMotionsSolution.Add(interruptByDeathMotion);
 
         invincible.Initialize(true, false);
 
@@ -250,27 +257,30 @@ public class Chara_Player : Chara
 
     }
 
-    private void PriorityManager()
-    {
-        if (alive == false) { return; }
+    //private void PriorityManager()
+    //{
+    //    if (alive == false) { return; }
+    //    if (moveRigor == true) { return; }
+
+
+    //    List<float> motionPriorities = new List<float>();
+    //    int smallestIndex;  // 最も割合が低い(最新の入力)MotionのIndex
+
+    //    for(int i = 0; i < motionsByButton.Count; ++i)
+    //    {
+    //        if (motionsByButton[i].durationActive == true) // 入力されているMotionのみ
+    //        {
+    //            motionPriorities.Add(motionsByButton[i].activeDuration.ratio);
+    //            motionsByButton[i].activeDuration.Reach(); // 入力を消費する
+
+    //        }
+    //    }
+
+    //    smallestIndex = AddFunction.GetSmallestIndexInList(motionPriorities); // 優先度をソート
+
         
-        List<float> motionPriorities = new List<float>();
-        int smallestIndex;  // 最も割合が低い(最新の入力)MotionのIndex
-
-        for(int i = 0; i < inputtingMotions.Count; ++i)
-        {
-            if (inputtingMotions[i].durationActive == true) // 入力されているMotionのみ
-            {
-                motionPriorities.Add(inputtingMotions[i].activeDuration.ratio);
-                inputtingMotions[i].activeDuration.Reach(); // 入力を消費する
-
-            }
-        }
-
-        smallestIndex = AddFunction.GetSmallestIndexInList(motionPriorities); // 優先度をソート
-
-        inputtingMotions[smallestIndex].Launch();
-    }
+    //    motionsByButton[smallestIndex].Launch();
+    //}
 
     public void InputMoveUpdate()    // 動ける状態なら
     {
@@ -482,7 +492,9 @@ public class Chara_Player : Chara
         }
     }
 
-
+    /// <summary>
+    /// モーション割込み
+    /// </summary>
     public void InputMotionReset()
     {
         for (int i = 0; i < interruptMotionsSolution.Count; ++i)
@@ -492,7 +504,7 @@ public class Chara_Player : Chara
                 if (interruptMotionsSolution[i][j].exist.state != ExistState.Disable)
                 {
                     interruptMotionsSolution[i][j].cutIn?.Invoke();
-                    if (interruptMotionsSolution[i][j] != interruptByDamageMotions[interruptByDamageMotions.Count - 1])    // 実行中のモーションなら
+                    if (interruptMotionsSolution[i][j] != interruptByDamageMotion[interruptByDamageMotion.Count - 1])    // 実行中のモーションなら
                     {
                         interruptMotionsSolution[i][j].Reset();
                     }
@@ -647,7 +659,7 @@ public class Chara_Player : Chara
         if (sceneOperator.timeOver == true) { return; }
         if (moveRigor == true) { return; }
         step.DurationActive();
-        
+        step.Launch();
 
     }
     #endregion
