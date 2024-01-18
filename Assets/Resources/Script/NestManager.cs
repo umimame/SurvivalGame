@@ -107,6 +107,7 @@ public class NestManager : MonoBehaviour
 
     private void LeaveActiveAction(Chara_Player player)
     {
+        Debug.Log("leave");
         leavedScore = player.ChangeScoreByLeave();
         player.leavedScore += (int)leavedScore;
         leavedPlayer = player;
@@ -117,7 +118,7 @@ public class NestManager : MonoBehaviour
 
     }
 
-    private void SteakActiveAction(Chara_Player player)
+    private void StealActiveAction(Chara_Player player)
     {
         leavedPlayer.leavedScore -= (int)leavedScore;
         player.AddScore((int)StealLeavedScore());
@@ -139,12 +140,15 @@ public class NestManager : MonoBehaviour
     {
         if (other.CompareTag(Tags.Player01) || other.CompareTag(Tags.Player02))
         {
-            Chara_Player player = other.transform.root.GetChild(0).GetComponent<Chara_Player>();
-            targets.Update(player);  // G‚ê‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ð“o˜^‚·‚é
-            int i = targets.GetIndex(player);
-            Debug.Log(i);
-            leaveIntervals[i].activeAction += ()=> LeaveActiveAction(player);
-            stealIntervals[i].activeAction += () => SteakActiveAction(player);
+            Chara_Player player = other.transform.parent.GetComponent<Chara_Player>();
+            if (player != null)
+            {
+                targets.Update(player);  // G‚ê‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ð“o˜^‚·‚é
+                int i = targets.GetIndex(player);
+                leaveIntervals[i].activeAction += () => LeaveActiveAction(player);
+                stealIntervals[i].activeAction += () => StealActiveAction(player);
+
+            }
         }
     }
 
@@ -152,11 +156,15 @@ public class NestManager : MonoBehaviour
     {
         if (other.CompareTag(Tags.Player01) || other.CompareTag(Tags.Player02))
         {
-            Chara_Player player = other.transform.root.GetChild(0).GetComponent<Chara_Player>();
-            int i = targets.GetIndex(player);
+            Chara_Player player = other.transform.parent.GetComponent<Chara_Player>();
+            if (player != null)
+            {
 
-            leaveIntervals[i].activeAction -= () => LeaveActiveAction(player);
-            stealIntervals[i].activeAction += () => SteakActiveAction(player);
+                int i = targets.GetIndex(player);
+
+                leaveIntervals[i].activeAction = null;
+                stealIntervals[i].activeAction = null;
+            }
         }
 
     }

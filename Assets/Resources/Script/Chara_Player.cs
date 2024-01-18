@@ -27,6 +27,7 @@ public class Chara_Player : Chara
         Damage,
         Death,
         Step,
+        Digs,
         None,
     }
     public enum InputState
@@ -57,6 +58,7 @@ public class Chara_Player : Chara
     [SerializeField, NonEditable] private bool run;                 // 走り入力
     [SerializeField, NonEditable] private bool moveRigor;           // 移動入力の受け付け
     [SerializeField, NonEditable] private bool viewRigor;           // 視点入力の受け付け
+    [SerializeField, NonEditable] private bool attackRigor;         // 攻撃による硬直
     [SerializeField, NonEditable] private bool damageRigor;         // ダメージによる硬直
     [field: SerializeField, NonEditable] public EntityAndPlan<float> leaveButton { get; private set; }  // 巣にスコアを預ける入力
     [SerializeField, NonEditable] private Vector3 dirrection;
@@ -73,6 +75,7 @@ public class Chara_Player : Chara
     [SerializeField] private MotionWithCollider attack1 = new MotionWithCollider();
     [SerializeField] private MotionWithCollider attack2 = new MotionWithCollider();
     [SerializeField] private Motion step = new Motion();
+    [SerializeField] private Motion digs = new Motion();
 
     private List<Motion> interruptByStepMotion = new List<Motion>();    // ステップモーションに割り込まれるモーションを登録
     private List<Motion> interruptByDamageMotion = new List<Motion>();  // 被弾モーションに割り込まれるモーションを登録
@@ -159,13 +162,20 @@ public class Chara_Player : Chara
         attack2.motion.AssignCutInMotion();
 
         interruptByStepMotion = new List<Motion>() { attack1.motion, attack2.motion };
-        step.Initialize(animator, Anims.attack2);
+        step.Initialize(animator, Anims.Digs);
         step.startAction += InputMotionReset;
         step.enableAction += () => StateChange(MotionState.Step);
         step.startAction += () => moveRigor = true;
         step.startAction += () => animator.Play("Digs", 0, 0.0f);
         step.endAction += ThinkNextMotion;
         step.endAction += () => moveRigor = false;
+
+        digs.Initialize(animator, Anims.Digs);
+        digs.enableAction += () => StateChange(MotionState.Digs);
+        digs.startAction += () => moveRigor = true;
+        digs.startAction += () => animator.Play("Digs", 0, 0.0f);
+        digs.endAction += ThinkNextMotion;
+        digs.endAction += () => moveRigor = false;
 
         damage.Initialize(animator, Anims.damege);
         damage.startAction += InputMotionReset;
@@ -336,6 +346,9 @@ public class Chara_Player : Chara
                 break;
 
             case MotionState.Step:
+                break;
+
+            case MotionState.Digs:
                 break;
 
             case MotionState.Damage:
@@ -575,6 +588,7 @@ public class Chara_Player : Chara
         float returnScore = score.plan / 2;
         score.plan /= 2;
 
+        Debug.Log("Change");
         return returnScore;
     }
 

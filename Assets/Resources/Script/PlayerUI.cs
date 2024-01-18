@@ -19,7 +19,7 @@ public class PlayerUI : MonoBehaviour
     private RectTransform rect;
     private void Start()
     {
-        scoreText.SetText(body.score.ToString());
+        scoreText.SetText(body.score.plan.ToString());
         AnchorSet();
         nestGuageVariable.transform.parent.gameObject.SetActive(false);
         nestImage = nestGuageVariable.GetComponent<Image>();
@@ -28,7 +28,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Update()
     {
-        scoreText.SetText("Score:" + body.score.plan.ToString("d4"));
+        scoreText.SetText("Score:" + body.score.plan.ToString("d4") + "\n     (" + body.sumScore.ToString("d4") + ")");
         hpGuageVariable.OnChangeValue(body.hp.entity / body.hp.max);
         stGuageVariable.OnChangeValue(body.stamina.entity / body.stamina.max);
         leaveText.Update();
@@ -54,7 +54,6 @@ public class PlayerUI : MonoBehaviour
         if(leave == true)
         {
             leaveText.Launch();
-            Debug.Log(leaveText.img.Alpha);
         }
     }
 

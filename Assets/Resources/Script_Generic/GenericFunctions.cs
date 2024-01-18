@@ -1692,7 +1692,6 @@ namespace AddClass
         public void Fade()
         {
             img.Alpha = 1.0f - intervalToFade.ratio;
-            Debug.Log(img.Alpha);
         }
 
         public GameObject obj
