@@ -848,6 +848,7 @@ MonoBehaviour:
   <lastAttacker>k__BackingField: {fileID: 0}
   input: {fileID: 4064012994823538045}
   <UI>k__BackingField: {fileID: 2359422959093900368}
+  bloodParticle: {fileID: 2185279525705732043, guid: b654e2683fb6e21478d9bf3bcd1ce9b7, type: 3}
   <score>k__BackingField:
     <entity>k__BackingField: 0
     <plan>k__BackingField: 0
@@ -914,6 +915,7 @@ MonoBehaviour:
   run: 0
   moveRigor: 0
   viewRigor: 0
+  attackRigor: 0
   damageRigor: 0
   <leaveButton>k__BackingField:
     <entity>k__BackingField: 0
@@ -1043,7 +1045,7 @@ MonoBehaviour:
       <motionThreshold>k__BackingField:
         <reaching>k__BackingField: 0
         <beforeBool>k__BackingField: 0
-        thresholdRange: {x: 0.3, y: 0.7}
+        thresholdRange: {x: 0.3, y: 0.4}
         currentValue: 0
         beforeRange: {x: 0, y: 0}
       <exist>k__BackingField:
@@ -1102,6 +1104,47 @@ MonoBehaviour:
     <activeDuration>k__BackingField:
       <active>k__BackingField: 0
       <interval>k__BackingField: 0.1
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
+    motionTime: 0
+    adjustMotionTime: 0
+    <interval>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0
+      <time>k__BackingField:
+        <value>k__BackingField: 0
+        <increseType>k__BackingField: 0
+        reversalIncrese: 0
+      <ratio>k__BackingField: 0
+      <difference>k__BackingField: 0
+    <motionThreshold>k__BackingField:
+      <reaching>k__BackingField: 0
+      <beforeBool>k__BackingField: 0
+      thresholdRange: {x: 0, y: 0}
+      currentValue: 0
+      beforeRange: {x: 0, y: 0}
+    <exist>k__BackingField:
+      <state>k__BackingField: 0
+      <oneShot>k__BackingField: 0
+    <easAnim>k__BackingField:
+      traffic:
+        active: 0
+      <nowRatio>k__BackingField: 0
+      <maxTime>k__BackingField: 0
+      curve:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  digs:
+    <activeDuration>k__BackingField:
+      <active>k__BackingField: 0
+      <interval>k__BackingField: 0
       <time>k__BackingField:
         <value>k__BackingField: 0
         <increseType>k__BackingField: 0

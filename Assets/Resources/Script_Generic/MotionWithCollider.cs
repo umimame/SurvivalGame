@@ -27,6 +27,7 @@ using GenericChara;
         motionCol.passJudgeFunc += MotionColPassingFunc;
 
         withinThreshold += () => motionCol.Launch(damage, hitCount);
+        outThreshold += motionCol.Spawn;
         endAction += motionCol.Spawn;
         cutIn += motionCol.Spawn;
     }

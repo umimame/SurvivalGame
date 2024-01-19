@@ -39,6 +39,7 @@ public class Chara_Player : Chara
 
     [SerializeField] private PlayerInput input;
     [field: SerializeField] public PlayerUI UI { get; private set; }
+    [SerializeField] private ParticleSystem bloodParticle;
     public PlayerRespawnPos playerRespawnPos { get; set; }
     public GameScene_Operator sceneOperator { get; set; }
     [field: SerializeField, NonEditable] public EntityAndPlan<int> score { get; private set; }
@@ -483,6 +484,7 @@ public class Chara_Player : Chara
     public void RigorOperator()
     {
 
+
         if (moveRigor == true)
         {
             inputMoveVelocity.PlanDefault();
@@ -502,6 +504,13 @@ public class Chara_Player : Chara
         {
             viewPointManager.inputViewPoint.Assign();
 
+        }
+
+        if (alive == false)
+        {
+
+            inputMoveVelocity.PlanDefault();
+            leaveButton.PlanDefault();
         }
     }
 
@@ -548,7 +557,8 @@ public class Chara_Player : Chara
         {
             damage.Launch();
             invincible.Reset();
-
+            ParticleSystem blood = Instantiate(bloodParticle);
+            blood.transform.position = transform.position;
         }
     }
 

@@ -26,13 +26,6 @@ public class Item : MonoBehaviour
     // 追記終了
     // 継承先の関数でResultParamOperatorの関数を実行する処理を追記
 
-    void OnTriggerStay(Collider other)
-    {
-       // 畠山による変更
-       // Stayが実行される前にEnterによりオブジェクトが消滅するため、
-       // Stayに書かれた処理をすべてEnterに移した
-    }
-
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == Tags.Player01 || other.gameObject.tag == Tags.Player02)

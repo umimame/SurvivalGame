@@ -138,7 +138,6 @@ public class ItemSpawnPos : MonoBehaviour
         int value = 0;
         Item = GameObject.FindGameObjectsWithTag(item);
         value = Item.Length;
-        //Debug.Log(value);
         return value;
     }
 }

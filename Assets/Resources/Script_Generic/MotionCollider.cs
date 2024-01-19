@@ -7,7 +7,7 @@ using System;
 public class MotionCollider : MonoBehaviour
 {
     [field: SerializeField] public Chara parent { get; set; }
-    [field: SerializeField, NonEditable] public bool enable { get; private set; } = false;
+    [field: SerializeField, NonEditable] public bool enable { get; set; } = false;
     [SerializeField] private Collider thisCollider;
     [field: SerializeField, NonEditable] public int hitCount { get; private set; }
     [SerializeField, NonEditable] private float damage;
@@ -32,6 +32,7 @@ public class MotionCollider : MonoBehaviour
         targetColliders.Clear();
         enable = false;
     }
+
 
     /// <summary>
     /// à¯êî:<br/>

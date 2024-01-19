@@ -107,7 +107,6 @@ public class NestManager : MonoBehaviour
 
     private void LeaveActiveAction(Chara_Player player)
     {
-        Debug.Log("leave");
         leavedScore = player.ChangeScoreByLeave();
         player.leavedScore += (int)leavedScore;
         leavedPlayer = player;
@@ -148,6 +147,7 @@ public class NestManager : MonoBehaviour
                 leaveIntervals[i].activeAction += () => LeaveActiveAction(player);
                 stealIntervals[i].activeAction += () => StealActiveAction(player);
 
+                Debug.Log("ìoò^");
             }
         }
     }
@@ -164,6 +164,7 @@ public class NestManager : MonoBehaviour
 
                 leaveIntervals[i].activeAction = null;
                 stealIntervals[i].activeAction = null;
+                Debug.Log("âèú");
             }
         }
 
