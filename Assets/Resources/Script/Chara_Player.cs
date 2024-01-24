@@ -268,30 +268,6 @@ public class Chara_Player : Chara
 
     }
 
-    //private void PriorityManager()
-    //{
-    //    if (alive == false) { return; }
-    //    if (moveRigor == true) { return; }
-
-
-    //    List<float> motionPriorities = new List<float>();
-    //    int smallestIndex;  // 最も割合が低い(最新の入力)MotionのIndex
-
-    //    for(int i = 0; i < motionsByButton.Count; ++i)
-    //    {
-    //        if (motionsByButton[i].durationActive == true) // 入力されているMotionのみ
-    //        {
-    //            motionPriorities.Add(motionsByButton[i].activeDuration.ratio);
-    //            motionsByButton[i].activeDuration.Reach(); // 入力を消費する
-
-    //        }
-    //    }
-
-    //    smallestIndex = AddFunction.GetSmallestIndexInList(motionPriorities); // 優先度をソート
-
-        
-    //    motionsByButton[smallestIndex].Launch();
-    //}
 
     public void InputMoveUpdate()    // 動ける状態なら
     {
@@ -577,7 +553,6 @@ public class Chara_Player : Chara
     /// <param name="you"></param>
     public void ChangeScoreByKill()
     {
-        Debug.Log("Death");
         if (lastAttacker == null)
         {
             Debug.Log("自滅");
@@ -598,7 +573,6 @@ public class Chara_Player : Chara
         float returnScore = score.plan / 2;
         score.plan /= 2;
 
-        Debug.Log("Change");
         return returnScore;
     }
 
@@ -615,7 +589,7 @@ public class Chara_Player : Chara
     }
 
 
-    private void OnTriggerStay(Collider other)
+    public void UnderFootColliderStay(Collider other)
     {
         if(other.CompareTag(SurvivalGameTags.Nest) == true)
         {
@@ -624,7 +598,7 @@ public class Chara_Player : Chara
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void UnderFootColliderExit(Collider other)
     {
         if (other.CompareTag(SurvivalGameTags.Nest) == true)
         {

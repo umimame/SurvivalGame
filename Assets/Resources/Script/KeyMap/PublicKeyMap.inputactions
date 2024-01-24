@@ -1,0 +1,86 @@
+{
+    "name": "PublicKeyMap",
+    "maps": [
+        {
+            "name": "Public",
+            "id": "a61f06e4-f89c-4b70-a65e-c6b832f39171",
+            "actions": [
+                {
+                    "name": "Positive",
+                    "type": "Button",
+                    "id": "a2591c1b-6e89-432e-b9c6-60ce7f0d6be2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Negative",
+                    "type": "Button",
+                    "id": "66b6ca05-ba55-4292-a888-174ba5657345",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "5ea9bb97-c4a5-458f-9d41-b3c7e7888fc6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3ea206dd-51cc-4171-ab26-8669252002f6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Public",
+                    "action": "Positive",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "843cbca9-c1e0-4b70-8f21-229d9eb8616c",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Public",
+                    "action": "Negative",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8a95c67-c80d-4e8f-94de-6581a105ab4e",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Public",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Public",
+            "bindingGroup": "Public",
+            "devices": [
+                {
+                    "devicePath": "<Gamepad>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

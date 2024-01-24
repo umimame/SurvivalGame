@@ -1681,7 +1681,6 @@ namespace AddClass
             displayInterval.Reset();
             intervalToFade.Reset();
             img.Alpha = 1.0f;
-            Debug.Log("Launch");
         }
 
         public void Reset()
