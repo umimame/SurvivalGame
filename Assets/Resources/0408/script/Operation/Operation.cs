@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Operation : MonoBehaviour
 {
-
+    public string sceneName;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,9 +15,9 @@ public class Operation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.anyKey)
         {
-            SceneManager.LoadScene("GameScene");
+            SceneManager.LoadScene(sceneName);
         }
     }
 }
