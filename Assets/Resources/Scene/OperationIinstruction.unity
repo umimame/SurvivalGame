@@ -188,8 +188,8 @@ MonoBehaviour:
     \u5DE6\u306B\u3042\u308B\u7DD1\u306E\u30B2\u30FC\u30B8\u3067\u3059\r\n\u30B9\u30BF\u30DF\u30CA           
     \u53F3\u306B\u3042\u308B\u9EC4\u8272\u306E\u5186\u5F62\u306E\u30B2\u30FC\u30B8\u3067\u3059\r\n\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
-  m_sharedMaterial: {fileID: 6574258357237554280, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ed37427932e66564cb3a7fbf0a18f82e, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: ed37427932e66564cb3a7fbf0a18f82e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcb89beaf1b521c43a9ad0cd4fca6b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneName: GameScene
 --- !u!4 &1321192782
 Transform:
   m_ObjectHideFlags: 0
