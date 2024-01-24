@@ -72,7 +72,6 @@ public class NestManager : MonoBehaviour
     public bool ControleNest(Chara_Player player, bool active)
     {
         int i = targets.GetIndex(player);
-        enable = active;
         if (player == leavedPlayer) { return false; }   // —a‚©‚Á‚½ƒvƒŒƒCƒ„[‚ªG‚ê‚Ä‚¢‚é‚È‚ç
 
         if (active == false)                            // “ü—Í‚ª‚È‚¢‚È‚ç
@@ -84,7 +83,11 @@ public class NestManager : MonoBehaviour
             return false;
         }
 
-        if (i == -1) {  return false; }                 // targets‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢‚È‚ç(—áŠOˆ—)
+        if (i == -1)    // targets‚É“o˜^‚³‚ê‚Ä‚¢‚È‚¢‚È‚ç(—áŠOˆ—)
+        {  
+            Debug.LogError("Nest‚Ì—áŠOˆ—");
+            return false; 
+        }                 
 
 
 
@@ -93,12 +96,14 @@ public class NestManager : MonoBehaviour
             leaveIntervals[i].Update();
             stealIntervals[i].Reset();
             player.UI.ControlNestGuage(leaveIntervals[i].ratio, true);
+            return true;
         }
         else if (leavedPlayer != player) // —a‚©‚Á‚Ä‚¢‚éó‘ÔŠ‚Â‘¼‚ÌƒvƒŒƒCƒ„[‚ªG‚Á‚Ä‚¢‚éó‘Ô‚È‚ç
         {
             leaveIntervals[i].Reset();
             stealIntervals[i].Update();
             player.UI.ControlNestGuage(stealIntervals[i].ratio, false);
+            return true;
         }
 
 
@@ -119,6 +124,7 @@ public class NestManager : MonoBehaviour
 
     private void StealActiveAction(Chara_Player player)
     {
+        Debug.Log(leavedPlayer);
         leavedPlayer.leavedScore -= (int)leavedScore;
         player.AddScore((int)StealLeavedScore());
 
@@ -132,6 +138,7 @@ public class NestManager : MonoBehaviour
         if(other.CompareTag(Tags.Player01) || other.CompareTag(Tags.Player02))
         {
             targets.Update(other.transform.root.GetChild(0).GetComponent<Chara_Player>());  // G‚ê‚Ä‚¢‚éƒvƒŒƒCƒ„[‚ğ“o˜^‚·‚é
+
         }
     }
 
@@ -147,7 +154,6 @@ public class NestManager : MonoBehaviour
                 leaveIntervals[i].activeAction += () => LeaveActiveAction(player);
                 stealIntervals[i].activeAction += () => StealActiveAction(player);
 
-                Debug.Log("“o˜^");
             }
         }
     }
@@ -164,7 +170,6 @@ public class NestManager : MonoBehaviour
 
                 leaveIntervals[i].activeAction = null;
                 stealIntervals[i].activeAction = null;
-                Debug.Log("‰ğœ");
             }
         }
 

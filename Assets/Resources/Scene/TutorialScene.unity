@@ -123,6 +123,79 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &58079087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 58079090}
+  - component: {fileID: 58079089}
+  - component: {fileID: 58079088}
+  m_Layer: 0
+  m_Name: SceneOperator
+  m_TagString: SceneOperator
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &58079088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58079087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c09e243ce5be474491521036c3ad2d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleText: 
+--- !u!114 &58079089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58079087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 142ee44936482314b93881a4f03a7675, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <debugMode>k__BackingField: 0
+  canvas:
+    <obj>k__BackingField: {fileID: 7474081723118478971, guid: 663c775d986e7d64ab1bd3135aca749f, type: 3}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+  fadeObj:
+    <obj>k__BackingField: {fileID: 0}
+    <clones>k__BackingField: []
+    <state>k__BackingField: 0
+    instanceSound: {fileID: 0}
+    parent: {fileID: 0}
+    fadeUI: {fileID: 0}
+    scene: 
+--- !u!4 &58079090
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58079087}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 160.21515, y: 3.883284, z: 74.44337}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &135600723
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +232,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 1}
-  m_SizeDelta: {x: 968.9669, y: 418.2969}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &135600725
 MonoBehaviour:
@@ -183,13 +256,13 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\n\u64CD\u4F5C\u8AAC\u660E\n\n\u30AD\u30E3\u30E9\u30AF\u30BF\u30FC\u306E\u79FB\u52D5\u3000\u5DE6\u30B9\u30C6\u30A3\u30C3\u30AF\n\u8996\u70B9\u306E\u79FB\u52D5      
     \u53F3\u30B9\u30C6\u30A3\u30C3\u30AF\n\u30C0\u30C3\u30B7\u30E5\u3000\u3000\u3000\u3000\u3000 
-    L2\u30DC\u30BF\u30F3\n\u653B\u6483\u3000\u3000\u3000\u3000\u3000\u3000 X,Y\u30DC\u30BF\u30F3\n\u30A2\u30AF\u30B7\u30E7\u30F3         
+    L2\u30DC\u30BF\u30F3\n\u653B\u6483\u3000\u3000\u3000\u3000\u3000\u3000 R1\u3001L1\u30DC\u30BF\u30F3\n\u30A2\u30AF\u30B7\u30E7\u30F3         
     R2\u30DC\u30BF\u30F3\n\n\u30D1\u30E9\u30E1\u30FC\u30BF\u30FC\r\nHP              
-    \u5DE6\u306B\u3042\u308B\u7DD1\u306E\u30B2\u30FC\u30B8\u3067\u3059\r\n\u30B9\u30BF\u30DF\u30CA           
-    \u53F3\u306B\u3042\u308B\u9EC4\u8272\u306E\u5186\u5F62\u306E\u30B2\u30FC\u30B8\u3067\u3059\r\n\n"
+    \u5DE6\u306B\u3042\u308B\u7DD1\u306E\u30B2\u30FC\u30B8\n\u30B9\u30BF\u30DF\u30CA           
+    \u53F3\u306B\u3042\u308B\u9EC4\u8272\u306E\u5186\u5F62\u306E\u30B2\u30FC\u30B8"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ed37427932e66564cb3a7fbf0a18f82e, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: ed37427932e66564cb3a7fbf0a18f82e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
+  m_sharedMaterial: {fileID: 6574258357237554280, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -213,13 +286,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 72
+  m_fontSizeBase: 30.2
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -469,7 +542,6 @@ GameObject:
   m_Component:
   - component: {fileID: 780046636}
   - component: {fileID: 780046635}
-  - component: {fileID: 780046634}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -477,14 +549,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &780046634
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 780046633}
-  m_Enabled: 1
 --- !u!20 &780046635
 Camera:
   m_ObjectHideFlags: 0
@@ -561,6 +625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1321192782}
   - component: {fileID: 1321192781}
+  - component: {fileID: 1321192783}
   m_Layer: 0
   m_Name: Scene
   m_TagString: Untagged
@@ -580,6 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcb89beaf1b521c43a9ad0cd4fca6b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 1321192783}
   sceneName: GameScene
 --- !u!4 &1321192782
 Transform:
@@ -596,6 +662,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1321192783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1321192780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 0340fdc18c6201d4ca39c13865bf0d07, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Public
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1686459243
 GameObject:
   m_ObjectHideFlags: 0

@@ -43,8 +43,12 @@ public class GameScene_Operator : SceneOperator
             Collider[] colliders = playerInstancer.lastObj.GetComponentsInChildren<Collider>();
             foreach(Collider collider in colliders)
             {
-                collider.gameObject.tag = TagAndArray.ArrayToTag(i);
-                collider.gameObject.layer = 6;      // Layer‚ğPlayer‚É•ÏX
+                if(collider.isTrigger == true)
+                {
+                    collider.gameObject.tag = TagAndArray.ArrayToTag(i);
+                    collider.gameObject.layer = 6;      // Layer‚ğPlayer‚É•ÏX
+
+                }
             }
             playerInstancer.lastObj.transform.GetChild(0).position = preset.playerPos[i];
 
