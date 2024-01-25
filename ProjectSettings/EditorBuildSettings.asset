@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/0414/TitleScene.unity
     guid: d712550fc38131848a7e1a90c1208323
   - enabled: 1
-    path: Assets/Resources/Scene/OperationIinstruction.unity
+    path: Assets/Resources/Scene/TutorialScene.unity
     guid: 966a67b531637e44a9236eaa6ca2499d
   - enabled: 1
     path: Assets/Resources/0432/GameScene.unity
