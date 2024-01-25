@@ -344,7 +344,7 @@ public class Chara_Player : Chara
 
     public void AssignBMI()
     {
-        float differentScore = sceneOperator.DifferenceOfTopScore(score.plan + score.entity);   // トッププレイヤーとのスコア差
+        float differentScore = sceneOperator.DifferenceOfTopScore(sumScore);   // トッププレイヤーとのスコア差
 
         if (differentScore == 0)
         {
@@ -484,7 +484,6 @@ public class Chara_Player : Chara
 
         if (alive == false)
         {
-
             inputMoveVelocity.PlanDefault();
             leaveButton.PlanDefault();
         }
@@ -631,6 +630,7 @@ public class Chara_Player : Chara
     public void OnAttack1(InputValue value)
     {
         if (sceneOperator.timeOver == true) { return; }
+        if (alive == false) { return; }
         if (moveRigor == true) { return; }
         attack1.motion.DurationActive();
         attack1.Launch(power.plan, 3);
@@ -639,6 +639,7 @@ public class Chara_Player : Chara
     public void OnAttack2(InputValue value)
     {
         if (sceneOperator.timeOver == true) { return; }
+        if (alive == false) { return; }
         if (moveRigor == true) { return; }
         attack2.motion.DurationActive();
         attack2.Launch(power.plan * 2, 1);
@@ -654,10 +655,10 @@ public class Chara_Player : Chara
     public void OnStep(InputValue value)
     {
 
-        if (sceneOperator.timeOver == true) { return; }
-        if (moveRigor == true) { return; }
-        step.DurationActive();
-        step.Launch();
+        //if (sceneOperator.timeOver == true) { return; }
+        //if (moveRigor == true) { return; }
+        //step.DurationActive();
+        //step.Launch();
 
     }
     #endregion

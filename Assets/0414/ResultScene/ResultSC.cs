@@ -271,4 +271,5 @@ public enum Winner
 {
     Player1,
     Player2,
+    Draw,
 }

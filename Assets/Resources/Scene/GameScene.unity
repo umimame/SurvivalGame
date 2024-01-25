@@ -1078,7 +1078,7 @@ MonoBehaviour:
   respownPos: {fileID: 526006638}
   timeLimit:
     <active>k__BackingField: 0
-    <interval>k__BackingField: 999
+    <interval>k__BackingField: 180
     <time>k__BackingField:
       <value>k__BackingField: 0
       <increseType>k__BackingField: 0
