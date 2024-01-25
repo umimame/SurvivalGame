@@ -26,6 +26,7 @@ public class ResultSC : MonoBehaviour
     bool rAdd, gAdd, bAdd, SceneChangeFlag;
     int NowIndex;
     int playerScore, playerKill, playerApple, playerOrange, playerGrape;
+    bool isSceneChange;
     //Chara_Playerオブジェクトを取得
     SceneBlackOut SceneBlackOut;
     // Start is called before the first frame update
@@ -40,6 +41,7 @@ public class ResultSC : MonoBehaviour
         StartCoroutine(PushKeyBlinking());
         //シーン遷移をするかどうか
         SceneChangeFlag = false;
+        isSceneChange = false;
     }
     // Update is called once per frame
     void Update()
@@ -100,10 +102,13 @@ public class ResultSC : MonoBehaviour
             {
                 if (Input.anyKey)//一部反応しないキーがある
                 {
-                    //charaPlayer.SetScore();//シーン遷移前にスコア等の初期化
-                    Debug.Log("ResultSCでシングルトン破棄");
-                    SceneBlackOut.BlackOutSceneChangeForResult();
-                    //SceneManager.LoadScene("TitleScene");
+                    if (!isSceneChange)
+                    {
+                        Debug.Log("ResultSCでシングルトン破棄");
+                        SceneBlackOut.BlackOutSceneChangeForResult();
+                        isSceneChange = true;
+                        //SceneManager.LoadScene("TitleScene");
+                    }
                 }
             }
         }

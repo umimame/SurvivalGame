@@ -51,7 +51,7 @@ public class SceneBlackOut : MonoBehaviour
     {
         while (!isSceneChange)
         {
-            PanelColor.a += 0.001f;
+            PanelColor.a += 0.08f;
             _PanelImage.color = PanelColor;
             if (PanelColor.a >= 1)
                 isSceneChange = true;
@@ -59,24 +59,13 @@ public class SceneBlackOut : MonoBehaviour
         }
         SceneManager.LoadScene(nextSceneName);
     }
-    private IEnumerator BigWolfSceneChange()
-    {
-        while (!isSceneChange)
-        {
-            rectTransform.sizeDelta = new Vector2(width += 1f, height += 1f);
-            //if (rectTransform.sizeDelta.x > 100)
-            Debug.Log("WolfXis" + rectTransform.sizeDelta.x);
-            //isSceneChange = true;
-            yield return new WaitForSeconds(_speed);
-        }
-        SceneManager.LoadScene(nextSceneName);
-    }
+   
     private IEnumerator BigPanelCircleSceneChange()
     {
         while (!isSceneChange)
         {
-            rectTransform.localScale = new Vector3(ScaleX += 0.002f, ScaleY += 0.002f);
-            PanelColor.a += 0.0007f;
+            rectTransform.localScale = new Vector3(ScaleX += 0.2f, ScaleY += 0.2f);
+            PanelColor.a += 0.07f;
             _PanelImage.color = PanelColor;
             //Debug.Log("Speed" + _speed);
             if (rectTransform.localScale.x >= 3f && PanelColor.a >= 1)

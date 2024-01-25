@@ -7,10 +7,12 @@ public class TitleSceneChanger : MonoBehaviour
 {
     [SerializeField] private string changeScene;
     SceneBlackOut SceneBlackOut;
+    bool isSceneChange;
     // Start is called before the first frame update
     void Start()
     {
         SceneBlackOut = FindObjectOfType<SceneBlackOut>();
+        isSceneChange = false;
     }
     // Update is called once per frame
     void Update()
@@ -23,22 +25,26 @@ public class TitleSceneChanger : MonoBehaviour
         {
             if (Input.anyKey)
             {
-                Debug.Log("タイトル画面で何かキーが押されたよ");
-                SceneBlackOut.BlackOutSceneChangeForTitle();
-                //SceneManager.LoadScene("TestScene");
+                if (!isSceneChange)
+                {
+                    Debug.Log("タイトル画面で何かキーが押されたよ");
+                    SceneBlackOut.BlackOutSceneChangeForTitle();
+                    isSceneChange = true;
+                    //SceneManager.LoadScene("TestScene");
+                }
             }
         }
-        //if (Input.GetKey(KeyCode.Escape))
-        //{
-        //    //何もしない
-        //}
-        //else
-        //{
-        //    if (Input.anyKey)
-        //    {
-        //        Debug.Log("タイトル画面で何かキーが押されたよ");
-        //        SceneManager.LoadScene(changeScene);
-        //    }
-        //}
     }
+    //if (Input.GetKey(KeyCode.Escape))
+    //{
+    //    //何もしない
+    //}
+    //else
+    //{
+    //    if (Input.anyKey)
+    //    {
+    //        Debug.Log("タイトル画面で何かキーが押されたよ");
+    //        SceneManager.LoadScene(changeScene);
+    //    }
+    //}
 }
