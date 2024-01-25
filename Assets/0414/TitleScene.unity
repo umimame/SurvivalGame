@@ -341,8 +341,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
-  m_sharedMaterial: {fileID: 1791618558887037572, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
+  m_sharedMaterial: {fileID: 6574258357237554280, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -706,8 +706,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -530, y: 318}
-  m_SizeDelta: {x: 700, y: 150}
+  m_AnchoredPosition: {x: -491, y: 301}
+  m_SizeDelta: {x: 854.0519, y: 184}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &717432461
 MonoBehaviour:
@@ -731,8 +731,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Survival '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
-  m_sharedMaterial: {fileID: 1791618558887037572, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
+  m_sharedMaterial: {fileID: 6574258357237554280, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -2.3658447, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1009,7 +1009,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1188,7 +1188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -530, y: 134}
+  m_AnchoredPosition: {x: -530, y: 127}
   m_SizeDelta: {x: 700, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1987985958
@@ -1213,8 +1213,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Game
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
-  m_sharedMaterial: {fileID: 1791618558887037572, guid: 05f5c94a47e799244b67c6007217383a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
+  m_sharedMaterial: {fileID: 6574258357237554280, guid: 6e959058cffe0fb4ca9d9762e219aff2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
